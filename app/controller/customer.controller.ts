@@ -1,9 +1,8 @@
 const Joi = require('@hapi/joi');
-const db = require('../config/db.config.js');
-const crypto = require('crypto');
 const redis = require('redis');
-const Customer = db.customers;
-
+const crypto = require('crypto');
+import db from '../config/db.config';
+import Customer from '../model/customer.model';
 class CustomerController {
   addNewCustomer(req, res) {
     /****************** Password encryption start ******************/
@@ -13,15 +12,11 @@ class CustomerController {
     req.body.password = hash;
     req.body.salt = salt;
     /****************** Password encryption end ********************/
-    for(let i = 0; i< 20000; i++) {
-      req.body.firstname += "_"+i;
-      Customer.create(req.body).then(customer => {
-        res.send(customer);
-      }).catch(function (err) {
-        return res.status(500).send(err);
-      })
-    }
-    
+    Customer.create(req.body).then(customer => {
+      res.send(customer);
+    }).catch(function (err) {
+      return res.status(500).send(err);
+    })    
   }
 
   findByDateRange(req, res) {
@@ -82,12 +77,6 @@ class CustomerController {
     })
   };
 
-  findById(req, res) {
-    Customer.findById(req.params.customerId).then(customer => {
-      res.send(customer);
-    })
-  };
-
   update(req, res) {
     const id = req.params.customerId;
     Customer.update({ firstname: req.body.firstname, lastname: req.body.lastname, age: req.body.age },
@@ -107,4 +96,4 @@ class CustomerController {
   };
 }
 
-module.exports = CustomerController;
+export default CustomerController;

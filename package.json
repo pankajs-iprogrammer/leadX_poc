@@ -1,11 +1,12 @@
 {
   "name": "starter-node-angular",
-  "main": "server.js",
+  "main": "server.ts",
   "scripts": {
-    "local": "nodemon ./server.js localhost 8888"
+    "local": "tsc --watch & nodemon dist"
   },
   "dependencies": {
     "@hapi/joi": "^15.0.1",
+    "@types/express": "^4.16.1",
     "babel": "^6.23.0",
     "body-parser": "^1.19.0",
     "express": "^4.16.4",
@@ -13,7 +14,9 @@
     "mysql2": "^1.5.3",
     "redis": "^2.8.0",
     "request": "^2.88.0",
-    "sequelize": "^4.37.6"
+    "sequelize": "^4.37.6",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5"
   },
   "devDependencies": {
     "nodemon": "^1.19.0"

@@ -1,5 +1,4 @@
-// import CustomerController from './controller/customer.controller.js';
-const CustomerController = require('./controller/customer.controller.js');
+import CustomerController from './controller/customer.controller';
 const objCustCtrl = new CustomerController();
 module.exports = function(app) {
  

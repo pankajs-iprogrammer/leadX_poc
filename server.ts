@@ -1,4 +1,5 @@
-// server.js
+// server.ts
+var db = import('./app/config/db.config');
 
 // modules =================================================
 var express        = require('express');
@@ -9,7 +10,7 @@ var methodOverride = require('method-override');
 // configuration ===========================================
 
 // config files
-var db = require('./app/config/db.config');
+// var db = require('./app/config/db.config');
 
 // set our port
 var port = process.env.PORT || 8888; 
