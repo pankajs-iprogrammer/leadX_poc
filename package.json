@@ -1,6 +1,6 @@
 {
   "name": "starter-node-angular",
-  "main": "server.ts",
+  "main": "app.ts",
   "scripts": {
     "local": "tsc --watch & nodemon dist"
   },
@@ -12,6 +12,7 @@
     "express": "^4.16.4",
     "method-override": "^3.0.0",
     "mysql2": "^1.5.3",
+    "nodemailer": "^6.1.1",
     "redis": "^2.8.0",
     "request": "^2.88.0",
     "sequelize": "^4.37.6",

@@ -1,6 +1,6 @@
 // server.ts
 var db = import('./app/config/db.config');
-
+import router from './routes';
 // modules =================================================
 var express        = require('express');
 var app            = express();
@@ -29,7 +29,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('X-HTTP-Method-Override')); 
 
 // routes ==================================================
-require('./app/routes')(app); // configure our routes
+//require('./app/routes')(app); // configure our routes
+app.use('/api', router);
 
 // start app ===============================================
 // startup our app at http://localhost:8080

@@ -1,3 +1,3 @@
 # leadX_poc
 
-to start project : ts-node server.ts
+to start project : ts-node app.ts
