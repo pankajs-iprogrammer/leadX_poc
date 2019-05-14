@@ -138,7 +138,10 @@ class BaseController {
                 }
                 // let imageTypeRegularExpression = /\/(.*?)$/;
                 const currDate = Date.now();
-                const mathRandomStr = Math.random().toString(CONSTANTS.THIRTYSIX).substring(CONSTANTS.TWO, CONSTANTS.FIFTEEN);
+                const num = CONSTANTS.THIRTYSIX;
+                const startStr = CONSTANTS.TWO;
+                const endStr = CONSTANTS.FIFTEEN;
+                const mathRandomStr = Math.random().toString(num).substring(startStr, endStr);
                 const uniqueRandomFileName = (imageCategory + '-' + currDate + mathRandomStr + mathRandomStr + '.png');
                 // let imageTypeDetected = imageBuffer['type'].match(imageTypeRegularExpression);
                 const uploadedFilePath = path + uniqueRandomFileName;
