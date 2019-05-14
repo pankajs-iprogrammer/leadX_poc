@@ -1,7 +1,7 @@
 const env = {
-    database: 'codementor',
+    database: 'leadx_poc',
     username: 'root',
-    password: 'test',
+    password: 'root',
     host: 'localhost',
     dialect: 'mysql',
     pool: {

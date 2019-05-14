@@ -1,7 +1,7 @@
-const env = require('./env.js');
+const env = require('./env');
  
 const Sequelize = require('sequelize');
-export const sObj = new Sequelize("leadx_poc", "root", "iprogrammer123#", {
+export const sObj = new Sequelize("leadx_poc", "root", "root", {
   host: "localhost",
   dialect: "mysql",
   operatorsAliases: false,
