@@ -82,7 +82,7 @@ class CustomerController extends BaseController {
 
   public async encryptPassword(plainTextPassword) {
     const salt = crypto.randomBytes(CONSTANTS.SIXTEEN).toString('hex');
-    const hash = crypto.pbkdf2Sync(plainTextPassword, salt, 1000, CONSTANTS.SIXTYFOUR, `sha512`).toString(`hex`);
+    const hash = crypto.pbkdf2Sync(plainTextPassword, salt, CONSTANTS.THOUSAND, CONSTANTS.SIXTYFOUR, `sha512`).toString(`hex`);
     const passObj = {
       salt,
       hash,
