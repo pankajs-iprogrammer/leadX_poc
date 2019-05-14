@@ -1,7 +1,6 @@
-import Joi = require('@hapi/joi');
-import redis = require('redis');
-import crypto = require('crypto');
-//import * as crypto from 'crypto';
+import * as Joi from '@hapi/joi';
+import * as redis from 'redis';
+import * as crypto from 'crypto';
 
 import db from '../../config/db.config';
 import BaseController from '../../shared/controller/BaseController';
@@ -85,7 +84,7 @@ class CustomerController extends BaseController {
     let hash = crypto.pbkdf2Sync(plainTextPassword, salt, 1000, 64, `sha512`).toString(`hex`);
     let passObj = {
       "salt" : salt,
-      "hash" : hash
+      "hash" : hash,
     };
     return passObj;
   }
@@ -106,7 +105,7 @@ class CustomerController extends BaseController {
     const id = reqBody.customerId;
     
     Customer.update(reqBody,
-      { where: { id: reqBody.customerId } }
+      { where: { id: reqBody.customerId, } }
     ).then(() => {
       this.sendResponse(res, true, 200, "updated successfully a customer with id = " + id, '');
     });
