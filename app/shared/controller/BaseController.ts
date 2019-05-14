@@ -40,7 +40,7 @@ class BaseController {
     public check = (p, o, q = "") => p.reduce((xs, x) => {
         if (x == "$") {
             if (Array.isArray(xs)) {
-                let tempXS = xs.find((item) => {
+                const tempXS = xs.find((item) => {
                     return item._id.toString() == q.toString()
                 });
                 if (tempXS) {
@@ -64,12 +64,12 @@ class BaseController {
 
     public dotify2(path, object) {
         // console.log('++++ path ++++', path);        
-        let self = this;
-        let objectKeys = Object.keys(object);
-        let newObj: any = {};
+        const self = this;
+        const objectKeys = Object.keys(object);
+        const newObj: any = {};
         objectKeys.forEach(function (objectKey) {
             if (typeof object[objectKey] == "object") {
-                let temp = self.dotify2(path + objectKey + '.', object[objectKey]);
+                const temp = self.dotify2(path + objectKey + '.', object[objectKey]);
                 Object.assign(newObj, temp);
             } else {
                 newObj[path + objectKey] = object[objectKey];
@@ -80,10 +80,10 @@ class BaseController {
 
     // regx formatter: Apply regx for search query
     public regxFormatter(objParams) {
-        let arrFilter = [];
+        const arrFilter = [];
         if (Object.keys(objParams).length) {
             Object.keys(objParams).forEach(key => {
-                let objRegx = {};
+                const objRegx = {};
                 objRegx[key] = { $regex: new RegExp(objParams[key], 'i') }
                 arrFilter.push(objRegx);
             });
@@ -93,10 +93,10 @@ class BaseController {
 
     // filterByFormatter
     public filterByFormatter(objParams) {
-        let arrFilter = [];
+        const arrFilter = [];
         if (Object.keys(objParams).length) {
             Object.keys(objParams).forEach(key => {
-                let obj = {};
+                const obj = {};
                 obj[key] = objParams[key];
                 arrFilter.push(obj);
             });
@@ -118,10 +118,10 @@ class BaseController {
 
     // Create directories based on path
     public mkdirSyncRecursive(directory) {
-        let path = directory.replace(/\/$/, '').split('/');
-        let mode = parseInt('0777', 8);
+        const path = directory.replace(/\/$/, '').split('/');
+        const mode = parseInt('0777', 8);
         for (let i = 1; i <= path.length; i++) {
-            let segment = path.slice(0, i).join('/');
+            const segment = path.slice(0, i).join('/');
             if (!fs.existsSync(segment)){
                 fs.mkdirSync(segment, mode)
             }
@@ -199,7 +199,7 @@ class BaseController {
     }
     
     public guid() {
-        let string = "ss-s-s-s-sss".replace(/s/g, this.s4);
+        const string = "ss-s-s-s-sss".replace(/s/g, this.s4);
         return string.replace(/-/g, "");
     }
 
@@ -208,9 +208,9 @@ class BaseController {
     }
 
     public async sendEmail(to, subject, text) {
-        var from = 'support@selfdoc.com';
+        const from = 'support@selfdoc.com';
 
-        var smtpTransport = nodemailer.createTransport({
+        const smtpTransport = nodemailer.createTransport({
             host: 'smtp.sendgrid.net',
             port: 587,
             secure: false,
@@ -220,7 +220,7 @@ class BaseController {
             },
         });
 
-        var mailOptions = {
+        const mailOptions = {
             to: to,
             from: from,
             subject: subject,
