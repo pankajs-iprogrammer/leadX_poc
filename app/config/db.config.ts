@@ -13,7 +13,7 @@ export const sObj = new Sequelize("leadx_poc", "root", "root", {
   }
 });
  
-var db = {
+const db = {
   "Sequelize":Sequelize,
   "sObj": sObj,
   "key": "7u8i9o0p"
