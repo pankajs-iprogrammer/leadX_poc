@@ -8,14 +8,14 @@ const Customer = sObj.define('customer', {
     validate: {
       is: /^[a-z]+$/i,  // or isAlpha: true
       notEmpty: true,
-    }
+    },
   },
   lastname: {
     type: Sequelize.STRING,
     validate: {
       is: /^[a-z]+$/i,  // or isAlpha: true
       notEmpty: true,
-    }
+    },
   },
   email: {
     type: Sequelize.STRING,
