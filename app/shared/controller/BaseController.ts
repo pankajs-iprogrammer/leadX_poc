@@ -133,7 +133,7 @@ class BaseController {
                 let matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
                 let imageBuffer = {
                     type: matches[1],
-                    data: new Buffer(matches[2], 'base64')
+                    data: new Buffer(matches[2], 'base64'),
                 }
                 // let imageTypeRegularExpression = /\/(.*?)$/;
                 let uniqueRandomFileName = (imageCategory + '-' + Date.now() + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '.png');
