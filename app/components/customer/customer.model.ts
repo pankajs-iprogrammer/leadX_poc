@@ -1,4 +1,5 @@
-import Sequelize = require('sequelize');
+//import Sequelize = require('sequelize');
+import * as Sequelize from 'sequelize';
 import db from "../../config/db.config";
 const sObj = db.sObj;
 const Customer = sObj.define('customer', {
@@ -22,15 +23,15 @@ const Customer = sObj.define('customer', {
     }
   },
   password: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   salt: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   contact: {
     type: Sequelize.STRING,
     validate: {
-      isNumeric: true
+      isNumeric: true,
     }
   }
 });
