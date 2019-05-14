@@ -2,10 +2,10 @@
 const db = import('./app/config/db.config');
 import router from './routes';
 // modules =================================================
-const express        = require("express");
+import express        = require("express");
 const app            = express();
-const bodyParser     = require("body-parser");
-const methodOverride = require("method-override");
+import bodyParser     = require("body-parser");
+import methodOverride = require("method-override");
 
 // configuration ===========================================
 

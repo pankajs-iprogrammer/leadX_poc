@@ -32,7 +32,7 @@ const Customer = sObj.define('customer', {
     type: Sequelize.STRING,
     validate: {
       isNumeric: true,
-    }
+    },
   }
 });
 
