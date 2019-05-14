@@ -9,14 +9,14 @@ export const sObj = new Sequelize("leadx_poc", "root", "root", {
     max: env.max,
     min: env.min,
     acquire: env.acquire,
-    idle: env.idle
-  }
+    idle: env.idle,
+  },
 });
  
 const db = {
   Sequelize,
   sObj,
-  "key" : "7u8i9o0p"
+  "key" : "7u8i9o0p",
 };
  
 

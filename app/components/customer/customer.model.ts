@@ -22,7 +22,7 @@ const Customer = sObj.define('customer', {
     validate: {
       isEmail: true,
       notEmpty: true,
-    }
+    },
   },
   password: {
     type: Sequelize.STRING,

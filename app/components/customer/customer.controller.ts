@@ -105,7 +105,7 @@ class CustomerController extends BaseController {
     const id = reqBody.customerId;
     
     Customer.update(reqBody,
-      { where: { id: reqBody.customerId, } }
+      { where: { id: reqBody.customerId } }
     ).then(() => {
       this.sendResponse(res, true, 200, "updated successfully a customer with id = " + id, '');
     });
@@ -114,7 +114,7 @@ class CustomerController extends BaseController {
   async delete(reqBody, res, req) {
     const id = reqBody.customerId;
     Customer.destroy({
-      where: { id: id, }
+      where: { id: id }
     }).then(() => {
       this.sendResponse(res, true, 200, "deleted successfully a customer with id = " + id, '');
     });
