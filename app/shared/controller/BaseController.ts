@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as moment from 'moment';
 import * as nodemailer from 'nodemailer';
+import { CONSTANTS }  from '../../config/constants';
 
 class BaseController {
 
@@ -137,7 +138,7 @@ class BaseController {
                 }
                 // let imageTypeRegularExpression = /\/(.*?)$/;
                 const currDate = Date.now();
-                const mathRandomStr = Math.random().toString(36).substring(2, 15);
+                const mathRandomStr = Math.random().toString(CONSTANTS.THIRTYSIX).substring(CONSTANTS.TWO, CONSTANTS.FIFTEEN);
                 const uniqueRandomFileName = (imageCategory + '-' + currDate + mathRandomStr + mathRandomStr + '.png');
                 // let imageTypeDetected = imageBuffer['type'].match(imageTypeRegularExpression);
                 const uploadedFilePath = path + uniqueRandomFileName;
@@ -203,7 +204,7 @@ class BaseController {
     }
 
     public s4() {
-        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        return Math.floor((1 + Math.random()) * 0x10000).toString(CONSTANTS.SIXTEEN).substring(1);
     }
 
     public async sendEmail(to, subject, text) {
