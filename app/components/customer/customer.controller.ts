@@ -105,7 +105,7 @@ class CustomerController extends BaseController {
     const id = reqBody.customerId;
     
     Customer.update(reqBody,
-      { where: { id: reqBody.customerId } }
+      { where: { id: reqBody.customerId } },
     ).then(() => {
       this.sendResponse(res, true, 200, "updated successfully a customer with id = " + id, '');
     });
