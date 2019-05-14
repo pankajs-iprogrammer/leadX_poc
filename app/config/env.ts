@@ -1,7 +1,7 @@
 const env = {
     database: "leadx_poc",
     username: "root",
-    password: "root",
+    //password: "root",
     host: "localhost",
     dialect: "mysql",
     pool: {

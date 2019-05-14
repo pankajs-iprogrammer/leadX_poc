@@ -8,7 +8,7 @@ import Customer from './customer.model';
 
 class CustomerController extends BaseController {
 
-  async addNewCustomer(reqBody, res, req) {
+  public async addNewCustomer(reqBody, res, req) {
     /**************** Joi Validation Start ********************/
     /*let schema = Joi.object().keys({
       password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/).min(8).required()
@@ -37,7 +37,7 @@ class CustomerController extends BaseController {
     })    
   }
 
-  async findByDateRange(reqBody, res, req) {
+  public async findByDateRange(reqBody, res, req) {
     /**************** Joi Validation Start ********************/
     const schema = Joi.object().keys({
       startDate: Joi.date().iso().required(),
@@ -57,9 +57,9 @@ class CustomerController extends BaseController {
     });
   };
 
-  async getAllCustomer(reqBody, res, req) {
+  public async getAllCustomer(reqBody, res, req) {
     const self = this;
-    var client = redis.createClient();
+    const client = redis.createClient();
     let customerData = [];
     /* Checking whether data exist in redis or not */
     client.get("customers", function (err, data) {
@@ -79,9 +79,9 @@ class CustomerController extends BaseController {
     })
   };
 
-  async encryptPassword(plainTextPassword) {
-    let salt = crypto.randomBytes(16).toString('hex');
-    let hash = crypto.pbkdf2Sync(plainTextPassword, salt, 1000, 64, `sha512`).toString(`hex`);
+  public async encryptPassword(plainTextPassword) {
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = crypto.pbkdf2Sync(plainTextPassword, salt, 1000, 64, `sha512`).toString(`hex`);
     let passObj = {
       "salt" : salt,
       "hash" : hash,
@@ -89,19 +89,19 @@ class CustomerController extends BaseController {
     return passObj;
   }
 
-  async byProcedure(reqBody, res, req) {
+  public async byProcedure(reqBody, res, req) {
     db.sObj.query("CALL GetAllUsers;").then(customers => {
       res.send(customers);
     });
   };
 
-  async findById(reqBody, res, req) {
+  public async findById(reqBody, res, req) {
     Customer.findById(reqBody.customerId).then(customer => {
       this.sendResponse(res, true, 200, customer, '');
     })
   };
 
-  async update(reqBody, res, req) {
+  public async update(reqBody, res, req) {
     const id = reqBody.customerId;
     
     Customer.update(reqBody,
@@ -111,7 +111,7 @@ class CustomerController extends BaseController {
     });
   };
 
-  async delete(reqBody, res, req) {
+  public async delete(reqBody, res, req) {
     const id = reqBody.customerId;
     Customer.destroy({
       where: { id: id },
