@@ -1,10 +1,10 @@
 import * as fs from "fs";
+import * as moment from 'moment';
+import * as nodemailer from 'nodemailer';
 
-const moment = require('moment');
-const nodemailer = require('nodemailer');
 class BaseController {
 
-    sendResponse(httpResp, statusFlag, statusCode, data, errorMessage) {
+    public sendResponse(httpResp, statusFlag, statusCode, data, errorMessage) {
         const response = {
             'status': statusFlag ? 'Success' : 'Failure',
             'statusCode': statusCode,
@@ -16,7 +16,7 @@ class BaseController {
         }
     }
 
-    compare(a, b) {
+    public compare(a, b) {
         if (a["order"] < b["order"])
             return -1;
         if (a["order"] > b["order"])
@@ -24,19 +24,19 @@ class BaseController {
         return 0;
     }
 
-    removeLastArrayElement(arr) {
+    public removeLastArrayElement(arr) {
         return arr.slice(0, -1);
     }
 
-    getNextWeekDateByISOWeekDayByCount(dayINeed, weekCount) {
+    public getNextWeekDateByISOWeekDayByCount(dayINeed, weekCount) {
         return moment().add(weekCount + 1, 'weeks').isoWeekday(dayINeed);
     }
 
-    getNextWeekDateByISOWeekDayByDate(dayINeed, weekCount) {
+    public getNextWeekDateByISOWeekDayByDate(dayINeed, weekCount) {
         return moment(weekCount).add(1, 'weeks').isoWeekday(dayINeed);
     }
 
-    check = (p, o, q = "") => p.reduce((xs, x) => {
+    public check = (p, o, q = "") => p.reduce((xs, x) => {
         if (x == "$") {
             if (Array.isArray(xs)) {
                 let tempXS = xs.find((item) => {
@@ -61,7 +61,7 @@ class BaseController {
         }
     }, o);
 
-    dotify2(path, object) {
+    public dotify2(path, object) {
         // console.log('++++ path ++++', path);        
         let self = this;
         let objectKeys = Object.keys(object);
@@ -78,7 +78,7 @@ class BaseController {
     }
 
     // regx formatter: Apply regx for search query
-    regxFormatter(objParams) {
+    public regxFormatter(objParams) {
         let arrFilter = [];
         if (Object.keys(objParams).length) {
             Object.keys(objParams).forEach(key => {
@@ -91,7 +91,7 @@ class BaseController {
     }
 
     // filterByFormatter
-    filterByFormatter(objParams) {
+    public filterByFormatter(objParams) {
         let arrFilter = [];
         if (Object.keys(objParams).length) {
             Object.keys(objParams).forEach(key => {
@@ -104,7 +104,7 @@ class BaseController {
     }
 
     // Return total records/document count
-    getTotalRecordsCount(thisModel, objFilter?) {
+    public getTotalRecordsCount(thisModel, objFilter?) {
         return new Promise((resolve, reject) => {
             thisModel.countDocuments(objFilter).exec((err, totalCount) => {
                 if (err) {
@@ -116,7 +116,7 @@ class BaseController {
     }
 
     // Create directories based on path
-    mkdirSyncRecursive(directory) {
+    public mkdirSyncRecursive(directory) {
         let path = directory.replace(/\/$/, '').split('/');
         let mode = parseInt('0777', 8);
         for (let i = 1; i <= path.length; i++) {
@@ -127,7 +127,7 @@ class BaseController {
         }
     }
 
-    uploadBase64Image(path, base64Data, imageCategory?) {
+    public uploadBase64Image(path, base64Data, imageCategory?) {
         return new Promise((resolve, reject) => {
             try {
                 let matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
@@ -171,7 +171,7 @@ class BaseController {
         }).catch(err => err);
     }
 
-    dotify(obj: object, level = 1) {
+    public dotify(obj: object, level = 1) {
         const res = {};
         function recurse(obj: object, current?: string) {
             for (const key in obj) {
@@ -195,16 +195,16 @@ class BaseController {
         return res;
     }
     
-    guid() {
+    public guid() {
         let string = "ss-s-s-s-sss".replace(/s/g, this.s4);
         return string.replace(/-/g, "");
     }
 
-    s4() {
+    public s4() {
         return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     }
 
-    async sendEmail(to, subject, text) {
+    public async sendEmail(to, subject, text) {
         var from = 'support@selfdoc.com';
 
         var smtpTransport = nodemailer.createTransport({
