@@ -130,15 +130,17 @@ class BaseController {
     public uploadBase64Image(path, base64Data, imageCategory?) {
         return new Promise((resolve, reject) => {
             try {
-                let matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-                let imageBuffer = {
+                const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+                const imageBuffer = {
                     type: matches[1],
                     data: new Buffer(matches[2], 'base64'),
                 }
                 // let imageTypeRegularExpression = /\/(.*?)$/;
-                let uniqueRandomFileName = (imageCategory + '-' + Date.now() + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '.png');
+                const currDate = Date.now();
+                const mathRandomStr = Math.random().toString(36).substring(2, 15);
+                const uniqueRandomFileName = (imageCategory + '-' + currDate + mathRandomStr + mathRandomStr + '.png');
                 // let imageTypeDetected = imageBuffer['type'].match(imageTypeRegularExpression);
-                let uploadedFilePath = path + uniqueRandomFileName;
+                const uploadedFilePath = path + uniqueRandomFileName;
                 if (!fs.existsSync(path)) {
                     this.mkdirSyncRecursive(path);
                 }
@@ -148,16 +150,16 @@ class BaseController {
                             resolve({
                                 status: false,
                                 data: error,
-                                msg: 'failed to upload'
+                                msg: 'failed to upload',
                             });
                         } else {
                             resolve({
                                 status: true,
                                 data: {
                                     fileName: uniqueRandomFileName,
-                                    fullFileName: uploadedFilePath.replace('./dist', '')
+                                    fullFileName: uploadedFilePath.replace('./dist', ''),
                                 },
-                                msg: 'uploaded successfully'
+                                msg: 'uploaded successfully',
                             });
                         }
                     });
@@ -165,7 +167,7 @@ class BaseController {
             catch (error) {
                 resolve({
                     status: false,
-                    data: error
+                    data: error,
                 });
             }
         }).catch(err => err);
@@ -213,15 +215,15 @@ class BaseController {
             secure: false,
             auth: {
                 user: 'gauravp_iprogrammer', // generated ethereal user
-                pass: '7u8i9o0p' // generated ethereal password
-            }
+                pass: '7u8i9o0p', // generated ethereal password
+            },
         });
 
         var mailOptions = {
             to: to,
             from: from,
             subject: subject,
-            text: text
+            text: text,
         };
 
         // send mail with defined transport object
