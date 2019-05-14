@@ -1,5 +1,5 @@
 import * as express from 'express';
-let router = express();
+const router = express();
 import CustomersController from './customer.controller';
 const objCustomersCtrl = new CustomersController();
 
