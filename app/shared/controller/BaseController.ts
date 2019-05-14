@@ -9,7 +9,7 @@ class BaseController {
             'status': statusFlag ? 'Success' : 'Failure',
             'statusCode': statusCode,
             'data': data,
-            'errorMessage': errorMessage
+            'errorMessage': errorMessage,
         };
         if (httpResp) {
             httpResp.json(response);
