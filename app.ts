@@ -1,7 +1,8 @@
 // server.ts
 const db = import('./app/config/db.config');
 import router from './routes';
-import Constants from './app/config/constants';
+import { CONSTANTS }  from './app/config/constants';
+// const Constants = require('./app/config/constants').constants;
 // modules =================================================
 import * as express from 'express';
 const app            = express();
@@ -14,7 +15,7 @@ import * as methodOverride from 'method-override';
 // var db = require('./app/config/db.config');
 
 // set our port
-const port = process.env.PORT || Constants.STATICPORT; 
+const port = process.env.PORT || CONSTANTS.STATICPORT; 
 
 // get all data/stuff of the body (POST) parameters
 // parse application/json 
