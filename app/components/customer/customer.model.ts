@@ -32,7 +32,11 @@ const Customer = sObj.define('customer', {
     validate: {
       isNumeric: true
     }
-  }
+  },
+  departmentId: {
+    type : Sequelize.INTEGER,
+    foreignKey : true
+  } 
 });
 
 export default Customer;

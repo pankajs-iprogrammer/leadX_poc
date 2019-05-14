@@ -1,7 +1,7 @@
 const env = require("./env");
 const Sequelize = require("sequelize");
 
-export const sObj = new Sequelize("leadx_poc", "root", "root", {
+export const sObj = new Sequelize("leadx_poc", "root", "7u8i9o0p", {
   host: "localhost",
   dialect: "mysql",
   operatorsAliases: false,
@@ -19,18 +19,4 @@ const db = {
   "key" : "7u8i9o0p"
 };
  
-
-// Sequelize.prototype.query = function () {
-//   return originalQuery.apply(this, arguments).catch(function (err) {
-//     // log the error 
-//     console.log("+++++ Global Error +++++", err);
-//     throw err;
-//   });
-// };
- 
-//Models/tables
-
- 
- 
-// module.exports = db;
 export default db;

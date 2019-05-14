@@ -1,5 +1,4 @@
 import * as fs from "fs";
-
 const moment = require('moment');
 const nodemailer = require('nodemailer');
 class BaseController {

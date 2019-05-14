@@ -6,9 +6,9 @@ import crypto = require('crypto');
 import db from '../../config/db.config';
 import BaseController from '../../shared/controller/BaseController';
 import Customer from './customer.model';
-
+import Department from '../department/department.model'
+Customer.belongsTo(Department , {as : 'DepartmentRef' , foreignKey : 'department_id'});
 class CustomerController extends BaseController {
-
   async addNewCustomer(reqBody, res, req) {
     /**************** Joi Validation Start ********************/
     /*let schema = Joi.object().keys({
@@ -70,7 +70,13 @@ class CustomerController extends BaseController {
         self.sendResponse(res, true, 200, customerData, '');
       }
       else {
-        Customer.findAll().then(customers => {
+        
+        Customer.findAll({
+          include : [{
+                  model : Department , 
+                 as : 'DepartmentRef'
+                }]
+        }).then(customers => {
           /* Storing response in Redis */
           client.set('customers', JSON.stringify(customers));
           customerData = [{ "msg": "Response is coming from DB", "data": customers }];
@@ -79,7 +85,6 @@ class CustomerController extends BaseController {
       }
     })
   };
-
   async encryptPassword(plainTextPassword) {
     let salt = crypto.randomBytes(16).toString('hex');
     let hash = crypto.pbkdf2Sync(plainTextPassword, salt, 1000, 64, `sha512`).toString(`hex`);
