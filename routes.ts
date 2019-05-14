@@ -7,4 +7,3 @@ router.use('/customer', customerRouter);
 
 export default router;
 
-
