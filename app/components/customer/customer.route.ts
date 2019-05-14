@@ -27,5 +27,5 @@ router.delete('/delete', (req, res) => {
     objCustomersCtrl.delete(req.body, res, req);
 });
 
-
 export default router;
+
