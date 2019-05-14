@@ -7,6 +7,7 @@ const constants = {
     "THIRTYSIX" : 36,
     "TWO" : 2,
     "FIFTEEN" : 15,
+    "THOUSAND" : 1000,
 };
 
 export {constants as CONSTANTS};
