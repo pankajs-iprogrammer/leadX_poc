@@ -8,7 +8,7 @@ import Customer from './customer.model';
 
 class CustomerController extends BaseController {
 
-  public async addNewCustomer(reqBody, res: object) {
+  public async addNewCustomer(reqBody: any, res: object) {
     /**************** Joi Validation Start ********************/
     /*let schema = Joi.object().keys({
       password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/).min(8).required()
@@ -26,19 +26,19 @@ class CustomerController extends BaseController {
     /****************** Password encryption start ******************/
     const plainTextPassword = reqBody.password;
     const passwordObj = await this.encryptPassword(plainTextPassword);
-        
+
     reqBody.password = passwordObj.hash;
     reqBody.salt = passwordObj.salt;
     /****************** Password encryption end ********************/
-    
+
     Customer.create(reqBody).then(customer => {
       this.sendResponse(res, true, 200, customer, '');
     }).catch(function (err) {
       this.sendResponse(res, true, 500, err, '');
-    })    
+    })
   }
 
-  public async findByDateRange(reqBody, res: object) {
+  public async findByDateRange(reqBody: any, res: object) {
     /**************** Joi Validation Start ********************/
     const schema = Joi.object().keys({
       startDate: Joi.date().iso().required(),
@@ -58,7 +58,7 @@ class CustomerController extends BaseController {
     });
   };
 
-  public async getAllCustomer(reqBody, res: object) {
+  public async getAllCustomer(reqBody: any, res: object) {
     const self = this;
     const client = redis.createClient();
     let customerData = [];
@@ -90,21 +90,21 @@ class CustomerController extends BaseController {
     return passObj;
   }
 
-  public async byProcedure(reqBody, res: object) {
+  public async byProcedure(reqBody: any, res: object) {
     db.sObj.query("CALL GetAllUsers;").then(customers => {
       this.sendResponse(res, true, 200, customers, '');
     });
   };
 
-  public async findById(reqBody, res: object) {
+  public async findById(reqBody: any, res: object) {
     Customer.findById(reqBody.customerId).then(customer => {
       this.sendResponse(res, true, 200, customer, '');
     })
   };
 
-  public async update(reqBody, res: object) {
+  public async update(reqBody: any, res: object) {
     const id = reqBody.customerId;
-    
+
     Customer.update(reqBody,
       { where: { id: reqBody.customerId } },
     ).then(() => {
@@ -112,7 +112,7 @@ class CustomerController extends BaseController {
     });
   };
 
-  public async delete(reqBody, res: object) {
+  public async delete(reqBody: any, res: object) {
     const id = reqBody.customerId;
     Customer.destroy({
       where: { id: id },
