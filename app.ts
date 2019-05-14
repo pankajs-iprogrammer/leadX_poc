@@ -1,11 +1,11 @@
 // server.ts
-var db = import('./app/config/db.config');
+const db = import('./app/config/db.config');
 import router from './routes';
 // modules =================================================
-var express        = require('express');
-var app            = express();
-var bodyParser     = require('body-parser');
-var methodOverride = require('method-override');
+const express        = require("express");
+const app            = express();
+const bodyParser     = require("body-parser");
+const methodOverride = require("method-override");
 
 // configuration ===========================================
 
@@ -13,7 +13,7 @@ var methodOverride = require('method-override');
 // var db = require('./app/config/db.config');
 
 // set our port
-var port = process.env.PORT || 8888; 
+const port = process.env.PORT || 8888; 
 
 // get all data/stuff of the body (POST) parameters
 // parse application/json 

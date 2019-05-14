@@ -1,7 +1,6 @@
 import * as fs from "fs";
 
 const moment = require('moment');
-let g;
 const nodemailer = require('nodemailer');
 class BaseController {
 

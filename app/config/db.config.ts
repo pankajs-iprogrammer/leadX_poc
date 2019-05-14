@@ -1,6 +1,6 @@
-const env = require('./env');
- 
-const Sequelize = require('sequelize');
+const env = require("./env");
+const Sequelize = require("sequelize");
+
 export const sObj = new Sequelize("leadx_poc", "root", "root", {
   host: "localhost",
   dialect: "mysql",
@@ -14,9 +14,9 @@ export const sObj = new Sequelize("leadx_poc", "root", "root", {
 });
  
 const db = {
-  "Sequelize":Sequelize,
-  "sObj": sObj,
-  "key": "7u8i9o0p"
+  Sequelize,
+  sObj,
+  "key" : "7u8i9o0p"
 };
  
 

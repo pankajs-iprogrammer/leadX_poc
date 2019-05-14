@@ -1,6 +1,8 @@
-const Joi = require('@hapi/joi');
-const redis = require('redis');
-const crypto = require('crypto');
+import Joi = require('@hapi/joi');
+import redis = require('redis');
+import crypto = require('crypto');
+//import * as crypto from 'crypto';
+
 import db from '../../config/db.config';
 import BaseController from '../../shared/controller/BaseController';
 import Customer from './customer.model';
@@ -23,8 +25,8 @@ class CustomerController extends BaseController {
     /**************** Joi Validation End ********************/
 
     /****************** Password encryption start ******************/
-    let plainTextPassword = reqBody.password;
-    let passwordObj = await this.encryptPassword(plainTextPassword);
+    const plainTextPassword = reqBody.password;
+    const passwordObj = await this.encryptPassword(plainTextPassword);
     reqBody.password = passwordObj.hash;
     reqBody.salt = passwordObj.salt;
     /****************** Password encryption end ********************/
@@ -38,7 +40,7 @@ class CustomerController extends BaseController {
 
   async findByDateRange(reqBody, res, req) {
     /**************** Joi Validation Start ********************/
-    let schema = Joi.object().keys({
+    const schema = Joi.object().keys({
       startDate: Joi.date().iso().required(),
       endDate: Joi.date().iso().min(Joi.ref('startDate')).required(),
     });
@@ -57,21 +59,22 @@ class CustomerController extends BaseController {
   };
 
   async getAllCustomer(reqBody, res, req) {
+    const self = this;
     var client = redis.createClient();
     let customerData = [];
     /* Checking whether data exist in redis or not */
     client.get("customers", function (err, data) {
       if (data) {
-        let customers = JSON.parse(data);
+        const customers = JSON.parse(data);
         customerData = [{ "msg": "Response is coming from Redis", "data": customers }];
-        this.sendResponse(res, true, 200, customerData, '');
+        self.sendResponse(res, true, 200, customerData, '');
       }
       else {
         Customer.findAll().then(customers => {
           /* Storing response in Redis */
           client.set('customers', JSON.stringify(customers));
           customerData = [{ "msg": "Response is coming from DB", "data": customers }];
-          this.sendResponse(res, true, 200, customerData, '');
+          self.sendResponse(res, true, 200, customerData, '');
         });
       }
     })
