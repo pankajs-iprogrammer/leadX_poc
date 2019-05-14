@@ -5,8 +5,10 @@ const sObj = db.sObj;
 const Customer = sObj.define('customer', {
   firstname: {
     type: Sequelize.STRING,
-    is: /^[a-z]+$/i,  // or isAlpha: true
-    notEmpty: true,
+    validate: {
+      is: /^[a-z]+$/i,  // or isAlpha: true
+      notEmpty: true,
+    }
   },
   lastname: {
     type: Sequelize.STRING,
@@ -33,7 +35,7 @@ const Customer = sObj.define('customer', {
     validate: {
       isNumeric: true,
     },
-  }
+  },
 });
 
 export default Customer;
