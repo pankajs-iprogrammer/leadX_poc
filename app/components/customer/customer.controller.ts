@@ -1,7 +1,6 @@
-import Joi = require('@hapi/joi');
-import redis = require('redis');
-import crypto = require('crypto');
-//import * as crypto from 'crypto';
+import * as Joi from '@hapi/joi';
+import * as redis from 'redis';
+import * as crypto from 'crypto';
 
 import db from '../../config/db.config';
 import BaseController from '../../shared/controller/BaseController';
