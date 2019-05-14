@@ -1,7 +1,6 @@
 import * as fs from "fs";
 
 const moment = require('moment');
-let g;
 const nodemailer = require('nodemailer');
 class BaseController {
 
@@ -122,7 +121,9 @@ class BaseController {
         let mode = parseInt('0777', 8);
         for (let i = 1; i <= path.length; i++) {
             let segment = path.slice(0, i).join('/');
-            !fs.existsSync(segment) ? fs.mkdirSync(segment, mode) : null;
+            if (!fs.existsSync(segment)){
+                fs.mkdirSync(segment, mode)
+            }
         }
     }
 

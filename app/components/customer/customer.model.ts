@@ -1,6 +1,6 @@
-const Sequelize = require('sequelize');
+import Sequelize = require('sequelize');
 import db from "../../config/db.config";
-let sObj = db.sObj;
+const sObj = db.sObj;
 const Customer = sObj.define('customer', {
   firstname: {
     type: Sequelize.STRING,
