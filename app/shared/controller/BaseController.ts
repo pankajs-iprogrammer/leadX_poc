@@ -52,7 +52,7 @@ class BaseController {
                     if (xs.hasOwnProperty("_id"))
                         xs["_id"] = (xs["_id"]) ? xs["_id"].toString() : xs["_id"];
                     return xs
-                };
+                }
             } else {
                 return xs;
             }
