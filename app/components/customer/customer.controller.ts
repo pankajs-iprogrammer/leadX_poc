@@ -8,7 +8,7 @@ import Customer from './customer.model';
 
 class CustomerController extends BaseController {
 
-  public async addNewCustomer(reqBody, res) {
+  public async addNewCustomer(reqBody, res: object) {
     /**************** Joi Validation Start ********************/
     /*let schema = Joi.object().keys({
       password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/).min(8).required()
@@ -38,7 +38,7 @@ class CustomerController extends BaseController {
     })    
   }
 
-  public async findByDateRange(reqBody, res) {
+  public async findByDateRange(reqBody, res: object) {
     /**************** Joi Validation Start ********************/
     const schema = Joi.object().keys({
       startDate: Joi.date().iso().required(),
@@ -58,7 +58,7 @@ class CustomerController extends BaseController {
     });
   };
 
-  public async getAllCustomer(reqBody, res) {
+  public async getAllCustomer(reqBody, res: object) {
     const self = this;
     const client = redis.createClient();
     let customerData = [];
@@ -90,19 +90,19 @@ class CustomerController extends BaseController {
     return passObj;
   }
 
-  public async byProcedure(reqBody, res) {
+  public async byProcedure(reqBody, res: object) {
     db.sObj.query("CALL GetAllUsers;").then(customers => {
-      res.send(customers);
+      this.sendResponse(res, true, 200, customers, '');
     });
   };
 
-  public async findById(reqBody, res) {
+  public async findById(reqBody, res: object) {
     Customer.findById(reqBody.customerId).then(customer => {
       this.sendResponse(res, true, 200, customer, '');
     })
   };
 
-  public async update(reqBody, res) {
+  public async update(reqBody, res: object) {
     const id = reqBody.customerId;
     
     Customer.update(reqBody,
@@ -112,7 +112,7 @@ class CustomerController extends BaseController {
     });
   };
 
-  public async delete(reqBody, res) {
+  public async delete(reqBody, res: object) {
     const id = reqBody.customerId;
     Customer.destroy({
       where: { id: id },
