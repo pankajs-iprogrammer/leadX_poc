@@ -1,5 +1,6 @@
 import Sequelize = require('sequelize');
 import db from "../../config/db.config";
+import Department from '../department/department.model'
 const sObj = db.sObj;
 const Customer = sObj.define('customer', {
   firstname: {
@@ -33,10 +34,10 @@ const Customer = sObj.define('customer', {
       isNumeric: true
     }
   },
-  departmentId: {
+  department_id: {
     type : Sequelize.INTEGER,
     foreignKey : true
   } 
 });
-
+//Customer.belongsTo(Department , {as : 'DepartmentRef' , foreignKey : 'department_id'});
 export default Customer;

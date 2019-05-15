@@ -7,7 +7,7 @@ import db from '../../config/db.config';
 import BaseController from '../../shared/controller/BaseController';
 import Customer from './customer.model';
 import Department from '../department/department.model'
-Customer.belongsTo(Department , {as : 'DepartmentRef' , foreignKey : 'department_id'});
+
 class CustomerController extends BaseController {
   async addNewCustomer(reqBody, res, req) {
     /**************** Joi Validation Start ********************/

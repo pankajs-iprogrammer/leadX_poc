@@ -16,8 +16,6 @@ import Customer from '../customer/customer.model'
 //   modelName: 'customer'
 // });
 
-// Department.hasMany(Customer);
-
 class DepartmentController extends BaseController {
 
 async getAllDepartment(reqBody, res, req) {

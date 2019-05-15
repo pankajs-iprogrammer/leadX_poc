@@ -20,6 +20,6 @@ const Department = sObj.define('department', {
     }
   }
 });
-
+Department.hasMany(Customer);
 export default Department;
 
