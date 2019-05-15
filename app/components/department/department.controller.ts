@@ -28,8 +28,8 @@ class DepartmentController extends BaseController {
       else {
         Department.findAll({
           include : [{
-                      model : Customer
-                    }]
+                      model : Customer,
+                    }],
         }).then(Departments => {
           /* Storing response in Redis */
           client.set('Departments', JSON.stringify(Departments));

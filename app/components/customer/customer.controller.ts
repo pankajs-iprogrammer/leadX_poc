@@ -75,8 +75,8 @@ class CustomerController extends BaseController {
         Customer.findAll({
           include : [{
                   model : Department , 
-                 as : 'DepartmentRef'
-                }]
+                 as : 'DepartmentRef',
+                }],
         }).then(customers => {
           /* Storing response in Redis */
           client.set('customers', JSON.stringify(customers));
