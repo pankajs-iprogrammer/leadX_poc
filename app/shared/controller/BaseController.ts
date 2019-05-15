@@ -210,7 +210,8 @@ class BaseController {
     public s4() {
         const num = CONSTANTS.SIXTEEN;
         const startStr = CONSTANTS.ONE;
-        const rCount = Math.floor((startStr + Math.random()) * 0x10000);
+        const hexDecNum = CONSTANTS.HEXDECNUM;
+        const rCount = Math.floor((startStr + Math.random()) * hexDecNum);
         return rCount.toString(num).substring(startStr);
     }
 
