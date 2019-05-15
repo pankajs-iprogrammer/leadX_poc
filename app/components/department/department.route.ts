@@ -4,7 +4,7 @@ import DepartmentsController from './department.controller';
 const objDepartmentsCtrl = new DepartmentsController();
 
 router.get('/get', (req, res) => {
-    objDepartmentsCtrl.getAllDepartment(req.body, res, req);
+    objDepartmentsCtrl.getAllDepartment(req.body, res);
 });
 
 // router.post('/getById', (req, res) => {

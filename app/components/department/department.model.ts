@@ -1,4 +1,4 @@
-import Sequelize = require('sequelize');
+import * as Sequelize from 'sequelize';
 import Customer from '../customer/customer.model';
 import db from "../../config/db.config";
 const sObj = db.sObj;
@@ -22,4 +22,3 @@ const Department = sObj.define('department', {
 });
 Department.hasMany(Customer);
 export default Department;
-

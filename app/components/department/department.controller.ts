@@ -1,9 +1,5 @@
-import Joi = require('@hapi/joi');
-import redis = require('redis');
-import crypto = require('crypto');
-//import * as crypto from 'crypto';
-
-import db from '../../config/db.config';
+import * as redis from 'redis';
+import { CONSTANTS }  from '../../config/constants';
 import BaseController from '../../shared/controller/BaseController';
 import Department from './department.model';
 import Customer from '../customer/customer.model'
@@ -18,16 +14,16 @@ import Customer from '../customer/customer.model'
 
 class DepartmentController extends BaseController {
 
-async getAllDepartment(reqBody, res, req) {
+  public async getAllDepartment(reqBody, res) {
     const self = this;
-    var client = redis.createClient();
+    const client = redis.createClient();
     let DepartmentData = [];
     /* Checking whether data exist in redis or not */
     client.get("Departments", function (err, data) {
       if (data) {
         const Departments = JSON.parse(data);
         DepartmentData = [{ "msg": "Response is coming from Redis", "data": Departments }];
-        self.sendResponse(res, true, 200, DepartmentData, '');
+        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, DepartmentData, '');
       }
       else {
         Department.findAll({
@@ -38,7 +34,7 @@ async getAllDepartment(reqBody, res, req) {
           /* Storing response in Redis */
           client.set('Departments', JSON.stringify(Departments));
           DepartmentData = [{ "msg": "Response is coming from DB", "data": Departments }];
-          self.sendResponse(res, true, 200, DepartmentData, '');
+          self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, DepartmentData, '');
         });
       }
     })
