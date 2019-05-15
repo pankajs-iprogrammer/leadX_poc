@@ -19,22 +19,22 @@ class BaseController {
 
     public compare(a, b) {
         if (a["order"] < b["order"])
-            return -1;
+            return CONSTANTS.MONE;
         if (a["order"] > b["order"])
-            return 1;
-        return 0;
+            return CONSTANTS.ONE;
+        return CONSTANTS.ZERO;
     }
 
     public removeLastArrayElement(arr) {
-        return arr.slice(0, -1);
+        return arr.slice(CONSTANTS.ZERO, CONSTANTS.MONE);
     }
 
     public getNextWeekDateByISOWeekDayByCount(dayINeed, weekCount) {
-        return moment().add(weekCount + 1, 'weeks').isoWeekday(dayINeed);
+        return moment().add(weekCount + CONSTANTS.ONE, 'weeks').isoWeekday(dayINeed);
     }
 
     public getNextWeekDateByISOWeekDayByDate(dayINeed, weekCount) {
-        return moment(weekCount).add(1, 'weeks').isoWeekday(dayINeed);
+        return moment(weekCount).add(CONSTANTS.ONE, 'weeks').isoWeekday(dayINeed);
     }
 
     public check = (p, o, q = "") => p.reduce((xs, x) => {
@@ -66,7 +66,7 @@ class BaseController {
         // console.log('++++ path ++++', path);        
         const self = this;
         const objectKeys = Object.keys(object);
-        const newObj: any = {};
+        const newObj = {};
         objectKeys.forEach(function (objectKey) {
             if (typeof object[objectKey] == "object") {
                 const temp = self.dotify2(path + objectKey + '.', object[objectKey]);
@@ -121,7 +121,7 @@ class BaseController {
         const path = directory.replace(/\/$/, '').split('/');
         const mode = parseInt('0777', 8);
         for (let i = 1; i <= path.length; i++) {
-            const segment = path.slice(0, i).join('/');
+            const segment = path.slice(CONSTANTS.ZERO, i).join('/');
             if (!fs.existsSync(segment)){
                 fs.mkdirSync(segment, mode)
             }
@@ -183,7 +183,7 @@ class BaseController {
             for (const key in obj) {
                 const value = obj[key];
                 let newKey;
-                if (!isNaN(parseInt(key)) && level == 0 && current.indexOf('$') == -1) {
+                if (!isNaN(parseInt(key)) && level == CONSTANTS.ZERO && current.indexOf('$') == CONSTANTS.MONE) {
                     newKey = (current ? current + '.' + '$' : key);
                 } else {
                     newKey = (current ? current + '.' + key : key);
@@ -207,7 +207,9 @@ class BaseController {
     }
 
     public s4() {
-        return Math.floor((1 + Math.random()) * 0x10000).toString(CONSTANTS.SIXTEEN).substring(1);
+        const num = CONSTANTS.SIXTEEN;
+        const startStr = CONSTANTS.ONE;
+        return Math.floor((startStr + Math.random()) * 0x10000).toString(num).substring(startStr);
     }
 
     public async sendEmail(to, subject, text) {
