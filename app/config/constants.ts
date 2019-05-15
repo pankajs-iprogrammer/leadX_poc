@@ -11,7 +11,7 @@ const constants = {
     "ONE" : 1,
     "MONE" : -1,
     "ZERO" : 0,
-    "HEXDECNUM" : 0x10000
+    "HEXDECNUM" : 0x10000,
 };
 
 export {constants as CONSTANTS};
