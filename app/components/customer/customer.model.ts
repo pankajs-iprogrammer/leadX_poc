@@ -37,10 +37,10 @@ const Customer = sObj.define('customer', {
       isNumeric: true,
     },
   },
-  department_id: {
+  departmentId : {
     type : Sequelize.INTEGER,
-    foreignKey : true,
+   // foreignKey : true,
   },
 });
-//Customer.belongsTo(Department , {as : 'DepartmentRef' , foreignKey : 'department_id'});
+Customer.belongsTo(Department , {as : 'DepartmentRef' , foreignKey : 'department_id'});
 export default Customer;
