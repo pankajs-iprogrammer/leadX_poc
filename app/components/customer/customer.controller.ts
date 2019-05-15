@@ -5,6 +5,7 @@ import { CONSTANTS }  from '../../config/constants';
 import db from '../../config/db.config';
 import BaseController from '../../shared/controller/BaseController';
 import Customer from './customer.model';
+import Department from '../department/department.model'
 
 class CustomerController extends BaseController {
 
@@ -70,7 +71,13 @@ class CustomerController extends BaseController {
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, customerData, '');
       }
       else {
-        Customer.findAll().then(customers => {
+        
+        Customer.findAll({
+          include : [{
+                  model : Department , 
+                 as : 'DepartmentRef'
+                }]
+        }).then(customers => {
           /* Storing response in Redis */
           client.set('customers', JSON.stringify(customers));
           customerData = [{ "msg": "Response is coming from DB", "data": customers }];
