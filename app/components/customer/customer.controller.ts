@@ -6,7 +6,13 @@ import db from '../../config/db.config';
 import BaseController from '../../shared/controller/BaseController';
 import Customer from './customer.model';
 import Department from '../department/department.model'
-
+// Customer.init({
+  
+// }, {
+//   underscored: true,
+//   "sequelize": Department.sequelize,
+//   modelName: 'customer'
+// });
 class CustomerController extends BaseController {
 
   public async addNewCustomer(reqBody, res: object) {
@@ -73,10 +79,10 @@ class CustomerController extends BaseController {
       else {
         
         Customer.findAll({
-          include : [{
-                  model : Department , 
-                 as : 'DepartmentRef'
-                }]
+          // include : [{
+          //         model : Department , 
+          //        as : 'DepartmentRef'
+          //       }]
         }).then(customers => {
           /* Storing response in Redis */
           client.set('customers', JSON.stringify(customers));
