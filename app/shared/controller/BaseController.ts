@@ -148,7 +148,8 @@ class BaseController {
                 if (!fs.existsSync(path)) {
                     this.mkdirSyncRecursive(path);
                 }
-                require('fs').writeFile(uploadedFilePath, imageBuffer['data'],
+                
+                fs.writeFile(uploadedFilePath, imageBuffer['data'],
                     (error) => {
                         if (error) {
                             resolve({
