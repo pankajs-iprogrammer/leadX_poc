@@ -4,13 +4,7 @@ import BaseController from '../../shared/controller/BaseController';
 import Department from './department.model';
 import Customer from '../customer/customer.model'
 
-// Customer.init({
-  
-// }, {
-//   underscored: true,
-//   "sequelize": Department.sequelize,
-//   modelName: 'customer'
-// });
+
 
 class DepartmentController extends BaseController {
 
