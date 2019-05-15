@@ -1,4 +1,4 @@
-const env = {
+const Env = {
     database: "leadx_poc",
     username: "root",
     //password: "root",
@@ -11,4 +11,6 @@ const env = {
       idle: 10000,
     },
   };
+
+  export {Env as env};
 

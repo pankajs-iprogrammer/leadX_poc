@@ -1,15 +1,15 @@
-const env = require("./env");
-const Sequelize = require("sequelize");
+import { env } from './env';
+import * as Sequelize from 'sequelize';
 
 export const sObj = new Sequelize("leadx_poc", "root", "root", {
   host: "localhost",
   dialect: "mysql",
   operatorsAliases: false,
   pool: {
-    max: env.max,
-    min: env.min,
-    acquire: env.acquire,
-    idle: env.idle,
+    max: env.pool.max,
+    min: env.pool.min,
+    acquire: env.pool.acquire,
+    idle: env.pool.idle,
   },
 });
  
