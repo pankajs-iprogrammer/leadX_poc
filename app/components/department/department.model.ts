@@ -6,19 +6,21 @@ const Department = sObj.define('department', {
   id: {
     primaryKey: true,
     foreignKey: true,
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   name: {
     type: Sequelize.STRING,
-    is: /^[a-z]+$/i,  // or isAlpha: true
-    notEmpty: true,
+    validate : {
+      is: /^[a-z]+$/i,  // or isAlpha: true
+      notEmpty: true,
+    },
   },
   description: {
     type: Sequelize.STRING,
     validate: {
       is: /^[a-z]+$/i,  // or isAlpha: true
-    }
-  }
+    },
+  },
 });
 Department.hasMany(Customer);
 export default Department;
