@@ -8,3 +8,4 @@ router.use('/customer', customerRouter);
 router.use('/department', departmentRouter )
 
 export default router;
+

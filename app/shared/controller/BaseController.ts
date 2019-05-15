@@ -1,44 +1,46 @@
 import * as fs from "fs";
-const moment = require('moment');
-const nodemailer = require('nodemailer');
+import * as moment from 'moment';
+import * as nodemailer from 'nodemailer';
+import { CONSTANTS }  from '../../config/constants';
+
 class BaseController {
 
-    sendResponse(httpResp, statusFlag, statusCode, data, errorMessage) {
+    public sendResponse(httpResp, statusFlag, statusCode, data, errorMessage) {
         const response = {
             'status': statusFlag ? 'Success' : 'Failure',
             'statusCode': statusCode,
             'data': data,
-            'errorMessage': errorMessage
+            'errorMessage': errorMessage,
         };
         if (httpResp) {
             httpResp.json(response);
         }
     }
 
-    compare(a, b) {
+    public compare(a, b) {
         if (a["order"] < b["order"])
-            return -1;
+            return CONSTANTS.MONE;
         if (a["order"] > b["order"])
-            return 1;
-        return 0;
+            return CONSTANTS.ONE;
+        return CONSTANTS.ZERO;
     }
 
-    removeLastArrayElement(arr) {
-        return arr.slice(0, -1);
+    public removeLastArrayElement(arr) {
+        return arr.slice(CONSTANTS.ZERO, CONSTANTS.MONE);
     }
 
-    getNextWeekDateByISOWeekDayByCount(dayINeed, weekCount) {
-        return moment().add(weekCount + 1, 'weeks').isoWeekday(dayINeed);
+    public getNextWeekDateByISOWeekDayByCount(dayINeed, weekCount) {
+        return moment().add(weekCount + CONSTANTS.ONE, 'weeks').isoWeekday(dayINeed);
     }
 
-    getNextWeekDateByISOWeekDayByDate(dayINeed, weekCount) {
-        return moment(weekCount).add(1, 'weeks').isoWeekday(dayINeed);
+    public getNextWeekDateByISOWeekDayByDate(dayINeed, weekCount) {
+        return moment(weekCount).add(CONSTANTS.ONE, 'weeks').isoWeekday(dayINeed);
     }
 
-    check = (p, o, q = "") => p.reduce((xs, x) => {
+    public check = (p, o, q = "") => p.reduce((xs, x) => {
         if (x == "$") {
             if (Array.isArray(xs)) {
-                let tempXS = xs.find((item) => {
+                const tempXS = xs.find((item) => {
                     return item._id.toString() == q.toString()
                 });
                 if (tempXS) {
@@ -60,14 +62,14 @@ class BaseController {
         }
     }, o);
 
-    dotify2(path, object) {
+    public dotify2(path, object) {
         // console.log('++++ path ++++', path);        
-        let self = this;
-        let objectKeys = Object.keys(object);
-        let newObj: any = {};
+        const self = this;
+        const objectKeys = Object.keys(object);
+        const newObj = {};
         objectKeys.forEach(function (objectKey) {
             if (typeof object[objectKey] == "object") {
-                let temp = self.dotify2(path + objectKey + '.', object[objectKey]);
+                const temp = self.dotify2(path + objectKey + '.', object[objectKey]);
                 Object.assign(newObj, temp);
             } else {
                 newObj[path + objectKey] = object[objectKey];
@@ -77,11 +79,11 @@ class BaseController {
     }
 
     // regx formatter: Apply regx for search query
-    regxFormatter(objParams) {
-        let arrFilter = [];
+    public regxFormatter(objParams) {
+        const arrFilter = [];
         if (Object.keys(objParams).length) {
             Object.keys(objParams).forEach(key => {
-                let objRegx = {};
+                const objRegx = {};
                 objRegx[key] = { $regex: new RegExp(objParams[key], 'i') }
                 arrFilter.push(objRegx);
             });
@@ -90,11 +92,11 @@ class BaseController {
     }
 
     // filterByFormatter
-    filterByFormatter(objParams) {
-        let arrFilter = [];
+    public filterByFormatter(objParams) {
+        const arrFilter = [];
         if (Object.keys(objParams).length) {
             Object.keys(objParams).forEach(key => {
-                let obj = {};
+                const obj = {};
                 obj[key] = objParams[key];
                 arrFilter.push(obj);
             });
@@ -103,7 +105,7 @@ class BaseController {
     }
 
     // Return total records/document count
-    getTotalRecordsCount(thisModel, objFilter?) {
+    public getTotalRecordsCount(thisModel, objFilter?) {
         return new Promise((resolve, reject) => {
             thisModel.countDocuments(objFilter).exec((err, totalCount) => {
                 if (err) {
@@ -115,29 +117,34 @@ class BaseController {
     }
 
     // Create directories based on path
-    mkdirSyncRecursive(directory) {
-        let path = directory.replace(/\/$/, '').split('/');
-        let mode = parseInt('0777', 8);
+    public mkdirSyncRecursive(directory) {
+        const path = directory.replace(/\/$/, '').split('/');
+        const mode = parseInt('0777', 8);
         for (let i = 1; i <= path.length; i++) {
-            let segment = path.slice(0, i).join('/');
+            const segment = path.slice(CONSTANTS.ZERO, i).join('/');
             if (!fs.existsSync(segment)){
                 fs.mkdirSync(segment, mode)
             }
         }
     }
 
-    uploadBase64Image(path, base64Data, imageCategory?) {
+    public uploadBase64Image(path, base64Data, imageCategory?) {
         return new Promise((resolve, reject) => {
             try {
-                let matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-                let imageBuffer = {
+                const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+                const imageBuffer = {
                     type: matches[1],
-                    data: new Buffer(matches[2], 'base64')
+                    data: new Buffer(matches[2], 'base64'),
                 }
                 // let imageTypeRegularExpression = /\/(.*?)$/;
-                let uniqueRandomFileName = (imageCategory + '-' + Date.now() + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '.png');
+                const currDate = Date.now();
+                const num = CONSTANTS.THIRTYSIX;
+                const startStr = CONSTANTS.TWO;
+                const endStr = CONSTANTS.FIFTEEN;
+                const mathRandomStr = Math.random().toString(num).substring(startStr, endStr);
+                const uniqueRandomFileName = (imageCategory + '-' + currDate + mathRandomStr + mathRandomStr + '.png');
                 // let imageTypeDetected = imageBuffer['type'].match(imageTypeRegularExpression);
-                let uploadedFilePath = path + uniqueRandomFileName;
+                const uploadedFilePath = path + uniqueRandomFileName;
                 if (!fs.existsSync(path)) {
                     this.mkdirSyncRecursive(path);
                 }
@@ -147,16 +154,16 @@ class BaseController {
                             resolve({
                                 status: false,
                                 data: error,
-                                msg: 'failed to upload'
+                                msg: 'failed to upload',
                             });
                         } else {
                             resolve({
                                 status: true,
                                 data: {
                                     fileName: uniqueRandomFileName,
-                                    fullFileName: uploadedFilePath.replace('./dist', '')
+                                    fullFileName: uploadedFilePath.replace('./dist', ''),
                                 },
-                                msg: 'uploaded successfully'
+                                msg: 'uploaded successfully',
                             });
                         }
                     });
@@ -164,19 +171,19 @@ class BaseController {
             catch (error) {
                 resolve({
                     status: false,
-                    data: error
+                    data: error,
                 });
             }
         }).catch(err => err);
     }
 
-    dotify(obj: object, level = 1) {
+    public dotify(obj: object, level = 1) {
         const res = {};
         function recurse(obj: object, current?: string) {
             for (const key in obj) {
                 const value = obj[key];
                 let newKey;
-                if (!isNaN(parseInt(key)) && level == 0 && current.indexOf('$') == -1) {
+                if (!isNaN(parseInt(key)) && level == CONSTANTS.ZERO && current.indexOf('$') == CONSTANTS.MONE) {
                     newKey = (current ? current + '.' + '$' : key);
                 } else {
                     newKey = (current ? current + '.' + key : key);
@@ -194,33 +201,36 @@ class BaseController {
         return res;
     }
     
-    guid() {
-        let string = "ss-s-s-s-sss".replace(/s/g, this.s4);
+    public guid() {
+        const string = "ss-s-s-s-sss".replace(/s/g, this.s4);
         return string.replace(/-/g, "");
     }
 
-    s4() {
-        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    public s4() {
+        const num = CONSTANTS.SIXTEEN;
+        const startStr = CONSTANTS.ONE;
+        const rCount = Math.floor((startStr + Math.random()) * 0x10000);
+        return rCount.toString(num).substring(startStr);
     }
 
-    async sendEmail(to, subject, text) {
-        var from = 'support@selfdoc.com';
+    public async sendEmail(to, subject, text) {
+        const from = 'support@selfdoc.com';
 
-        var smtpTransport = nodemailer.createTransport({
+        const smtpTransport = nodemailer.createTransport({
             host: 'smtp.sendgrid.net',
             port: 587,
             secure: false,
             auth: {
                 user: 'gauravp_iprogrammer', // generated ethereal user
-                pass: '7u8i9o0p' // generated ethereal password
-            }
+                pass: '7u8i9o0p', // generated ethereal password
+            },
         });
 
-        var mailOptions = {
+        const mailOptions = {
             to: to,
             from: from,
             subject: subject,
-            text: text
+            text: text,
         };
 
         // send mail with defined transport object
