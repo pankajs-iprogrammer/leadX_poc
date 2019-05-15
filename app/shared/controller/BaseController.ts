@@ -209,7 +209,8 @@ class BaseController {
     public s4() {
         const num = CONSTANTS.SIXTEEN;
         const startStr = CONSTANTS.ONE;
-        return Math.floor((startStr + Math.random()) * 0x10000).toString(num).substring(startStr);
+        const rCount = Math.floor((startStr + Math.random()) * 0x10000);
+        return rCount.toString(num).substring(startStr);
     }
 
     public async sendEmail(to, subject, text) {
