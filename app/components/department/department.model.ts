@@ -6,7 +6,7 @@ const Department = sObj.define('department', {
   id: {
     primaryKey: true,
    // foreignKey: true,
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   name: {
     type: Sequelize.STRING,

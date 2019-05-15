@@ -36,7 +36,7 @@ const Customer = sObj.define('customer', {
     validate: {
       isNumeric: true,
     },
-   }
+   },
   // department_id : {
   //   type : Sequelize.INTEGER,
   //  // foreignKey : true,
