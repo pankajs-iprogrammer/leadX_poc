@@ -1,5 +1,5 @@
 const Env = {
-    database: "leadx_poc",
+    database: "leadx",
     username: "root",
     //password: "root",
     host: "localhost",
