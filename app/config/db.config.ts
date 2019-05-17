@@ -1,7 +1,7 @@
 import { env } from './env';
 import * as Sequelize from 'sequelize';
 
-export const sObj = new Sequelize("leadx_poc", "root", "7u8i9o0p", {
+export const sObj = new Sequelize("leadx", "root", "7u8i9o0p", {
   host: "localhost",
   dialect: "mysql",
   operatorsAliases: false,
