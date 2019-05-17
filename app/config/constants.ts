@@ -12,6 +12,7 @@ const constants = {
     "MONE" : -1,
     "ZERO" : 0,
     "HEXDECNUM" : 0x10000,
+    "alphaBetVal" : /^[a-z]+$/i,
 };
 
 export {constants as CONSTANTS};

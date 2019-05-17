@@ -5,7 +5,7 @@ import { CONSTANTS }  from '../../config/constants';
 import db from '../../config/db.config';
 import BaseController from '../../shared/controller/BaseController';
 import Customer from './customer.model';
-import Department from '../department/department.model'
+import Department from '../department/department.model';
 // Customer.init({
   
 // }, {
@@ -17,19 +17,23 @@ class CustomerController extends BaseController {
 
   public async addNewCustomer(reqBody, res: object) {
     /**************** Joi Validation Start ********************/
-    /*let schema = Joi.object().keys({
+    let schema = Joi.object().keys({
       password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/).min(8).required()
     });
-    Joi.validate(reqBody, schema, (err, value) => {
+    const reqPass = {
+      "password" : reqBody.password
+    };
+    Joi.validate(reqPass, schema, (err, value) => {
       if (err) {
         this.sendResponse(res, true, CONSTANTS.SERVERERRORCODE, err, '');
         return false;
       } else {
         console.log("there is no error");
       }
-    });*/
+    });
     /**************** Joi Validation End ********************/
 
+    const self = this;
     /****************** Password encryption start ******************/
     const plainTextPassword = reqBody.password;
     const passwordObj = await this.encryptPassword(plainTextPassword);
@@ -39,9 +43,9 @@ class CustomerController extends BaseController {
     /****************** Password encryption end ********************/
 
     Customer.create(reqBody).then(customer => {
-      this.sendResponse(res, true, CONSTANTS.SUCCESSCODE, customer, '');
+      self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, customer, '');
     }).catch(function (err) {
-      this.sendResponse(res, true, CONSTANTS.SERVERERRORCODE, err, '');
+      self.sendResponse(res, true, CONSTANTS.SERVERERRORCODE, err, '');
     })
   }
 

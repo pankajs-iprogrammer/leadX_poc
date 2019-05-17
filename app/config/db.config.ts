@@ -1,10 +1,15 @@
 import { env } from './env';
 import * as Sequelize from 'sequelize';
 
-export const sObj = new Sequelize("leadx_poc", "root", "7u8i9o0p", {
+export const sObj = new Sequelize("leadx_poc", "root", "root", {
   host: "localhost",
   dialect: "mysql",
   operatorsAliases: false,
+  define: {
+    charset: 'utf8',
+    collate: 'utf8_general_ci', 
+    timestamps: true,
+  },
   pool: {
     max: env.pool.max,
     min: env.pool.min,

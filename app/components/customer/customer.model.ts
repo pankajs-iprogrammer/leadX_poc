@@ -2,19 +2,21 @@
 import * as Sequelize from 'sequelize';
 import db from "../../config/db.config";
 import Department from '../department/department.model'
+import { CONSTANTS }  from '../../config/constants';
+
 const sObj = db.sObj;
 const Customer = sObj.define('customer', {
   firstname: {
     type: Sequelize.STRING,
     validate: {
-      is: /^[a-z]+$/i,  // or isAlpha: true
+      is: CONSTANTS.alphaBetVal,  // or isAlpha: true
       notEmpty: true,
     },
   },
   lastname: {
     type: Sequelize.STRING,
     validate: {
-      is: /^[a-z]+$/i,  // or isAlpha: true
+      is: CONSTANTS.alphaBetVal,  // or isAlpha: true
       notEmpty: true,
     },
   },
