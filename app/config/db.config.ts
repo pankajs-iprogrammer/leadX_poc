@@ -1,15 +1,22 @@
-import { env } from './env';
+//import { env } from './env';
 import * as Sequelize from 'sequelize';
+import * as dotenv from "dotenv";
+dotenv.config();
 
-export const sObj = new Sequelize("leadx", "root", "7u8i9o0p", {
-  host: "localhost",
-  dialect: "mysql",
+export const sObj = new Sequelize(process.env.DB_DATABASE, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
+  host: process.env.DB_HOST,
+  dialect: process.env.DB_DIALECT,
   operatorsAliases: false,
+  define: {
+    charset: 'utf8',
+    collate: 'utf8_general_ci', 
+    timestamps: true,
+  },
   pool: {
-    max: env.pool.max,
-    min: env.pool.min,
-    acquire: env.pool.acquire,
-    idle: env.pool.idle,
+    max: process.env.POOL_MAX,
+    min: process.env.POOL_MIN,
+    acquire: process.env.POOL_ACQUIRE,
+    idle: process.env.POOL_IDLE,
   },
 });
  
