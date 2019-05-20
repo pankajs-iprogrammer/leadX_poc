@@ -2,7 +2,7 @@ import * as Joi from '@hapi/joi';
 import * as redis from 'redis';
 import * as moment from 'moment';
 import * as AWS from 'aws-sdk';
-
+import * as bufferFrom from 'buffer-from';
 import * as dotenv from "dotenv";
 dotenv.config();
 import { CONSTANTS } from '../../config/constants';
@@ -12,9 +12,9 @@ import SalesNewsModel from './salesNews.model';
 class SalesNewsController extends BaseController {
 
   public async addNewSalesNews(reqBody, res) {
-    let self = this;
+    const self = this;
     reqBody.user_id = 1;
-    let attachment = reqBody.attachment;
+    const attachment = reqBody.attachment;
 
     if (self.check(["fileName"], attachment) != null && self.check(["fileBody"], attachment) != null && self.check(["fileExtension"], attachment) != null) {
       const s3UploadFile = await self.uploadFileOnS3Bucket(attachment, "sales_news");
@@ -31,9 +31,9 @@ class SalesNewsController extends BaseController {
   }
 
   public async updateSalesNews(reqBody, res) {
-    let self = this;
+    const self = this;
     const id = reqBody.id;
-    let attachment = reqBody.attachment;
+    const attachment = reqBody.attachment;
     
     if (self.check(["fileName"], attachment) != null && self.check(["fileBody"], attachment) != null && self.check(["fileExtension"], attachment) != null && self.check(["cover_image_old"], reqBody) != null) {
       const s3UploadFile = await self.uploadFileOnS3Bucket(attachment, "sales_news");
@@ -57,7 +57,7 @@ class SalesNewsController extends BaseController {
   }
 
   public async uploadFileOnS3Bucket(attachment, parentFolder) {
-    const bufferFrom = require('buffer-from');
+    //const bufferFrom = require('buffer-from');
     AWS.config.update({
       accessKeyId: process.env.ACCESS_KEY_ID,
       secretAccessKey: process.env.SECRET_ACCESS_KEY,
@@ -122,14 +122,14 @@ class SalesNewsController extends BaseController {
   }
 
   public async allSalesNewsList(reqBody, res) {
-    let objectFilters = {};
+    const objectFilters = {};
     if (reqBody.hasOwnProperty("arrayFilters") && Array.isArray(reqBody["arrayFilters"])) {
       reqBody["arrayFilters"].forEach(function (item, index) {
           Object.assign(objectFilters, item);
       });
     }
     const condition = {
-      where: objectFilters
+      where: objectFilters,
     };
     
     SalesNewsModel.findAll(condition).then(salesNews => {

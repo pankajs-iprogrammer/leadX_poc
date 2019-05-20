@@ -11,6 +11,8 @@ const constants = {
     "ONE" : 1,
     "MONE" : -1,
     "ZERO" : 0,
+    "EIGHT" : 0,
+    "HUNDRED" : 100,
     "HEXDECNUM" : 0x10000,
     "alphaBetVal" : /^[a-z]+$/i,
 };
