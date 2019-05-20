@@ -1,4 +1,5 @@
 import * as Sequelize from 'sequelize';
+import { CONSTANTS } from '../../config/constants';
 import db from "../../config/db.config";
 const sObj = db.sObj;
 const SalesNews = sObj.define('sales_news', {
@@ -7,7 +8,7 @@ const SalesNews = sObj.define('sales_news', {
     allowNull: false, 
     validate: {
       notEmpty: true,
-      len: [0, 100],
+      len: [CONSTANTS.ZERO, CONSTANTS.HUNDRED],
     },
   },
   cover_image: {
@@ -53,7 +54,5 @@ const SalesNews = sObj.define('sales_news', {
     allowNull: true, 
     field: 'updated_date',
    },
-}, {
-  freezeTableName: true,
 });
 export default SalesNews;
