@@ -16,7 +16,11 @@ class SalesNewsController extends BaseController {
     reqBody.user_id = 1;
     const attachment = reqBody.attachment;
 
-    if (self.check(["fileName"], attachment) != null && self.check(["fileBody"], attachment) != null && self.check(["fileExtension"], attachment) != null) {
+    const fileName = self.check(["fileName"], attachment);
+    const fileBody = self.check(["fileBody"], attachment);
+    const fileExtension = self.check(["fileExtension"], attachment);
+
+    if (fileName != null && fileBody != null && fileExtension != null) {
       const s3UploadFile = await self.uploadFileOnS3Bucket(attachment, "sales_news");
       if (s3UploadFile != "") {
         reqBody.cover_image = s3UploadFile;
@@ -35,15 +39,19 @@ class SalesNewsController extends BaseController {
     const id = reqBody.id;
     const attachment = reqBody.attachment;
     
-    if (self.check(["fileName"], attachment) != null && self.check(["fileBody"], attachment) != null && self.check(["fileExtension"], attachment) != null && self.check(["cover_image_old"], reqBody) != null) {
+    const fileName = self.check(["fileName"], attachment);
+    const fileBody = self.check(["fileBody"], attachment);
+    const fileExtension = self.check(["fileExtension"], attachment);
+    const coverIm = self.check(["cover_image_old"], reqBody);
+    if (fileName != null && fileBody != null && fileExtension != null && coverIm != null) {
       const s3UploadFile = await self.uploadFileOnS3Bucket(attachment, "sales_news");
       if (s3UploadFile != "") {
         reqBody.cover_image = s3UploadFile;
       }
 
       const filePath = reqBody.cover_image_old;
-      const fileName = filePath.replace(/^.*[\\\/]/, '');
-      const bucketKey = "sales_news" + "/" + fileName;
+      const fileNewName = filePath.replace(/^.*[\\\/]/, '');
+      const bucketKey = "sales_news" + "/" + fileNewName;
       const fileObj = [];
       fileObj.push({Key : bucketKey});
       await self.removeFileOnS3Bucket(fileObj);
@@ -110,7 +118,7 @@ class SalesNewsController extends BaseController {
   }
 
   public async deleteSalesNews(reqBody, res) {
-    let self = this;
+    const self = this;
     const id = reqBody.id;
     reqBody.is_deleted = 1;
 
