@@ -7,7 +7,7 @@ class DatabaseController {
             currentModel
                 .findAndCountAll(condition)
                 .then(data => {
-                    let status = Object.keys(data).length > CONSTANTS.ZERO;
+                    const status = Object.keys(data).length > CONSTANTS.ZERO;
                     resolve({
                         data: data,
                         status: status,
@@ -25,7 +25,7 @@ class DatabaseController {
             currentModel
                 .findOne(condition)
                 .then(data => {
-                    let status = Object.keys(data).length > CONSTANTS.ZERO;
+                    const status = Object.keys(data).length > CONSTANTS.ZERO;
                     resolve({
                         data: data,
                         status: status,
