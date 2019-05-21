@@ -249,7 +249,7 @@ class BaseController extends DatabaseController {
         return statusLog;
     }
 
-    public async getProcessedData(currentModel, reqBody, res) {
+    public async getProcessedData(currentModel, reqBody) {
         const self = this;
         const arrayFilters = {};
         let sort = [["id", "DESC"]];
@@ -287,7 +287,7 @@ class BaseController extends DatabaseController {
 
         let attr = [];
         if (self.check(["selectFilters"], reqBody)) {
-            if (reqBody.selectFilters.length > 0) {
+            if (reqBody.selectFilters.length > CONSTANTS.ZERO) {
                 attr = reqBody.selectFilters;
             }
         }
@@ -303,7 +303,7 @@ class BaseController extends DatabaseController {
         if (attr && attr.constructor === Array && attr.length === 0) {
             delete condition.attributes;
         }
-        let getResponse = await this.getAll(currentModel, condition);
+        const getResponse = await this.getAll(currentModel, condition);
         let finalResponse = {};
         if (getResponse && getResponse.hasOwnProperty("data")) {
             finalResponse = getResponse["data"];

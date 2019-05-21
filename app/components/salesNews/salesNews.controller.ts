@@ -94,11 +94,7 @@ class SalesNewsController extends BaseController {
 
     public async getAllSalesNewsList(reqBody, res) {
         const self = this;
-        const salesNews = await self.getProcessedData(
-            SalesNewsModel,
-            reqBody,
-            res
-        );
+        const salesNews = await self.getProcessedData(SalesNewsModel, reqBody);
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, salesNews, "");
     }
 

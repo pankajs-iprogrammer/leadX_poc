@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import { CONSTANTS } from "../../config/constants";
 
 class DatabaseController {
     public async getAll(currentModel, condition) {
@@ -6,7 +7,7 @@ class DatabaseController {
             currentModel
                 .findAndCountAll(condition)
                 .then(data => {
-                    let status = Object.keys(data).length > 0;
+                    let status = Object.keys(data).length > CONSTANTS.ZERO;
                     resolve({
                         data: data,
                         status: status,
@@ -24,7 +25,7 @@ class DatabaseController {
             currentModel
                 .findOne(condition)
                 .then(data => {
-                    let status = Object.keys(data).length > 0;
+                    let status = Object.keys(data).length > CONSTANTS.ZERO;
                     resolve({
                         data: data,
                         status: status,
@@ -44,10 +45,10 @@ class DatabaseController {
                 .then(resData => {
                     resolve({
                         data: resData,
-                        status: 200,
+                        status: CONSTANTS.SUCCESSCODE,
                         msg: "Data added scucessfully"
                     });
-                    return { status: 200, data: resData };
+                    return { status: CONSTANTS.SUCCESSCODE, data: resData };
                 })
                 .catch(err => {
                     resolve({
@@ -66,10 +67,10 @@ class DatabaseController {
                 .then(resData => {
                     resolve({
                         data: resData,
-                        status: 200,
+                        status: CONSTANTS.SUCCESSCODE,
                         msg: "Data updated scucessfully"
                     });
-                    return { status: 200, data: resData };
+                    return { status: CONSTANTS.SUCCESSCODE, data: resData };
                 })
                 .catch(err => {
                     resolve({ data: err, status: false, msg: err.message });
