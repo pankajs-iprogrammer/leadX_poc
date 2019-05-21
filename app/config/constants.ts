@@ -15,7 +15,11 @@ const constants = {
     HUNDRED: 100,
     HEXDECNUM: 0x10000,
     alphaBetVal: /^[a-z]+$/i,
-    BADREQUEST: 400
+    BADREQUEST: 400,
+    TEN: 10,
+    TWENTY: 20,
+    TWOHUNDREDFIFTYFIVE: 255,
+    FIFTY: 50
 };
 
 export { constants as CONSTANTS };
