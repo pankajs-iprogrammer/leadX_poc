@@ -1,141 +1,137 @@
-import * as Joi from '@hapi/joi';
-import * as redis from 'redis';
-import * as moment from 'moment';
-import * as AWS from 'aws-sdk';
-import * as bufferFrom from 'buffer-from';
-import * as dotenv from "dotenv";
-dotenv.config();
-import { CONSTANTS } from '../../config/constants';
-import BaseController from '../../shared/controller/BaseController';
-import SalesNewsModel from './salesNews.model';
+import * as Joi from "@hapi/joi";
+import * as redis from "redis";
+import * as moment from "moment";
+import { CONSTANTS } from "../../config/constants";
+import BaseController from "../../shared/controller/BaseController";
+import SalesNewsModel from "./salesNews.model";
 
 class SalesNewsController extends BaseController {
+    public async addNewSalesNews(reqBody, res) {
+        const self = this;
+        reqBody.user_id = 1;
+        const attachment = reqBody.attachment;
 
-  public async addNewSalesNews(reqBody, res) {
-    const self = this;
-    reqBody.user_id = 1;
-    const attachment = reqBody.attachment;
+        const fileName = self.check(["fileName"], attachment);
+        const fileBody = self.check(["fileBody"], attachment);
+        const fileExtension = self.check(["fileExtension"], attachment);
 
-    if (self.check(["fileName"], attachment) != null && self.check(["fileBody"], attachment) != null && self.check(["fileExtension"], attachment) != null) {
-      const s3UploadFile = await self.uploadFileOnS3Bucket(attachment, "sales_news");
-      if (s3UploadFile != "") {
-        reqBody.cover_image = s3UploadFile;
-      }
+        if (fileName != null && fileBody != null && fileExtension != null) {
+            const s3UploadFile = await self.uploadFileOnS3Bucket(
+                attachment,
+                "sales_news"
+            );
+            if (s3UploadFile != "") {
+                reqBody.cover_image = s3UploadFile;
+            }
+        }
+
+        const salesNews = await self.createData(SalesNewsModel, reqBody);
+        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, salesNews.data, "");
     }
 
-    SalesNewsModel.create(reqBody).then(salesNews => {
-      self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, salesNews, '');
-    }).catch(function (err) {
-      self.sendResponse(res, true, CONSTANTS.SERVERERRORCODE, err, '');
-    })
-  }
+    public async updateSalesNews(reqBody, res) {
+        const self = this;
 
-  public async updateSalesNews(reqBody, res) {
-    const self = this;
-    const id = reqBody.id;
-    const attachment = reqBody.attachment;
-    
-    if (self.check(["fileName"], attachment) != null && self.check(["fileBody"], attachment) != null && self.check(["fileExtension"], attachment) != null && self.check(["cover_image_old"], reqBody) != null) {
-      const s3UploadFile = await self.uploadFileOnS3Bucket(attachment, "sales_news");
-      if (s3UploadFile != "") {
-        reqBody.cover_image = s3UploadFile;
-      }
+        const attachment = reqBody.attachment;
 
-      const filePath = reqBody.cover_image_old;
-      const fileName = filePath.replace(/^.*[\\\/]/, '');
-      const bucketKey = "sales_news" + "/" + fileName;
-      const fileObj = [];
-      fileObj.push({Key : bucketKey});
-      await self.removeFileOnS3Bucket(fileObj);
+        const fileName = self.check(["fileName"], attachment);
+        const fileBody = self.check(["fileBody"], attachment);
+        const fileExtension = self.check(["fileExtension"], attachment);
+        const coverIm = self.check(["cover_image_old"], reqBody);
+        if (
+            fileName != null &&
+            fileBody != null &&
+            fileExtension != null &&
+            coverIm != null
+        ) {
+            const s3UploadFile = await self.uploadFileOnS3Bucket(
+                attachment,
+                "sales_news"
+            );
+            if (s3UploadFile != "") {
+                reqBody.cover_image = s3UploadFile;
+            }
+
+            const filePath = reqBody.cover_image_old;
+            const fileNewName = filePath.replace(/^.*[\\\/]/, "");
+            const bucketKey = "sales_news" + "/" + fileNewName;
+            const fileObj = [];
+            fileObj.push({ Key: bucketKey });
+            await self.removeFileOnS3Bucket(fileObj);
+        }
+
+        const condition = {
+            where: {
+                id: reqBody.id
+            }
+        };
+
+        const salesNews = await self.updateData(
+            SalesNewsModel,
+            reqBody,
+            condition
+        );
+        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, salesNews.msg, "");
     }
 
-    SalesNewsModel.update(reqBody,
-      { where: { id: reqBody.id } },
-    ).then(() => {
-      self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, "updated successfully a customer with id = " + id, '');
-    });
-  }
+    public async deleteSalesNews(reqBody, res) {
+        const self = this;
+        reqBody.is_deleted = 1;
 
-  public async uploadFileOnS3Bucket(attachment, parentFolder) {
-    //const bufferFrom = require('buffer-from');
-    AWS.config.update({
-      accessKeyId: process.env.ACCESS_KEY_ID,
-      secretAccessKey: process.env.SECRET_ACCESS_KEY,
-    });
+        const condition = {
+            where: {
+                id: reqBody.id
+            }
+        };
 
-    const s3 = new AWS.S3();
-
-    const base64String = attachment["fileBody"];
-    const fileName = attachment["fileName"];
-    const fileExtension = attachment["fileExtension"];
-    const bucketKey = parentFolder + "/" + Date.now() + "_" + fileName;
-
-    const buf = new bufferFrom(base64String.replace(/^data:([A-Za-z-+\/]+);base64,/, ""), 'base64');
-
-    const params = {
-      Bucket: process.env.S3_BUCKET,
-      Key: bucketKey,
-      Body: buf,
-      ContentType: fileExtension,
-      ACL: 'public-read',
-      ContentDisposition: 'inline',
-    };
-    const response = await s3.upload(params, function (err, data) {
-    }).promise();
-    if (this.check(["Location"], response) != null) {
-      return response.Location;
+        const salesNews = await self.updateData(
+            SalesNewsModel,
+            reqBody,
+            condition
+        );
+        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, salesNews.msg, "");
     }
-    return false;
-  }
 
-  public async removeFileOnS3Bucket(fileObj){
-    AWS.config.update({
-      accessKeyId: process.env.ACCESS_KEY_ID,
-      secretAccessKey: process.env.SECRET_ACCESS_KEY,
-    });
-
-    const s3 = new AWS.S3();
-    
-    const params = {
-        Bucket: process.env.S3_BUCKET,
-        Delete : {
-            Objects: fileObj,
-        },
-    };
-    
-    const response = await s3.deleteObjects(params, function (err, data) {
-    }).promise();
-    
-    return response;
-  }
-
-  public async deleteSalesNews(reqBody, res) {
-    let self = this;
-    const id = reqBody.id;
-    reqBody.is_deleted = 1;
-
-    SalesNewsModel.update(reqBody,
-      { where: { id: reqBody.id } },
-    ).then(() => {
-      self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, "deleted successfully a customer with id = " + id, '');
-    });
-  }
-
-  public async allSalesNewsList(reqBody, res) {
-    const objectFilters = {};
-    if (reqBody.hasOwnProperty("arrayFilters") && Array.isArray(reqBody["arrayFilters"])) {
-      reqBody["arrayFilters"].forEach(function (item, index) {
-          Object.assign(objectFilters, item);
-      });
+    public async getAllSalesNewsList(reqBody, res) {
+        const self = this;
+        const salesNews = await self.getProcessedData(SalesNewsModel, reqBody);
+        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, salesNews, "");
     }
-    const condition = {
-      where: objectFilters,
-    };
-    
-    SalesNewsModel.findAll(condition).then(salesNews => {
-      this.sendResponse(res, true, CONSTANTS.SUCCESSCODE, salesNews, '');
-    })
-  }
 
+    public async getSalesNewsOne(reqBody, res) {
+        const self = this;
+        const arrayFilters = {};
+        const arrFilterEq = reqBody["arrayFilters"];
+        if (
+            reqBody.hasOwnProperty("arrayFilters") &&
+            Array.isArray(reqBody["arrayFilters"])
+        ) {
+            arrFilterEq.forEach(function(item, index) {
+                Object.assign(arrayFilters, item);
+            });
+        }
+        const condition = {
+            where: arrayFilters
+        };
+        const salesNews = await self.getOne(SalesNewsModel, condition);
+
+        if (self.check(["data", "id"], salesNews) != null) {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                salesNews.data,
+                ""
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SERVERERRORCODE,
+                salesNews.data,
+                ""
+            );
+        }
+    }
 }
 export default SalesNewsController;
