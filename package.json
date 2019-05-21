@@ -2,7 +2,7 @@
   "name": "starter-node-angular",
   "main": "app.ts",
   "scripts": {
-    "local": "tsc --watch & nodemon dist"
+    "local": "nodemon --watch 'app/**/*.ts' --exec 'ts-node' app.ts"
   },
   "dependencies": {
     "@hapi/joi": "^15.0.1",
@@ -11,11 +11,15 @@
     "aws-sdk": "^2.457.0",
     "babel": "^6.23.0",
     "body-parser": "^1.19.0",
+    "connect-session-sequelize": "^6.0.0",
     "dotenv": "^8.0.0",
     "express": "^4.16.4",
+    "express-session": "^1.16.1",
     "method-override": "^3.0.0",
     "mysql2": "^1.5.3",
     "nodemailer": "^6.1.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "redis": "^2.8.0",
     "request": "^2.88.0",
     "sequelize": "^4.37.6",

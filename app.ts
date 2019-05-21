@@ -1,45 +1,52 @@
-// server.ts
-const db = import('./app/config/db.config');
-import router from './routes';
-import { CONSTANTS }  from './app/config/constants';
-// const Constants = require('./app/config/constants').constants;
-// modules =================================================
-import * as express from 'express';
-const app            = express();
-import * as bodyParser from 'body-parser';
-import * as methodOverride from 'method-override';
-
-// configuration ===========================================
-
-// config files
-// var db = require('./app/config/db.config');
+const db = import("./app/config/db.config");
+import router from "./routes";
+import { CONSTANTS } from "./app/config/constants";
+import * as express from "express";
+const app = express();
+import * as bodyParser from "body-parser";
+import * as methodOverride from "method-override";
+var passport = require("passport");
+var session = require("express-session");
+var Sequelize = require("sequelize");
 
 // set our port
-const port = process.env.PORT || CONSTANTS.STATICPORT; 
+const port = process.env.PORT || CONSTANTS.STATICPORT;
 
 // get all data/stuff of the body (POST) parameters
-// parse application/json 
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 
-// parse application/vnd.api+json as json
-// app.use(bodyParser.json({ type: 'application/vnd.api+json' })); 
+// parse application/json
+var SequelizeStore = require("connect-session-sequelize")(session.Store);
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true })); 
+// create database, ensure 'mysql2' in your package.json
+var sequelize = new Sequelize("leadx", "root", "password", {
+    host: "localhost",
+    dialect: "mysql",
+    operatorsAliases: false
+});
+
+app.use(
+    session({
+        secret: "keyboard cat",
+        resave: true,
+        saveUninitialized: true
+        // store: sequelize
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 // override with the X-HTTP-Method-Override header in the request. simulate DELETE/PUT
-app.use(methodOverride('X-HTTP-Method-Override')); 
+app.use(methodOverride("X-HTTP-Method-Override"));
 
 // routes ==================================================
-//require('./app/routes')(app); // configure our routes
-app.use('/api', router);
+app.use("/api", router);
 
 // start app ===============================================
-// startup our app at http://localhost:8080
-app.listen(port);               
+app.listen(port);
 
-// shoutout to the user                     
-console.log('Magic happens on port ' + port);
+// shoutout to the user
+console.log("Magic happens on port " + port);
 
-// expose app           
-exports = module.exports = app;                         
+// expose app
+exports = module.exports = app;
