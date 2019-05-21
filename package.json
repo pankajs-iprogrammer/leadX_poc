@@ -8,6 +8,7 @@
     "@hapi/joi": "^15.0.1",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^4.16.1",
+    "aws-sdk": "^2.457.0",
     "babel": "^6.23.0",
     "body-parser": "^1.19.0",
     "connect-session-sequelize": "^6.0.0",

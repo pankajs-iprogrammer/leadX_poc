@@ -17,11 +17,11 @@ class CustomerController extends BaseController {
 
   public async addNewCustomer(reqBody, res: object) {
     /**************** Joi Validation Start ********************/
-    let schema = Joi.object().keys({
-      password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/).min(8).required()
+    const schema = Joi.object().keys({
+      password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/).min(CONSTANTS.EIGHT).required(),
     });
     const reqPass = {
-      "password" : reqBody.password
+      "password" : reqBody.password,
     };
     Joi.validate(reqPass, schema, (err, value) => {
       if (err) {
