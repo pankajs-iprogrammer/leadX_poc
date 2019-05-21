@@ -1,6 +1,6 @@
 import * as express from "express";
 const router = express();
-import ContaPersonController from "./contact.person.controller";
+import ContaPersonController from "./person.controller";
 const ContactPersonCtrl = new ContaPersonController();
 
 router.get("/get", (req, res) => {

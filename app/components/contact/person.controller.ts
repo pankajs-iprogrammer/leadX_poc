@@ -1,8 +1,8 @@
 import * as Joi from "@hapi/joi";
 import * as redis from "redis";
-import { CONSTANTS } from "../../../config/constants";
-import BaseController from "../../../shared/controller/BaseController";
-import ContactPersonModel from "./contact.person.model";
+import { CONSTANTS } from "../../config/constants";
+import BaseController from "../../shared/controller/BaseController";
+import ContactPersonModel from "./person.model";
 
 class ContactPersonController extends BaseController {
     public async addNewContactPerson(reqBody, res) {

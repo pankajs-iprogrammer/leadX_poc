@@ -1,7 +1,7 @@
 import * as Joi from "@hapi/joi";
-import { CONSTANTS } from "../../../config/constants";
-import BaseController from "../../../shared/controller/BaseController";
-import ContactCompanyModel from "./contact.company.model";
+import { CONSTANTS } from "../../config/constants";
+import BaseController from "../../shared/controller/BaseController";
+import ContactCompanyModel from "./company.model";
 
 class ContactCompanyController extends BaseController {
     public async addNewContactCompany(reqBody, res) {

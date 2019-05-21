@@ -1,5 +1,5 @@
 import * as Sequelize from "sequelize";
-import db from "../../../config/db.config";
+import db from "../../config/db.config";
 const sObj = db.sObj;
 const ContactCompany = sObj.define(
     "contact_person",

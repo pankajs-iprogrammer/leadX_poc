@@ -1,6 +1,6 @@
 import * as express from "express";
 const router = express();
-import ContactCompanyController from "./contact.company.controller";
+import ContactCompanyController from "./company.controller";
 const ContactCompanyCtrl = new ContactCompanyController();
 
 router.post("/add", (req, res) => {
