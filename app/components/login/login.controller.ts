@@ -55,6 +55,27 @@ class LoginController extends BaseController {
         // Send all users to Client
     }
 
+    logout(req, res) {
+        let sessionData = req.session;
+        let msg;
+        let self = this;
+        sessionData.destroy(function(err) {
+            if (err) {
+                msg = "Error destroying session";
+                self.sendResponse(
+                    res,
+                    true,
+                    CONSTANTS.SERVERERRORCODE,
+                    err,
+                    msg
+                );
+            } else {
+                msg = "Session destroy successfully";
+                self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, err, msg);
+            }
+        });
+    }
+
     async getUserByEmail(email) {
         return new Promise((resolve, reject) => {
             User.findOne({
