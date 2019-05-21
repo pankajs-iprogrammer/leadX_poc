@@ -1,4 +1,3 @@
-import * as Joi from "@hapi/joi";
 import { CONSTANTS } from "../../config/constants";
 import BaseController from "../../shared/controller/BaseController";
 import ContactCompanyModel from "./company.model";
@@ -18,43 +17,6 @@ class ContactCompanyController extends BaseController {
             ""
         );
     }
-    public async findByDateRange(reqBody, res: object) {
-        /**************** Joi Validation Start ********************/
-        const schema = Joi.object().keys({
-            startDate: Joi.date()
-                .iso()
-                .required(),
-            endDate: Joi.date()
-                .iso()
-                .min(Joi.ref("startDate"))
-                .required()
-        });
-        Joi.validate(reqBody, schema, (err, value) => {
-            if (err) {
-                this.sendResponse(
-                    res,
-                    true,
-                    CONSTANTS.SERVERERRORCODE,
-                    err,
-                    ""
-                );
-            } else {
-                console.log("there is no error");
-            }
-        });
-        /**************** Joi Validation End ********************/
-        ContactCompanyModel.findAll().then(ContactCompanys => {
-            // Send all ContactCompanys to Client
-            this.sendResponse(
-                res,
-                true,
-                CONSTANTS.SUCCESSCODE,
-                ContactCompanys,
-                ""
-            );
-        });
-    }
-
     public async getAllContactCompany(reqBody, res: object) {
         const self = this;
         const contact_company = await self.getProcessedData(

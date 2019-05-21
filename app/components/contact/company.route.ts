@@ -23,8 +23,4 @@ router.post("/getOne", (req, res) => {
     ContactCompanyCtrl.getContactCompanyOne(req.body, res);
 });
 
-router.post("/findByDateRange", (req, res) => {
-    ContactCompanyCtrl.findByDateRange(req.body, res);
-});
-
 export default router;

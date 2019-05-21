@@ -11,10 +11,6 @@ router.post("/getOne", (req, res) => {
     ContactPersonCtrl.getContactPersonOne(req.body, res);
 });
 
-router.post("/findByDateRange", (req, res) => {
-    ContactPersonCtrl.findByDateRange(req.body, res);
-});
-
 router.post("/add", (req, res) => {
     ContactPersonCtrl.addNewContactPerson(req.body, res);
 });
