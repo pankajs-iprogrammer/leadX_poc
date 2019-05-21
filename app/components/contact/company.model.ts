@@ -6,91 +6,104 @@ const ContactCompany = sObj.define(
     "contact_company",
     {
         account_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             validate: {
                 notEmpty: { msg: "account id is required" },
-                isNumeric: true
+                isNumeric: true,
+                len: [CONSTANTS.ONE, CONSTANTS.TEN]
             }
         },
         company_name: {
-            type: Sequelize.STRING(100),
+            type: Sequelize.STRING(CONSTANTS.HUNDRED),
             validate: {
-                notEmpty: { msg: "company name is required" }
+                notEmpty: { msg: "company name is required" },
+                len: [CONSTANTS.ONE, CONSTANTS.HUNDRED]
             }
         },
         company_code: {
-            type: Sequelize.STRING(20),
+            type: Sequelize.STRING(CONSTANTS.TWENTY),
             unique: true,
             validate: {
-                notEmpty: { msg: "company code is required" }
+                notEmpty: { msg: "company code is required" },
+                len: [CONSTANTS.ONE, CONSTANTS.TWENTY]
             }
         },
         office_address_line_1: {
-            type: Sequelize.STRING(255),
+            type: Sequelize.STRING(CONSTANTS.TWOHUNDREDFIFTYFIVE),
             validate: {
-                notEmpty: { msg: "office address is required" }
+                notEmpty: { msg: "office address is required" },
+                len: [CONSTANTS.ONE, CONSTANTS.TWOHUNDREDFIFTYFIVE]
             }
         },
         office_address_line_2: {
-            type: Sequelize.STRING(255),
+            type: Sequelize.STRING(CONSTANTS.TWOHUNDREDFIFTYFIVE),
             validate: {
-                notEmpty: { msg: "office address is required" }
+                notEmpty: { msg: "office address is required" },
+                len: [CONSTANTS.ONE, CONSTANTS.TWOHUNDREDFIFTYFIVE]
             }
         },
         postal_address: {
-            type: Sequelize.STRING(10),
+            type: Sequelize.STRING(CONSTANTS.TEN),
             validate: {
-                notEmpty: { msg: "postal address is required" }
+                notEmpty: { msg: "postal address is required" },
+                len: [CONSTANTS.ONE, CONSTANTS.TEN]
             }
         },
         country_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             foreignKey: true,
             validate: {
-                notEmpty: { msg: "country id is required" }
+                notEmpty: { msg: "country id is required" },
+                len: [CONSTANTS.ONE, CONSTANTS.TEN]
             }
         },
         state_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             foreignKey: true,
             validate: {
-                notEmpty: { msg: "state id is required" }
+                notEmpty: { msg: "state id is required" },
+                len: [CONSTANTS.ONE, CONSTANTS.TEN]
             }
         },
         city_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "city id is required" },
-                isNumber: true
+                isNumber: true,
+                len: [CONSTANTS.ONE, CONSTANTS.TEN]
             }
         },
         website: {
-            type: Sequelize.STRING(50),
+            type: Sequelize.STRING(CONSTANTS.FIFTY),
             validate: {
                 notEmpty: { msg: "website is required" },
-                isUrl: true
+                isUrl: true,
+                len: [CONSTANTS.ONE, CONSTANTS.FIFTY]
             }
         },
         contact_person_name: {
-            type: Sequelize.STRING(100),
+            type: Sequelize.STRING(CONSTANTS.HUNDRED),
             validate: {
                 notEmpty: { msg: "contact person name is required" },
-                isAlpha: true
+                isAlpha: true,
+                len: [CONSTANTS.ONE, CONSTANTS.HUNDRED]
             }
         },
         contact_person_phone: {
-            type: Sequelize.INTEGER(20),
+            type: Sequelize.INTEGER(CONSTANTS.TWENTY),
             validate: {
                 notEmpty: { msg: "contact person phone is required" },
-                isNumeric: true
+                isNumeric: true,
+                len: [CONSTANTS.ONE, CONSTANTS.TWENTY]
             }
         },
         contact_person_email: {
-            type: Sequelize.STRING(100),
+            type: Sequelize.STRING(CONSTANTS.HUNDRED),
             validate: {
                 isEmail: true,
-                notEmpty: { msg: "contact person phone is required" }
+                notEmpty: { msg: "contact person email is required" },
+                len: [CONSTANTS.ONE, CONSTANTS.HUNDRED]
             }
         },
         notes: {
@@ -111,8 +124,9 @@ const ContactCompany = sObj.define(
             allowNull: true
         },
         created_by: {
-            type: Sequelize.INTEGER(10),
-            allowNull: false
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
+            allowNull: false,
+            len: [CONSTANTS.ONE, CONSTANTS.TEN]
         }
     },
     {
