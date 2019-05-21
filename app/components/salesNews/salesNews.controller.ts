@@ -9,6 +9,7 @@ class SalesNewsController extends BaseController {
     public async addNewSalesNews(reqBody, res) {
         const self = this;
         reqBody.user_id = 1;
+        reqBody.account_id = 1;
         const attachment = reqBody.attachment;
 
         const fileName = self.check(["fileName"], attachment);
