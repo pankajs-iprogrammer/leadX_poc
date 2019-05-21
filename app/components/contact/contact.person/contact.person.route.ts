@@ -7,8 +7,8 @@ router.get("/get", (req, res) => {
     ContactPersonCtrl.getAllContactPerson(req.body, res);
 });
 
-router.post("/getById", (req, res) => {
-    ContactPersonCtrl.findById(req.body, res);
+router.post("/getOne", (req, res) => {
+    ContactPersonCtrl.getContactPersonOne(req.body, res);
 });
 
 router.post("/findByDateRange", (req, res) => {

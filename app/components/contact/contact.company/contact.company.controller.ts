@@ -1,34 +1,23 @@
 import * as Joi from "@hapi/joi";
-import * as redis from "redis";
 import { CONSTANTS } from "../../../config/constants";
-import db from "../../../config/db.config";
 import BaseController from "../../../shared/controller/BaseController";
-import ContactCompany from "./contact.company.model";
+import ContactCompanyModel from "./contact.company.model";
 
 class ContactCompanyController extends BaseController {
     public async addNewContactCompany(reqBody, res) {
-        let self = this;
-        ContactCompany.create(reqBody)
-            .then(ContactCompany => {
-                self.sendResponse(
-                    res,
-                    true,
-                    CONSTANTS.SUCCESSCODE,
-                    ContactCompany,
-                    ""
-                );
-            })
-            .catch(function(err) {
-                self.sendResponse(
-                    res,
-                    true,
-                    CONSTANTS.SERVERERRORCODE,
-                    err,
-                    ""
-                );
-            });
+        const self = this;
+        const contact_company = await self.createData(
+            ContactCompanyModel,
+            reqBody
+        );
+        self.sendResponse(
+            res,
+            true,
+            CONSTANTS.SUCCESSCODE,
+            contact_company.data,
+            ""
+        );
     }
-
     public async findByDateRange(reqBody, res: object) {
         /**************** Joi Validation Start ********************/
         const schema = Joi.object().keys({
@@ -54,7 +43,7 @@ class ContactCompanyController extends BaseController {
             }
         });
         /**************** Joi Validation End ********************/
-        ContactCompany.findAll().then(ContactCompanys => {
+        ContactCompanyModel.findAll().then(ContactCompanys => {
             // Send all ContactCompanys to Client
             this.sendResponse(
                 res,
@@ -68,102 +57,96 @@ class ContactCompanyController extends BaseController {
 
     public async getAllContactCompany(reqBody, res: object) {
         const self = this;
-        const client = redis.createClient();
-        let ContactCompanyData = [];
-        /* Checking whether data exist in redis or not */
-        client.get("ContactCompanys", function(err, data) {
-            if (data) {
-                const ContactCompanys = JSON.parse(data);
-                ContactCompanyData = [
-                    {
-                        msg: "Response is coming from Redis",
-                        data: ContactCompanys
-                    }
-                ];
-                self.sendResponse(
-                    res,
-                    true,
-                    CONSTANTS.SUCCESSCODE,
-                    ContactCompanyData,
-                    ""
-                );
-            } else {
-                ContactCompany.findAll({ where: { is_deleted: 0 } }).then(
-                    ContactCompanys => {
-                        /* Storing response in Redis */
-                        client.set(
-                            "ContactCompanys",
-                            JSON.stringify(ContactCompanys)
-                        );
-                        ContactCompanyData = [
-                            {
-                                msg: "Response is coming from DB",
-                                data: ContactCompanys
-                            }
-                        ];
-                        self.sendResponse(
-                            res,
-                            true,
-                            CONSTANTS.SUCCESSCODE,
-                            ContactCompanyData,
-                            ""
-                        );
-                    }
-                );
-            }
-        });
-    }
-
-    public async findById(reqBody, res: object) {
-        ContactCompany.findById(reqBody.ContactCompanyId).then(
-            ContactCompany => {
-                this.sendResponse(
-                    res,
-                    true,
-                    CONSTANTS.SUCCESSCODE,
-                    ContactCompany,
-                    ""
-                );
-            }
+        const contact_company = await self.getProcessedData(
+            ContactCompanyModel,
+            reqBody
+        );
+        self.sendResponse(
+            res,
+            true,
+            CONSTANTS.SUCCESSCODE,
+            contact_company,
+            ""
         );
     }
 
-    public async update(reqBody, res: object) {
-        const id = reqBody.id;
-        ContactCompany.update(reqBody, { where: { id: reqBody.id } }).then(
-            () => {
-                this.sendResponse(
-                    res,
-                    true,
-                    CONSTANTS.SUCCESSCODE,
-                    "updated successfully a ContactCompany with id = " + id,
-                    ""
-                );
-            }
-        );
-    }
-
-    public async delete(reqBody, res: object) {
-        const id = reqBody.id;
-        ContactCompany.update({ is_deleted: 1 }, { where: { id: reqBody.id } })
-            .then(() => {
-                this.sendResponse(
-                    res,
-                    true,
-                    CONSTANTS.SUCCESSCODE,
-                    "deleted successfully a ContactCompany with id = " + id,
-                    ""
-                );
-            })
-            .catch(function(err) {
-                this.sendResponse(
-                    res,
-                    true,
-                    CONSTANTS.SERVERERRORCODE,
-                    err,
-                    ""
-                );
+    public async getContactCompanyOne(reqBody, res: object) {
+        const self = this;
+        const arrayFilters = {};
+        const arrFilterEq = reqBody["arrayFilters"];
+        if (
+            reqBody.hasOwnProperty("arrayFilters") &&
+            Array.isArray(reqBody["arrayFilters"])
+        ) {
+            arrFilterEq.forEach(function(item, index) {
+                Object.assign(arrayFilters, item);
             });
+        }
+        const condition = {
+            where: arrayFilters
+        };
+        const contact_company = await self.getOne(
+            ContactCompanyModel,
+            condition
+        );
+        if (self.check(["data", "id"], contact_company) != null) {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                contact_company.data,
+                ""
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SERVERERRORCODE,
+                contact_company.data,
+                ""
+            );
+        }
+    }
+    public async update(reqBody, res: object) {
+        const self = this;
+        const condition = {
+            where: {
+                id: reqBody.id
+            }
+        };
+        const contact_company = await self.updateData(
+            ContactCompanyModel,
+            reqBody,
+            condition
+        );
+        self.sendResponse(
+            res,
+            true,
+            CONSTANTS.SUCCESSCODE,
+            contact_company.msg,
+            ""
+        );
+    }
+    public async delete(reqBody, res: object) {
+        const self = this;
+        reqBody.is_deleted = 1;
+        const condition = {
+            where: {
+                id: reqBody.id
+            }
+        };
+        const contact_company = await self.updateData(
+            ContactCompanyModel,
+            reqBody,
+            condition
+        );
+        self.sendResponse(
+            res,
+            true,
+            CONSTANTS.SUCCESSCODE,
+            contact_company.msg,
+            ""
+        );
     }
 }
 export default ContactCompanyController;
