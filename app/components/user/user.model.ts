@@ -64,8 +64,8 @@ const User = sObj.define(
         underscored: true
     }
 );
-//User.hasMany(SalesNews);
-User.hook("beforeCreate", function(user) {
+
+User.addHook("beforeCreate", (user, options) => {
     const pass = user.password;
     const iterations = CONSTANTS.THOUSAND;
     const keylen = CONSTANTS.SIXTYFOUR;

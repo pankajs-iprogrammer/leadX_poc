@@ -7,15 +7,31 @@ import salesNewsRouter from "./app/components/salesNews/salesNews.route";
 import leadRouter from "./app/components/lead/lead.route";
 import customerRouter from "./app/components/customer/customer.route";
 import departmentRouter from "./app/components/department/department.route";
-import contactCompany from "./app/components/contact.company/contact.company.route";
+import contactCompany from "./app/components/contact/company.route";
+import contactPerson from "./app/components/contact/person.route";
+
+router.use("/login", loginRouter);
+router.use(function(req, res, next) {
+    console.log(": Session Email : ", req.session.email);
+    if (req.session.email) {
+        next();
+    } else {
+        let resonse = {
+            status: "Failure",
+            statusCode: 403,
+            data: "",
+            errorMessage: "Unauthorized Access"
+        };
+        res.json(resonse);
+    }
+});
 
 router.use("/salesNews", salesNewsRouter);
 router.use("/lead", leadRouter);
 router.use("/customer", customerRouter);
 router.use("/department", departmentRouter);
 router.use("/contact/company", contactCompany);
-
-router.use("/login", loginRouter);
+router.use("/contact/person", contactPerson);
 router.use("/user", userRouter);
 
 export default router;
