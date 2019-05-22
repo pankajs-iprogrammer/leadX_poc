@@ -21,6 +21,15 @@ class BaseController extends DatabaseController {
         }
     }
 
+    public isEmpty(myObject) {
+        for (var key in myObject) {
+            if (myObject.hasOwnProperty(key)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public compare(a, b) {
         if (a["order"] < b["order"]) return CONSTANTS.MONE;
         if (a["order"] > b["order"]) return CONSTANTS.ONE;
@@ -282,7 +291,7 @@ class BaseController extends DatabaseController {
             const page = reqBody.paginate.page;
             const pageSize = reqBody.paginate.limit;
             offset = page * pageSize;
-            limit = offset + pageSize;
+            limit = pageSize;
         }
 
         let attr = [];
@@ -304,9 +313,10 @@ class BaseController extends DatabaseController {
         if (attr && attr.constructor === Array && attr.length === 0) {
             delete condition.attributes;
         }
-        if (this.check(["model"], includeObj) == null) {
+        if (this.isEmpty(includeObj) === true) {
             delete condition.include;
         }
+
         const getResponse = await this.getAll(currentModel, condition);
         let finalResponse = {};
         if (getResponse && getResponse.hasOwnProperty("data")) {

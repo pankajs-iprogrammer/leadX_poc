@@ -4,6 +4,9 @@ import * as moment from "moment";
 import { CONSTANTS } from "../../config/constants";
 import BaseController from "../../shared/controller/BaseController";
 import LeadModel from "./lead.model";
+import UserModel from "../user/user.model";
+import Companies from "../contact/company.model";
+import LeadStatus from "../master/leadStatus.model";
 
 class LeadController extends BaseController {
     public async addNewLead(reqBody, res, req) {
@@ -84,7 +87,25 @@ class LeadController extends BaseController {
 
     public async getAllLeadList(reqBody, res) {
         const self = this;
-        const leadData = await self.getProcessedData(LeadModel.Lead, reqBody);
+        const includeObj = [
+            {
+                model: UserModel,
+                attributes: ["name", "user_avatar"]
+            },
+            {
+                model: Companies,
+                attributes: ["company_name"]
+            },
+            {
+                model: LeadStatus,
+                attributes: ["name"]
+            }
+        ];
+        const leadData = await self.getProcessedData(
+            LeadModel.Lead,
+            reqBody,
+            includeObj
+        );
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, leadData, "");
     }
 

@@ -2,6 +2,8 @@ import * as Sequelize from "sequelize";
 import { CONSTANTS } from "../../config/constants";
 import db from "../../config/db.config";
 import Users from "../user/user.model";
+import Companies from "../contact/company.model";
+import LeadStatus from "../master/leadStatus.model";
 
 const sObj = db.sObj;
 const Lead = sObj.define(
@@ -183,8 +185,16 @@ const LeadStatusLog = sObj.define(
         underscored: true
     }
 );
-//SalesNews.belongsTo(Users);
-//Users.hasMany(SalesNews);
+
+Lead.belongsTo(Users, { foreignKey: "created_by" });
+Users.hasMany(Lead, { foreignKey: "created_by" });
+
+Lead.belongsTo(Companies, { foreignKey: "company_id" });
+Companies.hasMany(Lead, { foreignKey: "company_id" });
+
+Lead.belongsTo(LeadStatus, { foreignKey: "lead_current_status_id" });
+LeadStatus.hasMany(Lead, { foreignKey: "lead_current_status_id" });
+
 sObj.sync()
     .then(() =>
         console.log(

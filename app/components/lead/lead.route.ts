@@ -11,7 +11,7 @@ router.put("/update", (req, res) => {
     LeadCtrl.updateLead(req.body, res, req);
 });
 
-router.post("/get", (req, res) => {
+router.post("/getList", (req, res) => {
     LeadCtrl.getAllLeadList(req.body, res);
 });
 
