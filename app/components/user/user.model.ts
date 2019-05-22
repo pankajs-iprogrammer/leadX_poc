@@ -66,7 +66,7 @@ const User = sObj.define("user", {
     }
 });
 
-User.hook("beforeCreate", function(user) {
+User.addHook("beforeCreate", (user, options) => {
     const pass = user.password;
     const iterations = CONSTANTS.THOUSAND;
     const keylen = CONSTANTS.SIXTYFOUR;

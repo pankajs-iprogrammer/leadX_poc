@@ -39,6 +39,8 @@ class LoginController extends BaseController {
 
         if (encryptedPasswordObj["hash"] === user["password"]) {
             req.session.email = reqBody["username"];
+            req.session.account_id = user["account_id"];
+            req.session.user_id = user["id"];
             delete user["password"];
             delete user["salt"];
             this.sendResponse(res, true, CONSTANTS.SUCCESSCODE, user, "");
@@ -53,6 +55,28 @@ class LoginController extends BaseController {
         }
 
         // Send all users to Client
+    }
+
+    logout(req, res) {
+        let sessionData = req.session;
+        let msg;
+        let self = this;
+        sessionData.destroy(function(err) {
+            if (err) {
+                msg = "Error destroying session";
+                self.sendResponse(
+                    res,
+                    true,
+                    CONSTANTS.SERVERERRORCODE,
+                    err,
+                    msg
+                );
+            } else {
+                msg = "Session destroy successfully";
+                self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, err, msg);
+            }
+        });
+        // self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, "Testing", "");
     }
 
     async getUserByEmail(email) {
