@@ -249,7 +249,7 @@ class BaseController extends DatabaseController {
         return statusLog;
     }
 
-    public async getProcessedData(currentModel, reqBody) {
+    public async getProcessedData(currentModel, reqBody, includeObj = {}) {
         const self = this;
         const arrayFilters = {};
         let sort = [["id", "DESC"]];
@@ -293,6 +293,7 @@ class BaseController extends DatabaseController {
         }
 
         const condition = {
+            include: includeObj,
             attributes: attr,
             offset: offset,
             limit: limit,
@@ -302,6 +303,9 @@ class BaseController extends DatabaseController {
 
         if (attr && attr.constructor === Array && attr.length === 0) {
             delete condition.attributes;
+        }
+        if (this.check(["model"], includeObj) == null) {
+            delete condition.include;
         }
         const getResponse = await this.getAll(currentModel, condition);
         let finalResponse = {};

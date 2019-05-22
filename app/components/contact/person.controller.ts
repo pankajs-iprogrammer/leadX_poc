@@ -12,12 +12,12 @@ class ContactPersonController extends BaseController {
             ContactPersonModel,
             reqBody
         );
-        self.sendResponse(
+        this.sendResponse(
             res,
             true,
             CONSTANTS.SUCCESSCODE,
             contact_person.data,
-            ""
+            contact_person.msg
         );
     }
 
