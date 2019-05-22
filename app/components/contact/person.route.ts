@@ -12,7 +12,7 @@ router.post("/getOne", (req, res) => {
 });
 
 router.post("/add", (req, res) => {
-    ContactPersonCtrl.addNewContactPerson(req.body, res);
+    ContactPersonCtrl.addNewContactPerson(req.body, res, req);
 });
 
 router.put("/update", (req, res) => {

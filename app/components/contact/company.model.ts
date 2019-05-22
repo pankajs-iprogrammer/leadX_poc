@@ -1,6 +1,7 @@
 import * as Sequelize from "sequelize";
 import db from "../../config/db.config";
 import { CONSTANTS } from "../../config/constants";
+import User from "../user/user.model";
 const sObj = db.sObj;
 const ContactCompany = sObj.define(
     "contact_company",
@@ -54,7 +55,8 @@ const ContactCompany = sObj.define(
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "country id is required" },
-                len: [CONSTANTS.ONE, CONSTANTS.TEN]
+                len: [CONSTANTS.ONE, CONSTANTS.TEN],
+                isNumeric: true
             }
         },
         state_id: {
@@ -70,7 +72,7 @@ const ContactCompany = sObj.define(
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "city id is required" },
-                isNumber: true,
+                isNumeric: true,
                 len: [CONSTANTS.ONE, CONSTANTS.TEN]
             }
         },
@@ -86,7 +88,6 @@ const ContactCompany = sObj.define(
             type: Sequelize.STRING(CONSTANTS.HUNDRED),
             validate: {
                 notEmpty: { msg: "contact person name is required" },
-                isAlpha: true,
                 len: [CONSTANTS.ONE, CONSTANTS.HUNDRED]
             }
         },
@@ -125,15 +126,17 @@ const ContactCompany = sObj.define(
         },
         created_by: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
-            allowNull: false,
-            len: [CONSTANTS.ONE, CONSTANTS.TEN]
+            foreignKey: true
         }
     },
     {
         underscored: true
     }
 );
-
+ContactCompany.belongsTo(User, {
+    as: "UserRef",
+    foreignKey: "created_by"
+});
 sObj.sync()
     .then(() =>
         console.log(
