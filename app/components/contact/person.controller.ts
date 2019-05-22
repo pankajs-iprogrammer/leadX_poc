@@ -4,17 +4,16 @@ import ContactPersonModel from "./person.model";
 
 class ContactPersonController extends BaseController {
     public async addNewContactPerson(reqBody, res) {
-        const self = this;
-        const contact_person = await self.createData(
+        const contact_person = await this.createData(
             ContactPersonModel,
             reqBody
         );
-        self.sendResponse(
+        this.sendResponse(
             res,
             true,
             CONSTANTS.SUCCESSCODE,
             contact_person.data,
-            ""
+            contact_person.msg
         );
     }
     public async getAllContactPerson(reqBody, res: object) {

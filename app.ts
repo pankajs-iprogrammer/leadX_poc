@@ -5,16 +5,16 @@ import * as express from "express";
 const app = express();
 import * as bodyParser from "body-parser";
 import * as methodOverride from "method-override";
-import passport from "passport";
 var session = require("express-session");
-import Sequelize from "sequelize";
 var MySQLStore = require("express-mysql-session")(session);
+var cors = require("cors");
 
 // set our port
 const port = process.env.PORT || CONSTANTS.STATICPORT;
 
 // get all data/stuff of the body (POST) parameters
 app.use(bodyParser.json());
+app.use(cors());
 
 var options = {
     // Host name for database connection:
