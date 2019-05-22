@@ -8,7 +8,7 @@ const Lead = sObj.define(
     "lead",
     {
         lead_source_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
@@ -23,7 +23,7 @@ const Lead = sObj.define(
             }
         },
         company_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
@@ -34,14 +34,14 @@ const Lead = sObj.define(
             allowNull: true
         },
         lead_value: {
-            type: Sequelize.FLOAT(10, 2),
+            type: Sequelize.FLOAT(CONSTANTS.TEN, CONSTANTS.TWO),
             allowNull: false,
             validate: {
                 notEmpty: true
             }
         },
         currency_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
@@ -53,14 +53,14 @@ const Lead = sObj.define(
             defaultValue: false
         },
         contact_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
             }
         },
         contact_person_phone: {
-            type: Sequelize.BIGINT(20),
+            type: Sequelize.BIGINT(CONSTANTS.TWENTY),
             allowNull: true
         },
         notes: {
@@ -82,14 +82,14 @@ const Lead = sObj.define(
             defaultValue: false
         },
         lead_current_status_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
             }
         },
         assigned_to: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: true
         },
         is_deleted: {
@@ -98,14 +98,14 @@ const Lead = sObj.define(
             defaultValue: false
         },
         account_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
             }
         },
         created_by: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
@@ -121,28 +121,28 @@ const LeadAssignmentLog = sObj.define(
     "lead_assignment_log",
     {
         lead_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
             }
         },
         account_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
             }
         },
         assigned_from: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
             }
         },
         assigned_to: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
@@ -158,21 +158,21 @@ const LeadStatusLog = sObj.define(
     "lead_status_log",
     {
         lead_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
             }
         },
         account_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true
             }
         },
         lead_status_id: {
-            type: Sequelize.INTEGER(10),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true

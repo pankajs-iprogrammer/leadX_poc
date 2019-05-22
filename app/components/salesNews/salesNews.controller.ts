@@ -7,10 +7,10 @@ import SalesNewsModel from "./salesNews.model";
 import User from "../user/user.model";
 
 class SalesNewsController extends BaseController {
-    public async addNewSalesNews(reqBody, res) {
+    public async addNewSalesNews(reqBody, res, req) {
         const self = this;
-        reqBody.user_id = 1;
-        reqBody.account_id = 1;
+        reqBody.created_by = req.session.user_id;
+        reqBody.account_id = req.session.account_id;
         const attachment = reqBody.attachment;
 
         const fileName = self.check(["fileName"], attachment);

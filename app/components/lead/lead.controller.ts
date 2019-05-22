@@ -6,24 +6,27 @@ import BaseController from "../../shared/controller/BaseController";
 import LeadModel from "./lead.model";
 
 class LeadController extends BaseController {
-    public async addNewLead(reqBody, res) {
+    public async addNewLead(reqBody, res, req) {
         const self = this;
-        reqBody.created_by = 1;
-        reqBody.account_id = 1;
+        reqBody.created_by = req.session.user_id;
+        reqBody.account_id = req.session.account_id;
+
         const leadData = await self.createData(LeadModel.Lead, reqBody);
         const lastInsertId = leadData.data.id;
         await this.addStatusLog(reqBody, lastInsertId);
 
         if (self.check(["assigned_to"], reqBody) != null) {
+            reqBody.assigned_from = req.session.user_id;
             await this.addAssignedLog(reqBody, lastInsertId);
         }
 
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, leadData.msg, "");
     }
 
-    public async updateLead(reqBody, res) {
+    public async updateLead(reqBody, res, req) {
         const self = this;
-        reqBody.account_id = 1;
+        reqBody.account_id = req.session.account_id;
+        reqBody.assigned_from = req.session.user_id;
         const getData = await self.getById(LeadModel.Lead, reqBody.id);
         const currentStatus = getData.data.lead_current_status_id;
         const currentAssigned = getData.data.assigned_to;
@@ -65,13 +68,13 @@ class LeadController extends BaseController {
     }
 
     public async addAssignedLog(reqBody, leadId) {
-        reqBody.assigned_from = 1;
         const leadAssignmentLogObj = {
             lead_id: leadId,
             account_id: reqBody.account_id,
             assigned_from: reqBody.assigned_from,
             assigned_to: reqBody.assigned_to
         };
+
         const addMsg = await this.createData(
             LeadModel.LeadAssignmentLog,
             leadAssignmentLogObj

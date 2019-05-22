@@ -8,7 +8,7 @@ const SalesNews = sObj.define(
     "sales_news",
     {
         title: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(CONSTANTS.HUNDRED),
             allowNull: false,
             validate: {
                 notEmpty: true,
@@ -16,7 +16,7 @@ const SalesNews = sObj.define(
             }
         },
         cover_image: {
-            type: Sequelize.STRING
+            type: Sequelize.STRING(CONSTANTS.TWOHUNDREDFIFTYFIVE)
             //allowNull: false,
             /*validate: {
       notEmpty: true,
@@ -31,7 +31,7 @@ const SalesNews = sObj.define(
             }
         },
         created_by: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             foreignKey: true,
             allowNull: false,
             validate: {
@@ -39,7 +39,7 @@ const SalesNews = sObj.define(
             }
         },
         account_id: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             allowNull: false,
             validate: {
                 notEmpty: true

@@ -4,7 +4,7 @@ import SalesNewsController from "./salesNews.controller";
 const SalesNewsCtrl = new SalesNewsController();
 
 router.post("/add", (req, res) => {
-    SalesNewsCtrl.addNewSalesNews(req.body, res);
+    SalesNewsCtrl.addNewSalesNews(req.body, res, req);
 });
 
 router.put("/update", (req, res) => {
