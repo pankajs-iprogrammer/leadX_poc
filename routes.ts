@@ -4,6 +4,7 @@ const router = express();
 import loginRouter from "./app/components/login/login.route";
 import userRouter from "./app/components/user/user.route";
 import salesNewsRouter from "./app/components/salesNews/salesNews.route";
+import leadRouter from "./app/components/lead/lead.route";
 import customerRouter from "./app/components/customer/customer.route";
 import departmentRouter from "./app/components/department/department.route";
 import contactCompany from "./app/components/contact/company.route";
@@ -26,6 +27,7 @@ router.use(function(req, res, next) {
 });
 
 router.use("/salesNews", salesNewsRouter);
+router.use("/lead", leadRouter);
 router.use("/customer", customerRouter);
 router.use("/department", departmentRouter);
 router.use("/contact/company", contactCompany);

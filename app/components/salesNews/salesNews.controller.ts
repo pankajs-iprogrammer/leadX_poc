@@ -4,6 +4,7 @@ import * as moment from "moment";
 import { CONSTANTS } from "../../config/constants";
 import BaseController from "../../shared/controller/BaseController";
 import SalesNewsModel from "./salesNews.model";
+import User from "../user/user.model";
 
 class SalesNewsController extends BaseController {
     public async addNewSalesNews(reqBody, res) {
@@ -95,7 +96,15 @@ class SalesNewsController extends BaseController {
 
     public async getAllSalesNewsList(reqBody, res) {
         const self = this;
-        const salesNews = await self.getProcessedData(SalesNewsModel, reqBody);
+        const includeObj = {
+            model: User,
+            attributes: ["name", "user_avatar"]
+        };
+        const salesNews = await self.getProcessedData(
+            SalesNewsModel,
+            reqBody,
+            includeObj
+        );
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, salesNews, "");
     }
 

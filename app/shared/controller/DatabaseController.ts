@@ -38,6 +38,24 @@ class DatabaseController {
         }).catch(err => err);
     }
 
+    public async getById(currentModel, id) {
+        return new Promise((resolve, reject) => {
+            currentModel
+                .findById(id)
+                .then(data => {
+                    const status = Object.keys(data).length > CONSTANTS.ZERO;
+                    resolve({
+                        data: data,
+                        status: status,
+                        msg: status ? "Data found." : "Data not found"
+                    });
+                })
+                .catch(err => {
+                    resolve({ data: err, status: false, msg: err.message });
+                });
+        }).catch(err => err);
+    }
+
     public async createData(currentModel, reqBody) {
         return new Promise((resolve, reject) => {
             currentModel
