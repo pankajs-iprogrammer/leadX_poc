@@ -143,5 +143,28 @@ class SalesNewsController extends BaseController {
             );
         }
     }
+
+    public async getSalesNewsById(reqBody, res) {
+        const self = this;
+        const salesNews = await self.getById(SalesNewsModel, reqBody.id);
+
+        if (self.check(["data", "id"], salesNews) != null) {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                salesNews.data,
+                ""
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SERVERERRORCODE,
+                salesNews.data,
+                ""
+            );
+        }
+    }
 }
 export default SalesNewsController;

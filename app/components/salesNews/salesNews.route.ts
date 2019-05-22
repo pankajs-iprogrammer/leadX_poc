@@ -23,4 +23,8 @@ router.post("/getOne", (req, res) => {
     SalesNewsCtrl.getSalesNewsOne(req.body, res);
 });
 
+router.post("/getById", (req, res) => {
+    SalesNewsCtrl.getSalesNewsById(req.body, res);
+});
+
 export default router;
