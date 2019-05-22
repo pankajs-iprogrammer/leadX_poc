@@ -1,10 +1,12 @@
 import { CONSTANTS } from "../../config/constants";
 import BaseController from "../../shared/controller/BaseController";
 import ContactCompanyModel from "./company.model";
-
+import User from "../user/user.model";
 class ContactCompanyController extends BaseController {
-    public async addNewContactCompany(reqBody, res) {
+    public async addNewContactCompany(reqBody, res, req) {
         const self = this;
+        reqBody.created_by = req.session.user_id;
+        reqBody.account_id = req.session.account_id;
         const contact_company = await self.createData(
             ContactCompanyModel,
             reqBody
@@ -14,14 +16,20 @@ class ContactCompanyController extends BaseController {
             true,
             CONSTANTS.SUCCESSCODE,
             contact_company.data,
-            ""
+            contact_company.msg
         );
     }
     public async getAllContactCompany(reqBody, res: object) {
         const self = this;
+        const includeObj = {
+            model: User,
+            as: "UserRef",
+            attributes: ["name", "user_avatar"]
+        };
         const contact_company = await self.getProcessedData(
             ContactCompanyModel,
-            reqBody
+            reqBody,
+            includeObj
         );
         self.sendResponse(
             res,

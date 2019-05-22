@@ -1,10 +1,13 @@
 import { CONSTANTS } from "../../config/constants";
 import BaseController from "../../shared/controller/BaseController";
 import ContactPersonModel from "./person.model";
+import User from "../user/user.model";
 
 class ContactPersonController extends BaseController {
-    public async addNewContactPerson(reqBody, res) {
+    public async addNewContactPerson(reqBody, res, req) {
         const self = this;
+        reqBody.created_by = req.session.user_id;
+        reqBody.account_id = req.session.account_id;
         const contact_person = await self.createData(
             ContactPersonModel,
             reqBody
@@ -17,11 +20,18 @@ class ContactPersonController extends BaseController {
             ""
         );
     }
+
     public async getAllContactPerson(reqBody, res: object) {
         const self = this;
+        const includeObj = {
+            model: User,
+            as: "UserRef",
+            attributes: ["name", "user_avatar"]
+        };
         const contact_person = await self.getProcessedData(
             ContactPersonModel,
-            reqBody
+            reqBody,
+            includeObj
         );
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, contact_person, "");
     }

@@ -8,6 +8,7 @@ import customerRouter from "./app/components/customer/customer.route";
 import departmentRouter from "./app/components/department/department.route";
 import contactCompany from "./app/components/contact/company.route";
 import contactPerson from "./app/components/contact/person.route";
+import SalesFeed from "./app/components/salesFeed/salesFeed.route";
 
 router.use("/login", loginRouter);
 console.log(": Session Email : ");
@@ -31,7 +32,7 @@ router.use("/customer", customerRouter);
 router.use("/department", departmentRouter);
 router.use("/contact/company", contactCompany);
 router.use("/contact/person", contactPerson);
-
+router.use("/salesFeed", SalesFeed);
 router.use("/user", userRouter);
 
 export default router;
