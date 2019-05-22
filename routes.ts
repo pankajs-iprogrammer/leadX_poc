@@ -10,7 +10,6 @@ import contactCompany from "./app/components/contact/company.route";
 import contactPerson from "./app/components/contact/person.route";
 
 router.use("/login", loginRouter);
-console.log(": Session Email : ");
 router.use(function(req, res, next) {
     console.log(": Session Email : ", req.session.email);
     if (req.session.email) {
@@ -31,7 +30,6 @@ router.use("/customer", customerRouter);
 router.use("/department", departmentRouter);
 router.use("/contact/company", contactCompany);
 router.use("/contact/person", contactPerson);
-
 router.use("/user", userRouter);
 
 export default router;
