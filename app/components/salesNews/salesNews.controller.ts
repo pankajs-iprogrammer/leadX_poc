@@ -121,6 +121,7 @@ class SalesNewsController extends BaseController {
             });
         }
         const condition = {
+            include: { model: User, attributes: ["name", "user_avatar"] },
             where: arrayFilters
         };
         const salesNews = await self.getOne(SalesNewsModel, condition);
@@ -146,7 +147,11 @@ class SalesNewsController extends BaseController {
 
     public async getSalesNewsById(reqBody, res) {
         const self = this;
-        const salesNews = await self.getById(SalesNewsModel, reqBody.id);
+        const condition = {
+            include: { model: User, attributes: ["name", "user_avatar"] },
+            where: reqBody.id
+        };
+        const salesNews = await self.getOne(SalesNewsModel, condition);
 
         if (self.check(["data", "id"], salesNews) != null) {
             self.sendResponse(
