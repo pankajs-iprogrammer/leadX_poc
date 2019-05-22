@@ -39,6 +39,8 @@ class LoginController extends BaseController {
 
         if (encryptedPasswordObj["hash"] === user["password"]) {
             req.session.email = reqBody["username"];
+            req.session.account_id = user["account_id"];
+            req.session.user_id = user["id"];
             delete user["password"];
             delete user["salt"];
             this.sendResponse(res, true, CONSTANTS.SUCCESSCODE, user, "");
@@ -74,6 +76,7 @@ class LoginController extends BaseController {
                 self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, err, msg);
             }
         });
+        // self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, "Testing", "");
     }
 
     async getUserByEmail(email) {

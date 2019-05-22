@@ -5,9 +5,9 @@ import * as express from "express";
 const app = express();
 import * as bodyParser from "body-parser";
 import * as methodOverride from "method-override";
-var passport = require("passport");
+import passport from "passport";
 var session = require("express-session");
-var Sequelize = require("sequelize");
+import Sequelize from "sequelize";
 var MySQLStore = require("express-mysql-session")(session);
 
 // set our port
@@ -59,27 +59,20 @@ app.use(
         key: "session_cookie_name",
         secret: "session_cookie_secret",
         store: sessionStore,
-        resave: false,
-        saveUninitialized: false
+        resave: true,
+        saveUninitialized: true
     })
 );
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // middleware function to check for logged-in users
-var sessionChecker = (req, res, next) => {
-    if (req.session.user && req.cookies.user_sid) {
-        res.redirect("/dashboard");
-    } else {
-        next();
-    }
-};
 
 // override with the X-HTTP-Method-Override header in the request. simulate DELETE/PUT
 app.use(methodOverride("X-HTTP-Method-Override"));
 
 // routes ==================================================
-app.use("/api", sessionChecker, router);
+app.use("/api", router);
 
 // start app ===============================================
 app.listen(port);
