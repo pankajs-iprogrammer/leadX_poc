@@ -6,14 +6,16 @@ import BaseController from "../../shared/controller/BaseController";
 import LeadModel from "./lead.model";
 import UserModel from "../user/user.model";
 import Companies from "../contact/company.model";
+import PersonModel from "../contact/person.model";
 import LeadStatus from "../master/leadStatus.model";
+import CurrencyModel from "../master/currency.model";
 
 class LeadController extends BaseController {
     public async addNewLead(reqBody, res, req) {
         const self = this;
         reqBody.created_by = req.session.user_id;
         reqBody.account_id = req.session.account_id;
-
+        reqBody.lead_current_status_id = 1;
         const leadData = await self.createData(LeadModel.Lead, reqBody);
         const lastInsertId = leadData.data.id;
         await this.addStatusLog(reqBody, lastInsertId);
@@ -94,11 +96,23 @@ class LeadController extends BaseController {
             },
             {
                 model: Companies,
-                attributes: ["company_name"]
+                attributes: ["id", "company_name"]
             },
             {
                 model: LeadStatus,
-                attributes: ["name"]
+                attributes: ["id", "name"]
+            },
+            {
+                model: PersonModel,
+                attributes: ["id", "name", "phone_number"]
+            },
+            {
+                model: LeadModel.LeadStatusLog,
+                attributes: ["lead_status_id", "created_at"]
+            },
+            {
+                model: CurrencyModel,
+                attributes: ["short_name"]
             }
         ];
         const leadData = await self.getProcessedData(

@@ -8,6 +8,7 @@ const constants = {
     TWO: 2,
     FIFTEEN: 15,
     THOUSAND: 1000,
+    FIVE: 5,
     ONE: 1,
     MONE: -1,
     ZERO: 0,
