@@ -7,6 +7,10 @@ router.post("/getMstLeadStatus", (req, res) => {
     MasterCtrl.getAllLeadStatus({ reqBody: req.body, res });
 });
 
+router.post("/getMstActivityType", (req, res) => {
+    MasterCtrl.getAllActivityType({ reqBody: req.body, res });
+});
+
 router.post("/getMstCurrency", (req, res) => {
     MasterCtrl.getAllCurrency({ reqBody: req.body, res });
 });
