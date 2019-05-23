@@ -4,15 +4,15 @@ import db from "../../config/db.config";
 
 const sObj = db.sObj;
 
-const LeadStatus = sObj.define(
-    "lead_status",
+const ActivityType = sObj.define(
+    "activity_type",
     {
         name: {
-            type: Sequelize.STRING(CONSTANTS.FIFTY),
+            type: Sequelize.STRING(CONSTANTS.HUNDRED),
             allowNull: false,
             validate: {
                 notEmpty: true,
-                len: [CONSTANTS.ZERO, CONSTANTS.FIFTY]
+                len: [CONSTANTS.ZERO, CONSTANTS.HUNDRED]
             }
         }
     },
@@ -44,4 +44,4 @@ LeadStatus.sync()
         console.log("Created user Stat", c.toJSON());
     })
     .catch(e => console.error(e));*/
-export default LeadStatus;
+export default ActivityType;
