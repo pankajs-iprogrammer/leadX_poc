@@ -3,7 +3,7 @@ const router = express();
 import ContaPersonController from "./person.controller";
 const ContactPersonCtrl = new ContaPersonController();
 
-router.get("/get", (req, res) => {
+router.post("/get", (req, res) => {
     ContactPersonCtrl.getAllContactPerson(req.body, res);
 });
 

@@ -5,6 +5,16 @@ import User from "../user/user.model";
 class ContactCompanyController extends BaseController {
     public async addNewContactCompany(reqBody, res, req) {
         const self = this;
+        if (!req.session.user_id) {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.UNAUTHORISED,
+                "",
+                "Unauthorised access"
+            );
+            return false;
+        }
         reqBody.created_by = req.session.user_id;
         reqBody.account_id = req.session.account_id;
         const contact_company = await self.createData(
