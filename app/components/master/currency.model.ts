@@ -4,10 +4,18 @@ import db from "../../config/db.config";
 
 const sObj = db.sObj;
 
-const LeadStatus = sObj.define(
-    "lead_status",
+const Currency = sObj.define(
+    "currency",
     {
-        name: {
+        short_name: {
+            type: Sequelize.STRING(CONSTANTS.FIVE),
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+                len: [CONSTANTS.ZERO, CONSTANTS.FIVE]
+            }
+        },
+        long_name: {
             type: Sequelize.STRING(CONSTANTS.FIFTY),
             allowNull: false,
             validate: {
@@ -44,4 +52,4 @@ LeadStatus.sync()
         console.log("Created user Stat", c.toJSON());
     })
     .catch(e => console.error(e));*/
-export default LeadStatus;
+export default Currency;

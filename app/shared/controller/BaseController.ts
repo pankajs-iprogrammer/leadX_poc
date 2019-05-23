@@ -284,10 +284,8 @@ class BaseController extends DatabaseController {
             sort = [[sortField, sortValue]];
         }
 
-        if (
-            reqBody.paginate.page >= 0 &&
-            self.check(["paginate", "limit"], reqBody) != null
-        ) {
+        let page = self.check(["paginate", "page"], reqBody);
+        if (page >= 0 && self.check(["paginate", "limit"], reqBody) != null) {
             const page = reqBody.paginate.page;
             const pageSize = reqBody.paginate.limit;
             offset = page * pageSize;
@@ -303,6 +301,7 @@ class BaseController extends DatabaseController {
 
         const condition = {
             include: includeObj,
+            subQuery: false,
             attributes: attr,
             offset: offset,
             limit: limit,

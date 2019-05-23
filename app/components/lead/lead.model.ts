@@ -4,6 +4,8 @@ import db from "../../config/db.config";
 import Users from "../user/user.model";
 import Companies from "../contact/company.model";
 import LeadStatus from "../master/leadStatus.model";
+import Person from "../contact/person.model";
+import Currency from "../master/currency.model";
 
 const sObj = db.sObj;
 const Lead = sObj.define(
@@ -194,6 +196,15 @@ Companies.hasMany(Lead, { foreignKey: "company_id" });
 
 Lead.belongsTo(LeadStatus, { foreignKey: "lead_current_status_id" });
 LeadStatus.hasMany(Lead, { foreignKey: "lead_current_status_id" });
+
+Lead.belongsTo(Person, { foreignKey: "contact_id" });
+Person.hasMany(Lead, { foreignKey: "contact_id" });
+
+LeadStatusLog.belongsTo(Lead, { foreignKey: "lead_id" });
+Lead.hasMany(LeadStatusLog, { foreignKey: "lead_id" });
+
+Lead.belongsTo(Currency, { foreignKey: "currency_id" });
+Currency.hasMany(Lead, { foreignKey: "currency_id" });
 
 sObj.sync()
     .then(() =>
