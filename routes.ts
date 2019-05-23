@@ -13,7 +13,7 @@ import contactPerson from "./app/components/contact/person.route";
 import SalesFeed from "./app/components/salesFeed/salesFeed.route";
 
 router.use("/login", loginRouter);
-router.use(function(req, res, next) {
+/*router.use(function(req, res, next) {
     console.log(": Session Email : ", req.session.email);
     if (req.session.email) {
         next();
@@ -26,7 +26,7 @@ router.use(function(req, res, next) {
         };
         res.json(resonse);
     }
-});
+});*/
 
 router.use("/salesNews", salesNewsRouter);
 router.use("/lead", leadRouter);

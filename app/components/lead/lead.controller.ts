@@ -13,15 +13,18 @@ import CurrencyModel from "../master/currency.model";
 class LeadController extends BaseController {
     public async addNewLead(reqBody, res, req) {
         const self = this;
-        reqBody.created_by = req.session.user_id;
-        reqBody.account_id = req.session.account_id;
+        //reqBody.created_by = req.session.user_id;
+        //reqBody.account_id = req.session.account_id;
+        reqBody.created_by = 1;
+        reqBody.account_id = 1;
         reqBody.lead_current_status_id = 1;
         const leadData = await self.createData(LeadModel.Lead, reqBody);
         const lastInsertId = leadData.data.id;
         await this.addStatusLog(reqBody, lastInsertId);
 
         if (self.check(["assigned_to"], reqBody) != null) {
-            reqBody.assigned_from = req.session.user_id;
+            //reqBody.assigned_from = req.session.user_id;
+            reqBody.assigned_from = 1;
             await this.addAssignedLog(reqBody, lastInsertId);
         }
 
@@ -30,8 +33,10 @@ class LeadController extends BaseController {
 
     public async updateLead(reqBody, res, req) {
         const self = this;
-        reqBody.account_id = req.session.account_id;
-        reqBody.assigned_from = req.session.user_id;
+        //reqBody.account_id = req.session.account_id;
+        //reqBody.assigned_from = req.session.user_id;
+        reqBody.account_id = 1;
+        reqBody.assigned_from = 1;
         const getData = await self.getById(LeadModel.Lead, reqBody.id);
         const currentStatus = getData.data.lead_current_status_id;
         const currentAssigned = getData.data.assigned_to;
