@@ -21,7 +21,8 @@ const constants = {
     TWENTY: 20,
     TWOHUNDREDFIFTYFIVE: 255,
     FIFTY: 50,
-    UNAUTHORISED: 403
+    UNAUTHORISED: 403,
+    THREE: 3
 };
 
 export { constants as CONSTANTS };

@@ -5,7 +5,7 @@ import User from "../user/user.model";
 import Company from "../contact/company.model";
 const sObj = db.sObj;
 const SalesFeed = sObj.define(
-    "salesFeed",
+    "sales_feed",
     {
         account_id: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),

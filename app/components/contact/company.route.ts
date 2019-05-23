@@ -15,7 +15,7 @@ router.delete("/delete", (req, res) => {
     ContactCompanyCtrl.delete(req.body, res);
 });
 
-router.get("/get", (req, res) => {
+router.post("/get", (req, res) => {
     ContactCompanyCtrl.getAllContactCompany(req.body, res);
 });
 

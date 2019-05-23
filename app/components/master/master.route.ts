@@ -18,5 +18,14 @@ router.post("/getMstCurrency", (req, res) => {
 router.post("/getMstLeadSource", (req, res) => {
     MasterCtrl.getAllLeadSource({ reqBody: req.body, res });
 });
+router.post("/territory/country", (req, res) => {
+    MasterCtrl.getAllCountry({ reqBody: req.body, res });
+});
+router.post("/territory/country/state", (req, res) => {
+    MasterCtrl.getAllStateOfThisCountry({ reqBody: req.body, res });
+});
+router.post("/territory/country/state/city", (req, res) => {
+    MasterCtrl.getAllCityOfThisState({ reqBody: req.body, res });
+});
 
 export default router;
