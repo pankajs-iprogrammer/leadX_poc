@@ -1,8 +1,10 @@
 import * as Sequelize from "sequelize";
 import db from "../../config/db.config";
 import { CONSTANTS } from "../../config/constants";
+import User from "../user/user.model";
+import Company from "../contact/company.model";
 const sObj = db.sObj;
-const ContactCompany = sObj.define(
+const SalesFeed = sObj.define(
     "salesFeed",
     {
         account_id: {
@@ -44,19 +46,27 @@ const ContactCompany = sObj.define(
             allowNull: false,
             defaultValue: false
         },
-        createdAt: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.literal("NOW()")
+        created_by: {
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
+            foreignKey: true
         },
-        updatedAt: {
-            type: Sequelize.DATE,
-            allowNull: true
+        company_id: {
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
+            foreignKey: true
         }
     },
     {
         underscored: true
     }
 );
+SalesFeed.belongsTo(User, {
+    as: "UserRef",
+    foreignKey: "created_by"
+});
+SalesFeed.belongsTo(Company, {
+    as: "CompanyRef",
+    foreignKey: "company_id"
+});
 sObj.sync()
     .then(() =>
         console.log(
@@ -64,4 +74,4 @@ sObj.sync()
         )
     )
     .catch(error => console.log("This error occured", error));
-export default ContactCompany;
+export default SalesFeed;
