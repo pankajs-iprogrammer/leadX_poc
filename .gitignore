@@ -4,3 +4,4 @@ node_modules
 dist/
 err.log
 out.log
+.env

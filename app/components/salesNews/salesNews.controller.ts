@@ -4,12 +4,13 @@ import * as moment from "moment";
 import { CONSTANTS } from "../../config/constants";
 import BaseController from "../../shared/controller/BaseController";
 import SalesNewsModel from "./salesNews.model";
+import User from "../user/user.model";
 
 class SalesNewsController extends BaseController {
-    public async addNewSalesNews(reqBody, res) {
+    public async addNewSalesNews(reqBody, res, req) {
         const self = this;
-        reqBody.user_id = 1;
-        reqBody.account_id = 1;
+        reqBody.created_by = req.session.user_id;
+        reqBody.account_id = req.session.account_id;
         const attachment = reqBody.attachment;
 
         const fileName = self.check(["fileName"], attachment);
@@ -95,7 +96,15 @@ class SalesNewsController extends BaseController {
 
     public async getAllSalesNewsList(reqBody, res) {
         const self = this;
-        const salesNews = await self.getProcessedData(SalesNewsModel, reqBody);
+        const includeObj = {
+            model: User,
+            attributes: ["name", "user_avatar"]
+        };
+        const salesNews = await self.getProcessedData(
+            SalesNewsModel,
+            reqBody,
+            includeObj
+        );
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, salesNews, "");
     }
 
@@ -112,7 +121,35 @@ class SalesNewsController extends BaseController {
             });
         }
         const condition = {
+            include: { model: User, attributes: ["name", "user_avatar"] },
             where: arrayFilters
+        };
+        const salesNews = await self.getOne(SalesNewsModel, condition);
+
+        if (self.check(["data", "id"], salesNews) != null) {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                salesNews.data,
+                ""
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SERVERERRORCODE,
+                salesNews.data,
+                ""
+            );
+        }
+    }
+
+    public async getSalesNewsById(reqBody, res) {
+        const self = this;
+        const condition = {
+            include: { model: User, attributes: ["name", "user_avatar"] },
+            where: reqBody.id
         };
         const salesNews = await self.getOne(SalesNewsModel, condition);
 

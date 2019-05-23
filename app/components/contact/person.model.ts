@@ -2,12 +2,15 @@ import * as Sequelize from "sequelize";
 import db from "../../config/db.config";
 import { isNumber } from "util";
 import { CONSTANTS } from "../../config/constants";
+import User from "../user/user.model";
+import Company from "./company.model";
 const sObj = db.sObj;
-const ContactCompany = sObj.define(
+const ContactPerson = sObj.define(
     "contact_person",
     {
         account_id: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
+            foreignKey: true,
             validate: {
                 notEmpty: { msg: "account id is required" },
                 isNumeric: true
@@ -16,12 +19,12 @@ const ContactCompany = sObj.define(
         name: {
             type: Sequelize.STRING(CONSTANTS.HUNDRED),
             validate: {
-                notEmpty: { msg: "name is required" },
-                isAlpha: true
+                notEmpty: { msg: "name is required" }
             }
         },
         company_id: {
             type: Sequelize.STRING(CONSTANTS.TEN),
+            foreignKey: true,
             validate: {
                 notEmpty: { msg: "company id is required" }
             }
@@ -57,7 +60,7 @@ const ContactCompany = sObj.define(
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "country id is required" },
-                isNumber: true
+                isNumeric: true
             }
         },
         state_id: {
@@ -65,7 +68,7 @@ const ContactCompany = sObj.define(
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "state id is required" },
-                isNumber: true
+                isNumeric: true
             }
         },
         city_id: {
@@ -73,7 +76,7 @@ const ContactCompany = sObj.define(
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "city id is required" },
-                isNumber: true
+                isNumeric: true
             }
         },
         notes: {
@@ -95,14 +98,17 @@ const ContactCompany = sObj.define(
         },
         created_by: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
-            allowNull: false
+            foreignKey: true
         }
     },
     {
         underscored: true
     }
 );
-
+ContactPerson.belongsTo(User, {
+    as: "UserRef",
+    foreignKey: "created_by"
+});
 sObj.sync()
     .then(() =>
         console.log(
@@ -110,4 +116,4 @@ sObj.sync()
         )
     )
     .catch(error => console.log("This error occured", error));
-export default ContactCompany;
+export default ContactPerson;

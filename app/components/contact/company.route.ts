@@ -4,7 +4,7 @@ import ContactCompanyController from "./company.controller";
 const ContactCompanyCtrl = new ContactCompanyController();
 
 router.post("/add", (req, res) => {
-    ContactCompanyCtrl.addNewContactCompany(req.body, res);
+    ContactCompanyCtrl.addNewContactCompany(req.body, res, req);
 });
 
 router.put("/update", (req, res) => {
