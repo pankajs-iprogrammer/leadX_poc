@@ -1,3 +1,6 @@
 package-lock.json
 node_modules
 /app/config/.env
+dist/
+err.log
+out.log

@@ -58,11 +58,11 @@ const User = sObj.define("user", {
     },
     createdAt: {
         type: Sequelize.DATE,
-        field: "created_date"
+        field: "created_at"
     },
     updatedAt: {
         type: Sequelize.DATE,
-        field: "updated_date"
+        field: "updated_at"
     }
 });
 
