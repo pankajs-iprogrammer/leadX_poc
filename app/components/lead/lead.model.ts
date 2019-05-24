@@ -188,8 +188,10 @@ const LeadStatusLog = sObj.define(
     }
 );
 
-Lead.belongsTo(Users, { foreignKey: "created_by" });
+Lead.belongsTo(Users, { foreignKey: "created_by", as: "createdBy" });
 Users.hasMany(Lead, { foreignKey: "created_by" });
+Lead.belongsTo(Users, { foreignKey: "assigned_to", as: "assignedTo" });
+Users.hasMany(Lead, { foreignKey: "assigned_to" });
 
 Lead.belongsTo(Companies, { foreignKey: "company_id" });
 Companies.hasMany(Lead, { foreignKey: "company_id" });

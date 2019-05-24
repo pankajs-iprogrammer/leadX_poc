@@ -12,7 +12,7 @@ router.put("/update", (req, res) => {
 });
 
 router.post("/getList", (req, res) => {
-    LeadCtrl.getAllLeadList(req.body, res);
+    LeadCtrl.getAllLeadList({ reqBody: req.body, res });
 });
 
 router.post("/getOne", (req, res) => {

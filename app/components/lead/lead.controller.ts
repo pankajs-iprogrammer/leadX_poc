@@ -9,6 +9,7 @@ import Companies from "../contact/company.model";
 import PersonModel from "../contact/person.model";
 import LeadStatus from "../master/leadStatus.model";
 import CurrencyModel from "../master/currency.model";
+import Territories from "../master/territory.model";
 
 class LeadController extends BaseController {
     public async addNewLead(reqBody, res, req) {
@@ -92,16 +93,32 @@ class LeadController extends BaseController {
         return addMsg;
     }
 
-    public async getAllLeadList(reqBody, res) {
+    public async getAllLeadList({ reqBody, res }: { reqBody; res }) {
         const self = this;
         const includeObj = [
             {
                 model: UserModel,
-                attributes: ["name", "user_avatar"]
+                attributes: ["name", "user_avatar"],
+                as: "createdBy"
+            },
+            {
+                model: UserModel,
+                attributes: ["name", "user_avatar"],
+                as: "assignedTo"
             },
             {
                 model: Companies,
-                attributes: ["id", "company_name"]
+                attributes: ["id", "company_name"],
+                include: [
+                    {
+                        model: Territories.Country,
+                        attributes: ["id", "name", "iso_code"]
+                    },
+                    {
+                        model: Territories.State,
+                        attributes: ["id", "name", "state_code"]
+                    }
+                ]
             },
             {
                 model: LeadStatus,
