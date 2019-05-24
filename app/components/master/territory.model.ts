@@ -48,7 +48,7 @@ const State = sObj.define(
             }
         },
         country_id: {
-            type: Sequelize.STRING(CONSTANTS.TEN),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "country id is required" },
@@ -74,7 +74,7 @@ const City = sObj.define(
             }
         },
         state_id: {
-            type: Sequelize.STRING(CONSTANTS.TEN),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "state id is required" },
@@ -83,7 +83,7 @@ const City = sObj.define(
             }
         },
         country_id: {
-            type: Sequelize.STRING(CONSTANTS.TEN),
+            type: Sequelize.INTEGER(CONSTANTS.TEN),
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "country id is required" },
