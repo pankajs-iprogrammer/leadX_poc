@@ -27,5 +27,10 @@ router.post("/territory/country/state", (req, res) => {
 router.post("/territory/country/state/city", (req, res) => {
     MasterCtrl.getAllCityOfThisState({ reqBody: req.body, res });
 });
-
+router.post("/getRoles", (req, res) => {
+    MasterCtrl.getAllRoles({ reqBody: req.body, res });
+});
+router.post("/getLicenseType", (req, res) => {
+    MasterCtrl.licenseType({ reqBody: req.body, res });
+});
 export default router;

@@ -3,7 +3,8 @@ import db from "../../config/db.config";
 import { isNumber } from "util";
 import { CONSTANTS } from "../../config/constants";
 import User from "../user/user.model";
-import Company from "./company.model";
+import Territory from "../master/territory.model";
+
 const sObj = db.sObj;
 const ContactPerson = sObj.define(
     "contact_person",
@@ -30,7 +31,7 @@ const ContactPerson = sObj.define(
             }
         },
         phone_number: {
-            type: Sequelize.INTEGER(CONSTANTS.TWENTY),
+            type: Sequelize.STRING(CONSTANTS.TWENTY),
             validate: {
                 isNumeric: true,
                 notEmpty: { msg: "phone number is required" }
@@ -88,14 +89,6 @@ const ContactPerson = sObj.define(
             allowNull: false,
             defaultValue: false
         },
-        createdAt: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.literal("NOW()")
-        },
-        updatedAt: {
-            type: Sequelize.DATE,
-            allowNull: true
-        },
         created_by: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
             foreignKey: true
@@ -108,6 +101,15 @@ const ContactPerson = sObj.define(
 ContactPerson.belongsTo(User, {
     as: "UserRef",
     foreignKey: "created_by"
+});
+ContactPerson.belongsTo(Territory.Country, {
+    foreignKey: ["country_id"]
+});
+ContactPerson.belongsTo(Territory.State, {
+    foreignKey: ["state_id"]
+});
+ContactPerson.belongsTo(Territory.City, {
+    foreignKey: ["city_id"]
 });
 sObj.sync()
     .then(() =>
