@@ -36,6 +36,48 @@ class ContactPersonController extends BaseController {
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, contact_person, "");
     }
 
+    public async getPersonListInMobileContactStyle(reqBody, res: object) {
+        const self = this;
+        const includeObj = {
+            model: User,
+            as: "UserRef",
+            attributes: ["name", "user_avatar"]
+        };
+        const contact_person = await self.getProcessedData(
+            ContactPersonModel,
+            reqBody,
+            includeObj
+        );
+        let newList = [];
+        console.log("+++ List ++++", contact_person["rows"]);
+        if (
+            Array.isArray(contact_person["rows"]) &&
+            contact_person["rows"].length > 0
+        ) {
+            let self = this;
+            let list = self.convertToObject(contact_person["rows"]);
+            list.map(function(person) {
+                let plainPerson = self.convertToObject(person);
+                let letter = plainPerson["name"].substr(0, 1);
+                let index = self.addItemInList(letter, plainPerson, list);
+                console.log("++++ index ++++", index);
+            });
+        }
+        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, contact_person, "");
+    }
+
+    public addItemInList(letter, item, list) {
+        let index = list.findIndex(i => {
+            let key = Object.keys(i);
+            if (key === letter) {
+                return i;
+            }
+        });
+        // if (index) {
+        //     item[index].push();
+        // }
+    }
+
     public async getContactPersonOne(reqBody, res: object) {
         const self = this;
         const arrayFilters = {};

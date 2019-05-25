@@ -384,5 +384,9 @@ class BaseController extends DatabaseController {
 
         return response;
     }
+
+    public convertToObject(seqObj) {
+        return JSON.parse(JSON.stringify(seqObj));
+    }
 }
 export default BaseController;
