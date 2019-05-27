@@ -5,8 +5,8 @@ import ActivityTypeModel from "./activityType.model";
 import CurrencyModel from "./currency.model";
 import LeadSourceModel from "./leadSource.model";
 import TerritoryModel from "./territory.model";
-import Role from "./role.model";
-import LicenseType from "./licenseType.model";
+import RoleModel from "./role.model";
+import LicenseTypeModel from "./licenseType.model";
 
 class MasterController extends BaseController {
     public async getAllLeadStatus({ reqBody, res }: { reqBody; res }) {
@@ -61,13 +61,13 @@ class MasterController extends BaseController {
     }
     public async getAllRoles({ reqBody, res }: { reqBody; res }) {
         const self = this;
-        const roleData = await self.getProcessedData(Role, reqBody);
+        const roleData = await self.getProcessedData(RoleModel, reqBody);
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, roleData, "");
     }
-    public async licenseType({ reqBody, res }: { reqBody; res }) {
+    public async getlicenseType({ reqBody, res }: { reqBody; res }) {
         const self = this;
         const licensetype = await self.getProcessedData(
-            TerritoryModel.City,
+            LicenseTypeModel,
             reqBody
         );
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, licensetype, "");

@@ -26,14 +26,6 @@ const LicenseType = sObj.define(
             allowNull: false,
             defaultValue: true
         },
-        createdAt: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.literal("NOW()")
-        },
-        updatedAt: {
-            type: Sequelize.DATE,
-            allowNull: true
-        },
         created_by: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
             foreignKey: true
