@@ -64,7 +64,7 @@ class DatabaseController {
                     resolve({
                         data: resData,
                         status: CONSTANTS.SUCCESSCODE,
-                        msg: "Data added scucessfully"
+                        msg: ""
                     });
                     return { status: CONSTANTS.SUCCESSCODE, data: resData };
                 })
@@ -86,7 +86,7 @@ class DatabaseController {
                     resolve({
                         data: resData,
                         status: CONSTANTS.SUCCESSCODE,
-                        msg: "Data updated scucessfully"
+                        msg: "Data updated successfully"
                     });
                     return { status: CONSTANTS.SUCCESSCODE, data: resData };
                 })

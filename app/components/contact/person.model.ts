@@ -19,12 +19,15 @@ const ContactPerson = sObj.define(
         },
         name: {
             type: Sequelize.STRING(CONSTANTS.HUNDRED),
+            allowNull: false,
             validate: {
-                notEmpty: { msg: "name is required" }
+                notEmpty: { msg: "name is required" },
+                len: [CONSTANTS.ONE, CONSTANTS.HUNDRED]
             }
         },
         company_id: {
             type: Sequelize.STRING(CONSTANTS.TEN),
+            allowNull: false,
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "company id is required" }
@@ -39,6 +42,7 @@ const ContactPerson = sObj.define(
         },
         email: {
             type: Sequelize.STRING(CONSTANTS.HUNDRED),
+            allowNull: false,
             validate: {
                 isEmail: true,
                 notEmpty: { msg: "email is required" }
@@ -46,18 +50,21 @@ const ContactPerson = sObj.define(
         },
         address_line_1: {
             type: Sequelize.STRING(CONSTANTS.TWOHUNDREDFIFTYFIVE),
+            allowNull: false,
             validate: {
                 notEmpty: { msg: "address is required" }
             }
         },
         address_line_2: {
             type: Sequelize.STRING(CONSTANTS.TWOHUNDREDFIFTYFIVE),
+            allowNull: false,
             validate: {
                 notEmpty: { msg: "address is required" }
             }
         },
         country_id: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
+            allowNull: false,
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "country id is required" },
@@ -66,6 +73,7 @@ const ContactPerson = sObj.define(
         },
         state_id: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
+            allowNull: false,
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "state id is required" },
@@ -74,6 +82,7 @@ const ContactPerson = sObj.define(
         },
         city_id: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
+            allowNull: false,
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "city id is required" },
