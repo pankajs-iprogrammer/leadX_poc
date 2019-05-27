@@ -31,6 +31,6 @@ router.post("/getRoles", (req, res) => {
     MasterCtrl.getAllRoles({ reqBody: req.body, res });
 });
 router.post("/getLicenseType", (req, res) => {
-    MasterCtrl.getlicenseType({ reqBody: req.body, res });
+    MasterCtrl.getAlllicenseType({ reqBody: req.body, res });
 });
 export default router;

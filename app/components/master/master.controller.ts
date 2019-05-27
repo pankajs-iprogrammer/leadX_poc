@@ -64,13 +64,13 @@ class MasterController extends BaseController {
         const roleData = await self.getProcessedData(RoleModel, reqBody);
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, roleData, "");
     }
-    public async getlicenseType({ reqBody, res }: { reqBody; res }) {
+    public async getAlllicenseType({ reqBody, res }: { reqBody; res }) {
         const self = this;
-        const licensetype = await self.getProcessedData(
+        const licenseType = await self.getProcessedData(
             LicenseTypeModel,
             reqBody
         );
-        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, licensetype, "");
+        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, licenseType, "");
     }
 }
 export default MasterController;
