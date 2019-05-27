@@ -7,6 +7,10 @@ router.post("/get", (req, res) => {
     ContactPersonCtrl.getAllContactPerson(req.body, res);
 });
 
+router.get("/getList", (req, res) => {
+    ContactPersonCtrl.getPersonListInMobileContactStyle(req.body, res);
+});
+
 router.post("/getOne", (req, res) => {
     ContactPersonCtrl.getContactPersonOne(req.body, res);
 });
