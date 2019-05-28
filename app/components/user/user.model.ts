@@ -3,6 +3,8 @@ import db from "../../config/db.config";
 import * as crypto from "crypto";
 import { CONSTANTS } from "../../config/constants";
 import SalesNews from "../salesNews/salesNews.model";
+import Role from "../master/role.model";
+import LicenseTypeModal from "../master/licenseType.model";
 
 const sObj = db.sObj;
 const User = sObj.define(
@@ -52,7 +54,7 @@ const User = sObj.define(
             type: Sequelize.INTEGER,
             foreignKey: true
         },
-        discipline_id: {
+        license_type_id: {
             type: Sequelize.INTEGER,
             foreignKey: true
         },
@@ -64,6 +66,12 @@ const User = sObj.define(
         underscored: true
     }
 );
+
+User.belongsTo(Role, { foreignKey: "user_role_id" });
+Role.hasMany(User, { foreignKey: "user_role_id" });
+
+User.belongsTo(LicenseTypeModal, { foreignKey: "license_type_id" });
+LicenseTypeModal.hasMany(User, { foreignKey: "license_type_id" });
 
 User.addHook("beforeCreate", (user, options) => {
     const pass = user.password;
