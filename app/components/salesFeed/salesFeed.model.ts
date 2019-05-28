@@ -16,15 +16,6 @@ const SalesFeed = sObj.define(
                 len: [CONSTANTS.ONE, CONSTANTS.TEN]
             }
         },
-        user_id: {
-            type: Sequelize.INTEGER(CONSTANTS.TEN),
-            foreignKey: true,
-            validate: {
-                notEmpty: { msg: "user id is required" },
-                isNumeric: true,
-                len: [CONSTANTS.ONE, CONSTANTS.TEN]
-            }
-        },
         lead_id: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
             foreignKey: true,

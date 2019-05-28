@@ -2,7 +2,8 @@
   "name": "starter-node-angular",
   "main": "app.ts",
   "scripts": {
-    "local": "nodemon --watch 'app/**/*.ts' --exec 'ts-node' app.ts"
+    "local": "nodemon --watch 'app/**/*.ts' --exec 'ts-node' app.ts",
+    "test": "mocha --require ts-node/register test/**/*.ts"
   },
   "dependencies": {
     "@hapi/joi": "^15.0.1",
@@ -25,11 +26,16 @@
     "passport-local": "^1.0.0",
     "redis": "^2.8.0",
     "request": "^2.88.0",
-    "sequelize": "^4.37.6",
-    "ts-node": "^8.1.0",
-    "typescript": "^3.4.5"
+    "sequelize": "^4.37.6"
   },
   "devDependencies": {
-    "nodemon": "^1.19.0"
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^6.1.4",
+    "nodemon": "^1.19.0",
+    "ts-node": "^8.2.0",
+    "typescript": "^3.4.5"
   }
 }

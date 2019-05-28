@@ -2,19 +2,20 @@ import { CONSTANTS } from "../../config/constants";
 import BaseController from "../../shared/controller/BaseController";
 import ContactCompanyModel from "./company.model";
 import User from "../user/user.model";
+import Territory from "../master/territory.model";
 class ContactCompanyController extends BaseController {
     public async addNewContactCompany(reqBody, res, req) {
         const self = this;
-        if (!req.session.user_id) {
-            self.sendResponse(
-                res,
-                true,
-                CONSTANTS.UNAUTHORISED,
-                "",
-                "Unauthorised access"
-            );
-            return false;
-        }
+        // if (!req.session.user_id) {
+        //     self.sendResponse(
+        //         res,
+        //         true,
+        //         CONSTANTS.UNAUTHORISED,
+        //         "",
+        //         "Unauthorised access"
+        //     );
+        //     return false;
+        // }
         reqBody.created_by = req.session.user_id;
         reqBody.account_id = req.session.account_id;
         const contact_company = await self.createData(
@@ -31,11 +32,24 @@ class ContactCompanyController extends BaseController {
     }
     public async getAllContactCompany(reqBody, res: object) {
         const self = this;
-        const includeObj = {
-            model: User,
-            as: "UserRef",
-            attributes: ["name", "user_avatar"]
-        };
+        const includeObj = [
+            {
+                model: User,
+                attributes: ["name", "user_avatar"]
+            },
+            {
+                model: Territory.Country,
+                attributes: ["name", "iso_code"]
+            },
+            {
+                model: Territory.State,
+                attributes: ["name", "state_code"]
+            },
+            {
+                model: Territory.City,
+                attributes: ["name"]
+            }
+        ];
         const contact_company = await self.getProcessedData(
             ContactCompanyModel,
             reqBody,
@@ -46,7 +60,7 @@ class ContactCompanyController extends BaseController {
             true,
             CONSTANTS.SUCCESSCODE,
             contact_company,
-            ""
+            contact_company
         );
     }
 

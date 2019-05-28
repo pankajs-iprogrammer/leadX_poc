@@ -3,7 +3,8 @@ import db from "../../config/db.config";
 import { isNumber } from "util";
 import { CONSTANTS } from "../../config/constants";
 import User from "../user/user.model";
-import Company from "./company.model";
+import Territory from "../master/territory.model";
+
 const sObj = db.sObj;
 const ContactPerson = sObj.define(
     "contact_person",
@@ -18,19 +19,22 @@ const ContactPerson = sObj.define(
         },
         name: {
             type: Sequelize.STRING(CONSTANTS.HUNDRED),
+            allowNull: false,
             validate: {
-                notEmpty: { msg: "name is required" }
+                notEmpty: { msg: "name is required" },
+                len: [CONSTANTS.ONE, CONSTANTS.HUNDRED]
             }
         },
         company_id: {
             type: Sequelize.STRING(CONSTANTS.TEN),
+            allowNull: false,
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "company id is required" }
             }
         },
         phone_number: {
-            type: Sequelize.INTEGER(CONSTANTS.TWENTY),
+            type: Sequelize.STRING(CONSTANTS.TWENTY),
             validate: {
                 isNumeric: true,
                 notEmpty: { msg: "phone number is required" }
@@ -38,6 +42,7 @@ const ContactPerson = sObj.define(
         },
         email: {
             type: Sequelize.STRING(CONSTANTS.HUNDRED),
+            allowNull: false,
             validate: {
                 isEmail: true,
                 notEmpty: { msg: "email is required" }
@@ -45,18 +50,21 @@ const ContactPerson = sObj.define(
         },
         address_line_1: {
             type: Sequelize.STRING(CONSTANTS.TWOHUNDREDFIFTYFIVE),
+            allowNull: false,
             validate: {
                 notEmpty: { msg: "address is required" }
             }
         },
         address_line_2: {
             type: Sequelize.STRING(CONSTANTS.TWOHUNDREDFIFTYFIVE),
+            allowNull: false,
             validate: {
                 notEmpty: { msg: "address is required" }
             }
         },
         country_id: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
+            allowNull: false,
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "country id is required" },
@@ -65,6 +73,7 @@ const ContactPerson = sObj.define(
         },
         state_id: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
+            allowNull: false,
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "state id is required" },
@@ -73,6 +82,7 @@ const ContactPerson = sObj.define(
         },
         city_id: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
+            allowNull: false,
             foreignKey: true,
             validate: {
                 notEmpty: { msg: "city id is required" },
@@ -88,14 +98,6 @@ const ContactPerson = sObj.define(
             allowNull: false,
             defaultValue: false
         },
-        createdAt: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.literal("NOW()")
-        },
-        updatedAt: {
-            type: Sequelize.DATE,
-            allowNull: true
-        },
         created_by: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),
             foreignKey: true
@@ -108,6 +110,15 @@ const ContactPerson = sObj.define(
 ContactPerson.belongsTo(User, {
     as: "UserRef",
     foreignKey: "created_by"
+});
+ContactPerson.belongsTo(Territory.Country, {
+    foreignKey: ["country_id"]
+});
+ContactPerson.belongsTo(Territory.State, {
+    foreignKey: ["state_id"]
+});
+ContactPerson.belongsTo(Territory.City, {
+    foreignKey: ["city_id"]
 });
 sObj.sync()
     .then(() =>
