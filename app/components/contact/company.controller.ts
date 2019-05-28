@@ -6,16 +6,6 @@ import Territory from "../master/territory.model";
 class ContactCompanyController extends BaseController {
     public async addNewContactCompany(reqBody, res, req) {
         const self = this;
-        // if (!req.session.user_id) {
-        //     self.sendResponse(
-        //         res,
-        //         true,
-        //         CONSTANTS.UNAUTHORISED,
-        //         "",
-        //         "Unauthorised access"
-        //     );
-        //     return false;
-        // }
         reqBody.created_by = req.session.user_id;
         reqBody.account_id = req.session.account_id;
         const contact_company = await self.createData(
@@ -30,7 +20,7 @@ class ContactCompanyController extends BaseController {
             contact_company.msg
         );
     }
-    public async getAllContactCompany(reqBody, res: object) {
+    public async getAllContactCompany(reqBody, res: object, is_return = 0) {
         const self = this;
         const includeObj = [
             {
@@ -55,13 +45,17 @@ class ContactCompanyController extends BaseController {
             reqBody,
             includeObj
         );
-        self.sendResponse(
-            res,
-            true,
-            CONSTANTS.SUCCESSCODE,
-            contact_company,
-            ""
-        );
+        if (is_return === 1) {
+            return contact_company;
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                contact_company,
+                ""
+            );
+        }
     }
 
     public async getContactCompanyOne(reqBody, res: object) {
