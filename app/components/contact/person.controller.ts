@@ -3,20 +3,11 @@ import BaseController from "../../shared/controller/BaseController";
 import ContactPersonModel from "./person.model";
 import User from "../user/user.model";
 import Territory from "../master/territory.model";
-
+import companyController from "../contact/company.controller";
+const companyObj = new companyController();
 class ContactPersonController extends BaseController {
     public async addNewContactPerson(reqBody, res, req) {
         const self = this;
-        // if (!req.session.user_id) {
-        //     self.sendResponse(
-        //         res,
-        //         true,
-        //         CONSTANTS.UNAUTHORISED,
-        //         "",
-        //         "Unauthorised access"
-        //     );
-        //     return false;
-        // }
         reqBody.created_by = req.session.user_id;
         reqBody.account_id = req.session.account_id;
         const contact_person = await self.createData(
@@ -32,7 +23,7 @@ class ContactPersonController extends BaseController {
         );
     }
 
-    public async getAllContactPerson(reqBody, res: object) {
+    public async getAllContactPerson(reqBody, res: object, is_return = 0) {
         const self = this;
         const includeObj = [
             {
@@ -58,49 +49,106 @@ class ContactPersonController extends BaseController {
             reqBody,
             includeObj
         );
-        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, contact_person, "");
+        if (is_return === 1) {
+            return contact_person;
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                contact_person,
+                ""
+            );
+        }
     }
 
     public async getPersonListInMobileContactStyle(reqBody, res: object) {
-        const self = this;
-        const includeObj = {
-            model: User,
-            as: "UserRef",
-            attributes: ["name", "user_avatar"]
-        };
-        const contact_person = await self.getProcessedData(
-            ContactPersonModel,
+        let contact_person = await this.getAllContactPerson(reqBody, res, 1);
+        if (this.check(["sort", "field"], reqBody) == "name") {
+            reqBody["sort"]["field"] = "company_name";
+        }
+        /* Checking here if request body has selectFilters &
+         * if yes then if it has name property then changing it to company_name
+         */
+        let nameIndex = -1;
+        if (this.check(["selectFilters", 0], reqBody)) {
+            nameIndex = reqBody["selectFilters"].indexOf("name");
+        }
+        if (nameIndex != -1) {
+            reqBody["selectFilters"][nameIndex] = "company_name";
+        }
+
+        let company_contact = await companyObj.getAllContactCompany(
             reqBody,
-            includeObj
+            res,
+            1
         );
-        let newList = [];
-        console.log("+++ List ++++", contact_person["rows"]);
+        // this.sendResponse(
+        //     res,
+        //     true,
+        //     CONSTANTS.SUCCESSCODE,
+        //     company_contact,
+        //     ""
+        // );
+        // return false;
+        const self = this;
+        let mapped_data = [];
         if (
             Array.isArray(contact_person["rows"]) &&
-            contact_person["rows"].length > 0
+            contact_person["count"] > 0
         ) {
             let self = this;
             let list = self.convertToObject(contact_person["rows"]);
+            if (
+                Array.isArray(company_contact["rows"]) &&
+                company_contact["count"] > 0
+            ) {
+                list = list.concat(company_contact["rows"]);
+            }
+            // self.sendResponse(
+            //     res,
+            //     true,
+            //     CONSTANTS.SUCCESSCODE,
+            //     list.sort(),
+            //     ""
+            // );
+            // return false;
+            let letters = [];
             list.map(function(person) {
                 let plainPerson = self.convertToObject(person);
-                let letter = plainPerson["name"].substr(0, 1);
-                let index = self.addItemInList(letter, plainPerson, list);
-                console.log("++++ index ++++", index);
+                let nameKey = plainPerson.hasOwnProperty("name")
+                    ? "name"
+                    : "company_name";
+                let alphabate = plainPerson[nameKey].substr(0, 1).toLowerCase();
+                let index = letters.indexOf(alphabate);
+                if (index === -1) {
+                    letters.push(alphabate);
+                    let temp = {};
+                    temp[alphabate] = [];
+                    mapped_data.push(temp);
+                    index = letters.length - 1;
+                }
+                // console.log(
+                //     "+++++ index +++++",
+                //     index,
+                //     "+++++ mapped_data ++++",
+                //     mapped_data,
+                //     "++++++++++++",
+                //     alphabate,
+                //     "+++++++++++",
+                //     mapped_data[index][alphabate]
+                // );
+                mapped_data[index][alphabate].push(plainPerson);
             });
+            console.log("++++ mapped_data ++++", mapped_data);
         }
-        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, contact_person, "");
-    }
-
-    public addItemInList(letter, item, list) {
-        let index = list.findIndex(i => {
-            let key = Object.keys(i);
-            if (key === letter) {
-                return i;
-            }
-        });
-        // if (index) {
-        //     item[index].push();
-        // }
+        self.sendResponse(
+            res,
+            true,
+            CONSTANTS.SUCCESSCODE,
+            mapped_data.sort(),
+            ""
+        );
     }
 
     public async getContactPersonOne(reqBody, res: object) {
