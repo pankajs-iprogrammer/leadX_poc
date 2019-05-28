@@ -130,11 +130,12 @@ class LeadController extends BaseController {
             },
             {
                 model: LeadModel.LeadStatusLog,
-                attributes: ["lead_status_id", "created_at"]
+                attributes: ["lead_status_id", "created_at"],
+                include: [{ model: LeadStatus, attributes: ["name"] }]
             },
             {
                 model: CurrencyModel,
-                attributes: ["short_name"]
+                attributes: ["id", "short_name"]
             }
         ];
         const leadData = await self.getProcessedData(

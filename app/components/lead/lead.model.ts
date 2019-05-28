@@ -208,6 +208,9 @@ Lead.hasMany(LeadStatusLog, { foreignKey: "lead_id" });
 Lead.belongsTo(Currency, { foreignKey: "currency_id" });
 Currency.hasMany(Lead, { foreignKey: "currency_id" });
 
+LeadStatusLog.belongsTo(LeadStatus, { foreignKey: "lead_status_id" });
+LeadStatus.hasMany(LeadStatusLog, { foreignKey: "lead_status_id" });
+
 sObj.sync()
     .then(() =>
         console.log(
