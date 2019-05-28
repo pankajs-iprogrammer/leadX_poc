@@ -51,11 +51,9 @@ const SalesFeed = sObj.define(
     }
 );
 SalesFeed.belongsTo(User, {
-    as: "UserRef",
     foreignKey: "created_by"
 });
 SalesFeed.belongsTo(Company, {
-    as: "CompanyRef",
     foreignKey: "company_id"
 });
 sObj.sync()
