@@ -60,7 +60,7 @@ class ContactCompanyController extends BaseController {
             true,
             CONSTANTS.SUCCESSCODE,
             contact_company,
-            contact_company
+            ""
         );
     }
 
