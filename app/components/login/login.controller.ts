@@ -3,6 +3,9 @@ import * as crypto from "crypto";
 import { CONSTANTS } from "../../config/constants";
 import UserController from "../user/user.controller";
 import BaseController from "../../shared/controller/BaseController";
+import RoleModel from "../master/role.model";
+import UserModal from "../user/user.model";
+import LicenseTypeModal from "../master/licenseType.model";
 import User from "../user/user.model";
 
 const userCtrlObj = new UserController();
@@ -32,6 +35,7 @@ class LoginController extends BaseController {
         /**************** Joi Validation End ********************/
 
         let user = await this.getUserByEmail(reqBody["username"]);
+        console.log("++++ user ++++", user);
         let encryptedPasswordObj = await userCtrlObj.encryptPassword(
             reqBody["password"],
             user["salt"]
@@ -80,15 +84,22 @@ class LoginController extends BaseController {
     }
 
     async getUserByEmail(email) {
-        return new Promise((resolve, reject) => {
-            User.findOne({
-                where: {
-                    email: email
-                }
-            }).then(users => {
-                resolve(users);
-            });
-        }).catch(err => err);
+        const includeObj = [
+            {
+                model: RoleModel,
+                attributes: ["id", "actual_name", "display_name"]
+            },
+            {
+                model: LicenseTypeModal,
+                attributes: ["id", "actual_name", "display_name"]
+            }
+        ];
+        let condition = {
+            where: { email: email },
+            include: includeObj
+        };
+        const leadData = await this.getOne(UserModal, condition);
+        return leadData["data"];
     }
 }
 
