@@ -8,12 +8,10 @@ class SalesFeedController extends BaseController {
         const includeObj = [
             {
                 model: User,
-                as: "UserRef",
                 attributes: ["name", "user_avatar"]
             },
             {
                 model: Company,
-                as: "CompanyRef",
                 attributes: ["id", "company_name"]
             }
         ];
