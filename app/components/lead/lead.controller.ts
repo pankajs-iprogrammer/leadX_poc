@@ -10,6 +10,8 @@ import PersonModel from "../contact/person.model";
 import LeadStatus from "../master/leadStatus.model";
 import CurrencyModel from "../master/currency.model";
 import Territories from "../master/territory.model";
+import SalesFeedModel from "../salesFeed/salesFeed.model";
+import LeadSourceModel from "../master/leadSource.model";
 
 class LeadController extends BaseController {
     public async addNewLead(reqBody, res, req) {
@@ -22,7 +24,7 @@ class LeadController extends BaseController {
         const leadData = await self.createData(LeadModel.Lead, reqBody);
         const lastInsertId = leadData.data.id;
         await this.addStatusLog(reqBody, lastInsertId);
-
+        await this.addSalesFeed(reqBody, lastInsertId, 2);
         if (self.check(["assigned_to"], reqBody) != null) {
             //reqBody.assigned_from = req.session.user_id;
             reqBody.assigned_from = 1;
@@ -38,6 +40,7 @@ class LeadController extends BaseController {
         //reqBody.assigned_from = req.session.user_id;
         reqBody.account_id = 1;
         reqBody.assigned_from = 1;
+        reqBody.created_by = 1;
         const getData = await self.getById(LeadModel.Lead, reqBody.id);
         const currentStatus = getData.data.lead_current_status_id;
         const currentAssigned = getData.data.assigned_to;
@@ -48,6 +51,10 @@ class LeadController extends BaseController {
 
         if (currentAssigned !== reqBody.assigned_to) {
             await self.addAssignedLog(reqBody, reqBody.id);
+        }
+
+        if (this.check(["is_won"], reqBody) !== null && reqBody.is_won === 1) {
+            await this.addSalesFeed(reqBody, reqBody.id, 1);
         }
 
         const condition = {
@@ -62,6 +69,22 @@ class LeadController extends BaseController {
             condition
         );
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, leadData.msg, "");
+    }
+
+    public async addSalesFeed(reqBody, leadId, actionType) {
+        const leadStatusLogObj = {
+            lead_id: leadId,
+            account_id: reqBody.account_id,
+            company_id: reqBody.company_id,
+            created_by: reqBody.created_by,
+            action_type: actionType
+        };
+
+        const addSalesFeed = await this.createData(
+            SalesFeedModel,
+            leadStatusLogObj
+        );
+        return addSalesFeed;
     }
 
     public async addStatusLog(reqBody, leadId) {
@@ -117,6 +140,10 @@ class LeadController extends BaseController {
                     {
                         model: Territories.State,
                         attributes: ["id", "name", "state_code"]
+                    },
+                    {
+                        model: Territories.City,
+                        attributes: ["id", "name"]
                     }
                 ]
             },
@@ -136,6 +163,10 @@ class LeadController extends BaseController {
             {
                 model: CurrencyModel,
                 attributes: ["id", "short_name"]
+            },
+            {
+                model: LeadSourceModel,
+                attributes: ["id", "name"]
             }
         ];
         const leadData = await self.getProcessedData(
