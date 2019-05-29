@@ -13,6 +13,7 @@ import Territories from "../master/territory.model";
 import SalesFeedModel from "../salesFeed/salesFeed.model";
 import LeadSourceModel from "../master/leadSource.model";
 
+const myPipeLine = "my_pipeline";
 class LeadController extends BaseController {
     public async addNewLead(reqBody, res, req) {
         const self = this;
@@ -211,6 +212,43 @@ class LeadController extends BaseController {
                 ""
             );
         }
+    }
+
+    public async getRevenueTotal(reqBody, res, req) {
+        let revenueObj = {};
+        if (
+            this.check(["revenueType"], reqBody) &&
+            reqBody.revenueType == myPipeLine
+        ) {
+            revenueObj = {
+                revenue: 3763,
+                leadsTotal: 150,
+                hitRate: 20.6,
+                account: {
+                    id: 1,
+                    name: "Cox Enterprise",
+                    currency: {
+                        id: 1,
+                        short_name: "USD"
+                    }
+                }
+            };
+        } else {
+            revenueObj = {
+                revenue: 27836,
+                leadsTotal: 2768,
+                hitRate: 12.9,
+                account: {
+                    id: 1,
+                    name: "Cox Enterprise",
+                    currency: {
+                        id: 1,
+                        short_name: "USD"
+                    }
+                }
+            };
+        }
+        this.sendResponse(res, true, CONSTANTS.SUCCESSCODE, revenueObj, "");
     }
 }
 export default LeadController;
