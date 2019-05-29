@@ -79,20 +79,30 @@ class ContactPersonController extends BaseController {
 
     public async getPersonListInMobileContactStyle(reqBody, res: object) {
         let contact_person = await this.getAllContactPerson(reqBody, res, 1);
+        let total_count = 0;
         if (this.check(["sort", "field"], reqBody) == "name") {
             reqBody["sort"]["field"] = "company_name";
         }
         /* Checking here if request body has selectFilters &
          * if yes then if it has name property then changing it to company_name
          */
-        let nameIndex = -1;
-        if (this.check(["selectFilters", 0], reqBody)) {
-            nameIndex = reqBody["selectFilters"].indexOf("name");
-        }
-        if (nameIndex != -1) {
-            reqBody["selectFilters"][nameIndex] = "company_name";
+        if (
+            this.check(["selectFilters", 0], reqBody) != null &&
+            reqBody["selectFilters"][0].hasOwnProperty("name")
+        ) {
+            reqBody["selectFilters"][0]["company_name"] =
+                reqBody["selectFilters"][0]["name"];
+            delete reqBody["selectFilters"][0]["name"];
         }
 
+        if (
+            this.check(["searchFilter", 0], reqBody) != null &&
+            reqBody["searchFilter"][0].hasOwnProperty("name")
+        ) {
+            reqBody["searchFilter"][0]["company_name"] =
+                reqBody["searchFilter"][0]["name"];
+            delete reqBody["searchFilter"][0]["name"];
+        }
         let company_contact = await companyObj.getAllContactCompany(
             reqBody,
             res,
@@ -106,12 +116,18 @@ class ContactPersonController extends BaseController {
         ) {
             let self = this;
             let list = self.convertToObject(contact_person["rows"]);
+            total_count += parseInt(contact_person["count"]);
+            console.log("++++ total_count +++++", total_count);
+
             if (
                 Array.isArray(company_contact["rows"]) &&
                 company_contact["count"] > 0
             ) {
                 list = list.concat(company_contact["rows"]);
             }
+
+            total_count += parseInt(company_contact["count"]);
+            console.log("++++ total_count +++++", company_contact);
             let letters = [];
             list.map(function(person) {
                 let plainPerson = self.convertToObject(person);
@@ -132,13 +148,8 @@ class ContactPersonController extends BaseController {
             });
             console.log("++++ mapped_data ++++", mapped_data);
         }
-        self.sendResponse(
-            res,
-            true,
-            CONSTANTS.SUCCESSCODE,
-            mapped_data.sort(),
-            ""
-        );
+        let finalResponse = { count: total_count, rows: mapped_data };
+        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, finalResponse, "");
     }
 
     public async getContactPersonOne(reqBody, res: object) {
