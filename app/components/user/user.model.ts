@@ -85,12 +85,12 @@ User.prototype.verifyPassword = function(password) {
     return hash === this.password;
 };
 //User.belongsTo(SalesNews);
-sObj.sync()
+/*sObj.sync()
     .then(() =>
         console.log(
             "User table has been successfully created, if one doesn't exist"
         )
     )
-    .catch(error => console.log("This error occured", error));
+    .catch(error => console.log("This error occured", error));*/
 //User.belongsTo(Department , {as : 'DepartmentRef' , foreignKey : 'department_id'});
 export default User;

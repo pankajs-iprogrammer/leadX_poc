@@ -35,11 +35,11 @@ const LicenseType = sObj.define(
         underscored: true
     }
 );
-sObj.sync()
+/*sObj.sync()
     .then(() =>
         console.log(
             "license_type table has been successfully created, if one doesn't exist"
         )
     )
-    .catch(error => console.log("This error occured", error));
+    .catch(error => console.log("This error occured", error));*/
 export default LicenseType;
