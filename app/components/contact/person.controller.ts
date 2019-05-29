@@ -14,7 +14,7 @@ class ContactPersonController extends BaseController {
             ContactPersonModel,
             reqBody
         );
-        if (contact_person.msg.length > 0) {
+        if (!contact_person.status) {
             self.sendResponse(
                 res,
                 false,
@@ -27,8 +27,8 @@ class ContactPersonController extends BaseController {
                 res,
                 true,
                 CONSTANTS.SUCCESSCODE,
-                contact_person.data,
-                contact_person.msg
+                contact_person,
+                ""
             );
         }
     }
@@ -208,13 +208,23 @@ class ContactPersonController extends BaseController {
             reqBody,
             condition
         );
-        self.sendResponse(
-            res,
-            true,
-            CONSTANTS.SUCCESSCODE,
-            contact_person.msg,
-            ""
-        );
+        if (!contact_person.status) {
+            self.sendResponse(
+                res,
+                false,
+                CONSTANTS.SERVERERRORCODE,
+                contact_person.data.errors[0].message,
+                contact_person.msg
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                contact_person.msg,
+                ""
+            );
+        }
     }
 
     public async delete(reqBody, res: object) {

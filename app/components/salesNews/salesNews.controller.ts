@@ -28,7 +28,17 @@ class SalesNewsController extends BaseController {
         }
 
         const salesNews = await self.createData(SalesNewsModel, reqBody);
-        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, salesNews.data, "");
+        if (!salesNews.status) {
+            self.sendResponse(
+                res,
+                false,
+                CONSTANTS.SERVERERRORCODE,
+                salesNews.data.errors[0].message,
+                salesNews.msg
+            );
+        } else {
+            self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, salesNews, "");
+        }
     }
 
     public async updateSalesNews(reqBody, res) {
@@ -73,7 +83,23 @@ class SalesNewsController extends BaseController {
             reqBody,
             condition
         );
-        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, salesNews.msg, "");
+        if (!salesNews.status) {
+            self.sendResponse(
+                res,
+                false,
+                CONSTANTS.SERVERERRORCODE,
+                salesNews.data.errors[0].message,
+                salesNews.msg
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                salesNews.msg,
+                ""
+            );
+        }
     }
 
     public async deleteSalesNews(reqBody, res) {

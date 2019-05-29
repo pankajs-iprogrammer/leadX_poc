@@ -30,8 +30,17 @@ class LeadController extends BaseController {
             reqBody.assigned_from = 1;
             await this.addAssignedLog(reqBody, lastInsertId);
         }
-
-        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, leadData.msg, "");
+        if (!leadData.status) {
+            self.sendResponse(
+                res,
+                false,
+                CONSTANTS.SERVERERRORCODE,
+                leadData.data.errors[0].message,
+                leadData.msg
+            );
+        } else {
+            self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, leadData, "");
+        }
     }
 
     public async updateLead(reqBody, res, req) {
@@ -68,7 +77,23 @@ class LeadController extends BaseController {
             reqBody,
             condition
         );
-        self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, leadData.msg, "");
+        if (!leadData.status) {
+            self.sendResponse(
+                res,
+                false,
+                CONSTANTS.SERVERERRORCODE,
+                leadData.data.errors[0].message,
+                leadData.msg
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                leadData.msg,
+                ""
+            );
+        }
     }
 
     public async addSalesFeed(reqBody, leadId, actionType) {
