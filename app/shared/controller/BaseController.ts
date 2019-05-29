@@ -261,6 +261,8 @@ class BaseController extends DatabaseController {
     }
 
     public async getProcessedData(currentModel, reqBody, includeObj = {}) {
+        console.log("+++++ reqBody +++++", reqBody);
+
         const self = this;
         const arrayFilters = {};
         let sort = [["id", "DESC"]];
