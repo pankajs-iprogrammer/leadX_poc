@@ -23,13 +23,23 @@ class ContactPersonController extends BaseController {
             ContactPersonModel,
             reqBody
         );
-        this.sendResponse(
-            res,
-            true,
-            CONSTANTS.SUCCESSCODE,
-            contact_person.data,
-            contact_person.msg
-        );
+        if (contact_person.msg.length > 0) {
+            self.sendResponse(
+                res,
+                false,
+                CONSTANTS.SERVERERRORCODE,
+                contact_person.data.errors[0].message,
+                contact_person.msg
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                contact_person.data,
+                contact_person.msg
+            );
+        }
     }
 
     public async getAllContactPerson(reqBody, res: object) {

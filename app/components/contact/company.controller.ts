@@ -22,13 +22,23 @@ class ContactCompanyController extends BaseController {
             ContactCompanyModel,
             reqBody
         );
-        self.sendResponse(
-            res,
-            true,
-            CONSTANTS.SUCCESSCODE,
-            contact_company.data,
-            contact_company.msg
-        );
+        if (contact_company.msg.length > 0) {
+            self.sendResponse(
+                res,
+                false,
+                CONSTANTS.SERVERERRORCODE,
+                contact_company.data.errors[0].message,
+                contact_company.msg
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                contact_company.data,
+                contact_company.msg
+            );
+        }
     }
     public async getAllContactCompany(reqBody, res: object) {
         const self = this;
