@@ -33,7 +33,7 @@ class SalesNewsController extends BaseController {
                 res,
                 false,
                 CONSTANTS.SERVERERRORCODE,
-                salesNews.data.errors[0].message,
+                salesNews.data,
                 salesNews.msg
             );
         } else {
@@ -88,7 +88,7 @@ class SalesNewsController extends BaseController {
                 res,
                 false,
                 CONSTANTS.SERVERERRORCODE,
-                salesNews.data.errors[0].message,
+                salesNews.data,
                 salesNews.msg
             );
         } else {

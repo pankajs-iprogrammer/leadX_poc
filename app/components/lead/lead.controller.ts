@@ -24,19 +24,25 @@ class LeadController extends BaseController {
         reqBody.lead_current_status_id = 1;
         const leadData = await self.createData(LeadModel.Lead, reqBody);
         const lastInsertId = leadData.data.id;
-        await this.addStatusLog(reqBody, lastInsertId);
-        await this.addSalesFeed(reqBody, lastInsertId, 2);
-        if (self.check(["assigned_to"], reqBody) != null) {
-            //reqBody.assigned_from = req.session.user_id;
-            reqBody.assigned_from = 1;
-            await this.addAssignedLog(reqBody, lastInsertId);
+
+        if (lastInsertId) {
+            await this.addStatusLog(reqBody, lastInsertId);
+            await this.addSalesFeed(reqBody, lastInsertId, CONSTANTS.TWO);
+            if (self.check(["assigned_to"], reqBody) != null) {
+                //reqBody.assigned_from = req.session.user_id;
+                reqBody.assigned_from = 1;
+                await this.addAssignedLog(reqBody, lastInsertId);
+            }
         }
+
+        console.log("leadData", leadData);
+
         if (!leadData.status) {
             self.sendResponse(
                 res,
                 false,
                 CONSTANTS.SERVERERRORCODE,
-                leadData.data.errors[0].message,
+                leadData.data,
                 leadData.msg
             );
         } else {
@@ -63,8 +69,11 @@ class LeadController extends BaseController {
             await self.addAssignedLog(reqBody, reqBody.id);
         }
 
-        if (this.check(["is_won"], reqBody) !== null && reqBody.is_won === 1) {
-            await this.addSalesFeed(reqBody, reqBody.id, 1);
+        if (
+            this.check(["is_won"], reqBody) !== null &&
+            reqBody.is_won === CONSTANTS.ONE
+        ) {
+            await this.addSalesFeed(reqBody, reqBody.id, CONSTANTS.ONE);
         }
 
         const condition = {
@@ -83,7 +92,7 @@ class LeadController extends BaseController {
                 res,
                 false,
                 CONSTANTS.SERVERERRORCODE,
-                leadData.data.errors[0].message,
+                leadData.data,
                 leadData.msg
             );
         } else {

@@ -20,7 +20,7 @@ class ContactPersonController extends BaseController {
                 res,
                 false,
                 CONSTANTS.SERVERERRORCODE,
-                contact_person.data.errors[0].message,
+                contact_person.data,
                 contact_person.msg
             );
         } else {
@@ -193,7 +193,7 @@ class ContactPersonController extends BaseController {
                 res,
                 false,
                 CONSTANTS.SERVERERRORCODE,
-                contact_person.data.errors[0].message,
+                contact_person.data,
                 contact_person.msg
             );
         } else {

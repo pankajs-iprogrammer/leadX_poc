@@ -65,7 +65,7 @@ const Lead = sObj.define(
             }
         },
         contact_person_phone: {
-            type: Sequelize.BIGINT(CONSTANTS.TWENTY),
+            type: Sequelize.STRING(CONSTANTS.TWENTY),
             allowNull: true
         },
         notes: {
