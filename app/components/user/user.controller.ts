@@ -6,6 +6,7 @@ import db from "../../config/db.config";
 import BaseController from "../../shared/controller/BaseController";
 import User from "./user.model";
 import Department from "../department/department.model";
+const Op = db.Sequelize.Op;
 
 class UserController extends BaseController {
     public async addNewUser(reqBody, res: object) {
@@ -59,37 +60,6 @@ class UserController extends BaseController {
                     ""
                 );
             });
-    }
-
-    public async findByDateRange(reqBody, res: object) {
-        /**************** Joi Validation Start ********************/
-        const schema = Joi.object().keys({
-            startDate: Joi.date()
-                .iso()
-                .required(),
-            endDate: Joi.date()
-                .iso()
-                .min(Joi.ref("startDate"))
-                .required()
-        });
-        Joi.validate(reqBody, schema, (err, value) => {
-            if (err) {
-                this.sendResponse(
-                    res,
-                    true,
-                    CONSTANTS.SERVERERRORCODE,
-                    err,
-                    ""
-                );
-            } else {
-                console.log("there is no error");
-            }
-        });
-        /**************** Joi Validation End ********************/
-        User.findAll().then(users => {
-            // Send all users to Client
-            this.sendResponse(res, true, CONSTANTS.SUCCESSCODE, users, "");
-        });
     }
 
     public async getAllUser(reqBody, res: object) {
@@ -172,18 +142,6 @@ class UserController extends BaseController {
         });
     }
 
-    public async byProcedure(reqBody, res: object) {
-        db.sObj.query("CALL GetAllUsers;").then(users => {
-            this.sendResponse(res, true, CONSTANTS.SUCCESSCODE, users, "");
-        });
-    }
-
-    public async findById(reqBody, res: object) {
-        User.findById(reqBody.userId).then(user => {
-            this.sendResponse(res, true, CONSTANTS.SUCCESSCODE, user, "");
-        });
-    }
-
     public async update(reqBody, res: object) {
         const id = reqBody.userId;
 
@@ -211,6 +169,25 @@ class UserController extends BaseController {
                 ""
             );
         });
+    }
+
+    public async getUserList(reqBody, res: object) {
+        const condition = {
+            where: {
+                user_role_id: {
+                    [Op.gt]: 1
+                }
+            },
+            attributes: ["id", "name"]
+        };
+        const contact_person = await this.getAll(User, condition);
+        this.sendResponse(
+            res,
+            true,
+            CONSTANTS.SUCCESSCODE,
+            contact_person["data"],
+            ""
+        );
     }
 }
 
