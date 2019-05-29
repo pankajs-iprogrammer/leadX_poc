@@ -83,14 +83,6 @@ class ContactPersonController extends BaseController {
             res,
             1
         );
-        // this.sendResponse(
-        //     res,
-        //     true,
-        //     CONSTANTS.SUCCESSCODE,
-        //     company_contact,
-        //     ""
-        // );
-        // return false;
         const self = this;
         let mapped_data = [];
         if (
@@ -105,14 +97,6 @@ class ContactPersonController extends BaseController {
             ) {
                 list = list.concat(company_contact["rows"]);
             }
-            // self.sendResponse(
-            //     res,
-            //     true,
-            //     CONSTANTS.SUCCESSCODE,
-            //     list.sort(),
-            //     ""
-            // );
-            // return false;
             let letters = [];
             list.map(function(person) {
                 let plainPerson = self.convertToObject(person);
@@ -123,21 +107,12 @@ class ContactPersonController extends BaseController {
                 let index = letters.indexOf(alphabate);
                 if (index === -1) {
                     letters.push(alphabate);
+                    letters = letters.sort();
+                    index = letters.indexOf(alphabate);
                     let temp = {};
                     temp[alphabate] = [];
-                    mapped_data.push(temp);
-                    index = letters.length - 1;
+                    mapped_data.splice(index, 0, temp);
                 }
-                // console.log(
-                //     "+++++ index +++++",
-                //     index,
-                //     "+++++ mapped_data ++++",
-                //     mapped_data,
-                //     "++++++++++++",
-                //     alphabate,
-                //     "+++++++++++",
-                //     mapped_data[index][alphabate]
-                // );
                 mapped_data[index][alphabate].push(plainPerson);
             });
             console.log("++++ mapped_data ++++", mapped_data);
