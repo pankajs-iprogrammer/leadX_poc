@@ -17,7 +17,7 @@ class ContactCompanyController extends BaseController {
                 res,
                 false,
                 CONSTANTS.SERVERERRORCODE,
-                contact_company.data.errors[0].message,
+                "",
                 contact_company.msg
             );
         } else {

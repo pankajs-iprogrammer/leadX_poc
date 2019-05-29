@@ -217,7 +217,7 @@ class LeadController extends BaseController {
         const condition = {
             where: arrayFilters
         };
-        const leadData = await self.getOne(LeadModel, condition);
+        const leadData = await self.getOne(LeadModel.Lead, condition);
 
         if (self.check(["data", "id"], leadData) != null) {
             self.sendResponse(
