@@ -6,6 +6,8 @@ import { CONSTANTS } from "../../config/constants";
 import * as AWS from "aws-sdk";
 import * as bufferFrom from "buffer-from";
 import * as dotenv from "dotenv";
+import db from "../../config/db.config";
+const Op = db.Sequelize.Op;
 dotenv.config();
 
 class BaseController extends DatabaseController {
@@ -272,6 +274,28 @@ class BaseController extends DatabaseController {
         ) {
             arrFilterEq.forEach(function(item, index) {
                 Object.assign(arrayFilters, item);
+            });
+        }
+
+        if (
+            reqBody.hasOwnProperty("searchFilter") &&
+            Array.isArray(reqBody["searchFilter"])
+        ) {
+            reqBody["searchFilter"].forEach(function(item, index) {
+                console.log("++++ item ++++", item);
+                let keys = Object.keys(item);
+                let temp = {};
+                console.log("++++ keys ++++", keys);
+                keys.forEach(function(key) {
+                    temp[key] = {};
+                    console.log("+++++ temp ++++++", temp);
+                    temp[key] = {
+                        [Op.like]: "%" + item[key] + "%"
+                    };
+                    Object.assign(arrayFilters, temp);
+                });
+                console.log("+++++ arrayFilters ++++++", arrayFilters);
+                // Object.assign(arrFilterEq, item);
             });
         }
 
