@@ -3,6 +3,7 @@ import BaseController from "../../shared/controller/BaseController";
 import ContactPersonModel from "./person.model";
 import User from "../user/user.model";
 import Territory from "../master/territory.model";
+import Company from "../contact/company.model";
 import companyController from "../contact/company.controller";
 const companyObj = new companyController();
 class ContactPersonController extends BaseController {
@@ -40,6 +41,10 @@ class ContactPersonController extends BaseController {
                 model: User,
                 as: "UserRef",
                 attributes: ["name", "user_avatar"]
+            },
+            {
+                model: Company,
+                attributes: ["id", "company_name"]
             },
             {
                 model: Territory.Country,
