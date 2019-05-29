@@ -4,6 +4,7 @@ import { isNumber } from "util";
 import { CONSTANTS } from "../../config/constants";
 import User from "../user/user.model";
 import Territory from "../master/territory.model";
+import ContactCompany from "./company.model";
 
 const sObj = db.sObj;
 const ContactPerson = sObj.define(
@@ -110,6 +111,12 @@ const ContactPerson = sObj.define(
 ContactPerson.belongsTo(User, {
     as: "UserRef",
     foreignKey: "created_by"
+});
+ContactPerson.belongsTo(ContactCompany, {
+    foreignKey: "company_id"
+});
+ContactCompany.hasMany(ContactPerson, {
+    foreignKey: "company_id"
 });
 ContactPerson.belongsTo(Territory.Country, {
     foreignKey: ["country_id"]
