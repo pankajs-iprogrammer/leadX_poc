@@ -19,4 +19,8 @@ router.post("/getOne", (req, res) => {
     LeadCtrl.getLeadOne(req.body, res);
 });
 
+router.post("/revenueTotal", (req, res) => {
+    LeadCtrl.getRevenueTotal(req.body, res, req);
+});
+
 export default router;
