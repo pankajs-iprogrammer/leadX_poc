@@ -138,11 +138,11 @@ ContactCompany.belongsTo(Territory.State, {
 ContactCompany.belongsTo(Territory.City, {
     foreignKey: ["city_id"]
 });
-sObj.sync()
+/*sObj.sync()
     .then(() =>
         console.log(
             "Contact company table has been successfully created, if one doesn't exist"
         )
     )
-    .catch(error => console.log("This error occured", error));
+    .catch(error => console.log("This error occured", error));*/
 export default ContactCompany;

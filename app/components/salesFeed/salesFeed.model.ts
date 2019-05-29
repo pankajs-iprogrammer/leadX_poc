@@ -56,11 +56,11 @@ SalesFeed.belongsTo(User, {
 SalesFeed.belongsTo(Company, {
     foreignKey: "company_id"
 });
-sObj.sync()
+/*sObj.sync()
     .then(() =>
         console.log(
             "salesFeed table has been successfully created, if one doesn't exist"
         )
     )
-    .catch(error => console.log("This error occured", error));
+    .catch(error => console.log("This error occured", error));*/
 export default SalesFeed;

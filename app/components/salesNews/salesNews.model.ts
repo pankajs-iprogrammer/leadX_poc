@@ -64,11 +64,11 @@ const SalesNews = sObj.define(
 SalesNews.belongsTo(Users, { foreignKey: "created_by" });
 Users.hasMany(SalesNews, { foreignKey: "created_by" });
 
-sObj.sync()
+/*sObj.sync()
     .then(() =>
         console.log(
             "Sales News table has been successfully created, if one doesn't exist"
         )
     )
-    .catch(error => console.log("This error occured", error));
+    .catch(error => console.log("This error occured", error));*/
 export default SalesNews;

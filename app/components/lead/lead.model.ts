@@ -6,7 +6,6 @@ import Companies from "../contact/company.model";
 import LeadStatus from "../master/leadStatus.model";
 import Person from "../contact/person.model";
 import Currency from "../master/currency.model";
-import LeasSource from "../master/leadSource.model";
 import LeadSource from "../master/leadSource.model";
 
 const sObj = db.sObj;
@@ -216,11 +215,11 @@ LeadStatus.hasMany(LeadStatusLog, { foreignKey: "lead_status_id" });
 Lead.belongsTo(LeadSource, { foreignKey: "lead_source_id" });
 LeadSource.hasMany(Lead, { foreignKey: "lead_source_id" });
 
-sObj.sync()
+/*sObj.sync()
     .then(() =>
         console.log(
             "Lead table has been successfully created, if one doesn't exist"
         )
     )
-    .catch(error => console.log("This error occured", error));
+    .catch(error => console.log("This error occured", error));*/
 export default { Lead, LeadAssignmentLog, LeadStatusLog };
