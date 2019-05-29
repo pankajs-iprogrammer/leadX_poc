@@ -64,6 +64,9 @@ class MasterController extends BaseController {
         const roleData = await self.getProcessedData(RoleModel, reqBody);
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, roleData, "");
     }
+    public async getMasters({ reqBody, res }: { reqBody; res }) {
+        /* here will be code for master get api */
+    }
     public async getAlllicenseType({ reqBody, res }: { reqBody; res }) {
         const self = this;
         const licenseType = await self.getProcessedData(
