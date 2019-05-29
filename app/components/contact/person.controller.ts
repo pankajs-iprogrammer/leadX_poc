@@ -14,13 +14,23 @@ class ContactPersonController extends BaseController {
             ContactPersonModel,
             reqBody
         );
-        this.sendResponse(
-            res,
-            true,
-            CONSTANTS.SUCCESSCODE,
-            contact_person.data,
-            contact_person.msg
-        );
+        if (!contact_person.status) {
+            self.sendResponse(
+                res,
+                false,
+                CONSTANTS.SERVERERRORCODE,
+                contact_person.data.errors[0].message,
+                contact_person.msg
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                contact_person,
+                ""
+            );
+        }
     }
 
     public async getAllContactPerson(reqBody, res: object, is_return = 0) {
@@ -198,13 +208,23 @@ class ContactPersonController extends BaseController {
             reqBody,
             condition
         );
-        self.sendResponse(
-            res,
-            true,
-            CONSTANTS.SUCCESSCODE,
-            contact_person.msg,
-            ""
-        );
+        if (!contact_person.status) {
+            self.sendResponse(
+                res,
+                false,
+                CONSTANTS.SERVERERRORCODE,
+                contact_person.data.errors[0].message,
+                contact_person.msg
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                contact_person.msg,
+                ""
+            );
+        }
     }
 
     public async delete(reqBody, res: object) {

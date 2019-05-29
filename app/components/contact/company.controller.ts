@@ -12,13 +12,23 @@ class ContactCompanyController extends BaseController {
             ContactCompanyModel,
             reqBody
         );
-        self.sendResponse(
-            res,
-            true,
-            CONSTANTS.SUCCESSCODE,
-            contact_company.data,
-            contact_company.msg
-        );
+        if (!contact_company.status) {
+            self.sendResponse(
+                res,
+                false,
+                CONSTANTS.SERVERERRORCODE,
+                contact_company.data.errors[0].message,
+                contact_company.msg
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                contact_company,
+                ""
+            );
+        }
     }
     public async getAllContactCompany(reqBody, res: object, is_return = 0) {
         const self = this;
@@ -107,13 +117,23 @@ class ContactCompanyController extends BaseController {
             reqBody,
             condition
         );
-        self.sendResponse(
-            res,
-            true,
-            CONSTANTS.SUCCESSCODE,
-            contact_company.msg,
-            ""
-        );
+        if (!contact_company.status) {
+            self.sendResponse(
+                res,
+                false,
+                CONSTANTS.SERVERERRORCODE,
+                contact_company.data.errors[0].message,
+                contact_company.msg
+            );
+        } else {
+            self.sendResponse(
+                res,
+                true,
+                CONSTANTS.SUCCESSCODE,
+                contact_company.msg,
+                ""
+            );
+        }
     }
     public async delete(reqBody, res: object) {
         const self = this;
