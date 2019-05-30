@@ -38,7 +38,10 @@ class LeadController extends BaseController {
 
         if (lastInsertId) {
             await this.addStatusLog(reqBody, lastInsertId);
-            await this.addSalesFeed(reqBody, lastInsertId, CONSTANTS.TWO);
+            if (reqBody.lead_current_status_id == 2) {
+                await this.addSalesFeed(reqBody, lastInsertId, CONSTANTS.TWO);
+            }
+
             if (self.check(["assigned_to"], reqBody) != null) {
                 //reqBody.assigned_from = req.session.user_id;
                 reqBody.assigned_from = 1;
@@ -178,14 +181,14 @@ class LeadController extends BaseController {
                         assigned_to: reqBody.user_id
                     });
                 } else {
-                    /*Object.assign(reqBody.arrayFilters[0], {
-                        assigned_to: reqBody.user_id
-                    });
-                    Object.assign(reqBody.arrayFilters[0], {
-                        lead_current_status_id: 1
-                    });*/
                     customWhere = {
                         $or: [
+                            {
+                                $and: [
+                                    { assigned_to: null },
+                                    { created_by: reqBody.user_id }
+                                ]
+                            },
                             { assigned_to: reqBody.user_id },
                             { lead_current_status_id: 1 }
                         ]
