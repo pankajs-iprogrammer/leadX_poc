@@ -12,16 +12,27 @@ import CurrencyModel from "../master/currency.model";
 import Territories from "../master/territory.model";
 import SalesFeedModel from "../salesFeed/salesFeed.model";
 import LeadSourceModel from "../master/leadSource.model";
+import UserController from "../user/user.controller";
 
 const myPipeLine = "my_pipeline";
 class LeadController extends BaseController {
     public async addNewLead(reqBody, res, req) {
         const self = this;
-        //reqBody.created_by = req.session.user_id;
-        //reqBody.account_id = req.session.account_id;
-        reqBody.created_by = 1;
+        const userId = reqBody.user_id;
+        reqBody.created_by = userId;
         reqBody.account_id = 1;
         reqBody.lead_current_status_id = 1;
+        if (self.check(["user_id"], reqBody) != null) {
+            let userCtrl = new UserController();
+            const userData = await userCtrl.getUserById(reqBody.user_id);
+            const roleType = userData.role.actual_name;
+            if (
+                roleType == "SALES_PROFESSIONAL" ||
+                roleType == "SALES_MANAGER"
+            ) {
+                reqBody.lead_current_status_id = 2;
+            }
+        }
         const leadData = await self.createData(LeadModel.Lead, reqBody);
         const lastInsertId = leadData.data.id;
 
@@ -34,8 +45,6 @@ class LeadController extends BaseController {
                 await this.addAssignedLog(reqBody, lastInsertId);
             }
         }
-
-        console.log("leadData", leadData);
 
         if (!leadData.status) {
             self.sendResponse(
@@ -54,9 +63,10 @@ class LeadController extends BaseController {
         const self = this;
         //reqBody.account_id = req.session.account_id;
         //reqBody.assigned_from = req.session.user_id;
+        const userId = reqBody.user_id;
         reqBody.account_id = 1;
-        reqBody.assigned_from = 1;
-        reqBody.created_by = 1;
+        reqBody.assigned_from = userId;
+        reqBody.created_by = userId;
         const getData = await self.getById(LeadModel.Lead, reqBody.id);
         const currentStatus = getData.data.lead_current_status_id;
         const currentAssigned = getData.data.assigned_to;
@@ -153,6 +163,40 @@ class LeadController extends BaseController {
 
     public async getAllLeadList({ reqBody, res }: { reqBody; res }) {
         const self = this;
+        let customWhere = {};
+        if (self.check(["from"], reqBody) == "my_pipeline") {
+            if (self.check(["user_id"], reqBody) != null) {
+                let userCtrl = new UserController();
+                const userData = await userCtrl.getUserById(reqBody.user_id);
+                const roleType = userData.role.actual_name;
+                if (roleType == "NON_SALES") {
+                    Object.assign(reqBody.arrayFilters[0], {
+                        created_by: reqBody.user_id
+                    });
+                } else if (roleType == "SALES_PROFESSIONAL") {
+                    Object.assign(reqBody.arrayFilters[0], {
+                        assigned_to: reqBody.user_id
+                    });
+                } else {
+                    /*Object.assign(reqBody.arrayFilters[0], {
+                        assigned_to: reqBody.user_id
+                    });
+                    Object.assign(reqBody.arrayFilters[0], {
+                        lead_current_status_id: 1
+                    });*/
+                    customWhere = {
+                        $or: [
+                            { assigned_to: reqBody.user_id },
+                            { lead_current_status_id: 1 }
+                        ]
+                    };
+                }
+            }
+        } else {
+            customWhere = { lead_current_status_id: { $ne: 1 } };
+        }
+        console.log("customWhere", customWhere);
+
         const includeObj = [
             {
                 model: UserModel,
@@ -207,7 +251,8 @@ class LeadController extends BaseController {
         const leadData = await self.getProcessedData(
             LeadModel.Lead,
             reqBody,
-            includeObj
+            includeObj,
+            customWhere
         );
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, leadData, "");
     }

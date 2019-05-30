@@ -15,10 +15,6 @@ router.put("/update", (req, res) => {
     objUsersCtrl.update(req.body, res);
 });
 
-router.delete("/delete", (req, res) => {
-    objUsersCtrl.delete(req.body, res);
-});
-
 router.get("/getUserList", (req, res) => {
     objUsersCtrl.getUserList(req.body, res);
 });
