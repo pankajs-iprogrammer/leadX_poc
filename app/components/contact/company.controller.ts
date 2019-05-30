@@ -3,6 +3,8 @@ import BaseController from "../../shared/controller/BaseController";
 import ContactCompanyModel from "./company.model";
 import User from "../user/user.model";
 import Territory from "../master/territory.model";
+import * as redis from "redis";
+const client = redis.createClient();
 class ContactCompanyController extends BaseController {
     public async addNewContactCompany(reqBody, res, req) {
         const self = this;
@@ -21,6 +23,7 @@ class ContactCompanyController extends BaseController {
                 contact_company.msg
             );
         } else {
+            this.clearRedisCacheByModule("COMPANY");
             self.sendResponse(
                 res,
                 true,
@@ -31,7 +34,6 @@ class ContactCompanyController extends BaseController {
         }
     }
     public async getAllContactCompany(reqBody, res: object, is_return = 0) {
-        const self = this;
         const includeObj = [
             {
                 model: User,
@@ -50,21 +52,48 @@ class ContactCompanyController extends BaseController {
                 attributes: ["name"]
             }
         ];
+        const self = this;
+        const jsonReqBody = self.reqbodyStringify(reqBody);
+        const hashcode = "COMPANY_" + self.hashCode(jsonReqBody);
+        var contactCompanyData = [];
         const contact_company = await self.getProcessedData(
             ContactCompanyModel,
             reqBody,
             includeObj
         );
+        client.get(hashcode, function(err, data) {
+            if (data) {
+                const contactPerson = JSON.parse(data);
+                contactCompanyData = [
+                    {
+                        msg: "Response is coming from Redis",
+                        data: contactPerson
+                    }
+                ];
+                self.sendResponse(
+                    res,
+                    true,
+                    CONSTANTS.SUCCESSCODE,
+                    contactCompanyData,
+                    ""
+                );
+            } else {
+                client.set(hashcode, JSON.stringify(contact_company));
+                contactCompanyData = [
+                    { msg: "Response is coming from DB", data: contact_company }
+                ];
+                self.sendResponse(
+                    res,
+                    true,
+                    CONSTANTS.SUCCESSCODE,
+                    contactCompanyData,
+                    ""
+                );
+            }
+        });
+
         if (is_return === 1) {
             return contact_company;
-        } else {
-            self.sendResponse(
-                res,
-                true,
-                CONSTANTS.SUCCESSCODE,
-                contact_company,
-                ""
-            );
         }
     }
 
@@ -126,6 +155,7 @@ class ContactCompanyController extends BaseController {
                 contact_company.msg
             );
         } else {
+            this.clearRedisCacheByModule("COMPANY");
             self.sendResponse(
                 res,
                 true,
@@ -148,6 +178,7 @@ class ContactCompanyController extends BaseController {
             reqBody,
             condition
         );
+        this.clearRedisCacheByModule("COMPANY");
         self.sendResponse(
             res,
             true,

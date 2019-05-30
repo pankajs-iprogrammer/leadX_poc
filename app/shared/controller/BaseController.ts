@@ -1,12 +1,14 @@
 import * as fs from "fs";
 import DatabaseController from "./DatabaseController";
 import * as moment from "moment";
+import * as redis from "redis";
 import * as nodemailer from "nodemailer";
 import { CONSTANTS } from "../../config/constants";
 import * as AWS from "aws-sdk";
 import * as bufferFrom from "buffer-from";
 import * as dotenv from "dotenv";
 dotenv.config();
+const client = redis.createClient();
 
 class BaseController extends DatabaseController {
     public sendResponse(httpResp, statusFlag, statusCode, data, errorMessage) {
@@ -318,12 +320,23 @@ class BaseController extends DatabaseController {
 
         const getResponse = await this.getAll(currentModel, condition);
         let finalResponse = {};
-        if (getResponse && getResponse.hasOwnProperty("data")) {
+        console.log("getResponse", getResponse.status);
+
+        if (getResponse && getResponse.status) {
             finalResponse = getResponse["data"];
             return finalResponse;
         } else {
             return false;
         }
+    }
+
+    public clearRedisCacheByModule(moduleName) {
+        client.keys(moduleName + "_*", (err, keys) => {
+            keys.forEach(key => {
+                console.log(moduleName + "_* key Deleted Successfully!");
+                client.del(key);
+            });
+        });
     }
 
     public async uploadFileOnS3Bucket(attachment, parentFolder) {
@@ -386,6 +399,16 @@ class BaseController extends DatabaseController {
 
     public convertToObject(seqObj) {
         return JSON.parse(JSON.stringify(seqObj));
+    }
+    public reqbodyStringify(reqBody) {
+        const req = JSON.stringify(reqBody);
+        return req;
+    }
+    public hashCode(s) {
+        return s.split("").reduce(function(a, b) {
+            a = (a << 5) - a + b.charCodeAt(0);
+            return a & a;
+        }, 0);
     }
 }
 export default BaseController;
