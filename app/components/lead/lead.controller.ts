@@ -189,8 +189,14 @@ class LeadController extends BaseController {
                                     { created_by: reqBody.user_id }
                                 ]
                             },
-                            { assigned_to: reqBody.user_id },
-                            { lead_current_status_id: 1 }
+                            {
+                                $and: [
+                                    { lead_current_status_id: 1 },
+                                    { is_hand_over: true }
+                                ]
+                            },
+                            { assigned_to: reqBody.user_id }
+                            //{ lead_current_status_id: 1 }
                         ]
                     };
                 }
