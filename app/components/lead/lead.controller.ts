@@ -192,7 +192,7 @@ class LeadController extends BaseController {
                             {
                                 $and: [
                                     { lead_current_status_id: 1 },
-                                    { is_hand_over: true }
+                                    { is_hand_over: 1 }
                                 ]
                             },
                             { assigned_to: reqBody.user_id }
