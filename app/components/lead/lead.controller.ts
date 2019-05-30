@@ -204,17 +204,16 @@ class LeadController extends BaseController {
         } else {
             customWhere = { lead_current_status_id: { $ne: 1 } };
         }
-        console.log("customWhere", customWhere);
 
         const includeObj = [
             {
                 model: UserModel,
-                attributes: ["name", "user_avatar"],
+                attributes: ["id", "name", "user_avatar"],
                 as: "createdBy"
             },
             {
                 model: UserModel,
-                attributes: ["name", "user_avatar"],
+                attributes: ["id", "name", "user_avatar"],
                 as: "assignedTo"
             },
             {
