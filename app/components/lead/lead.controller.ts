@@ -73,7 +73,7 @@ class LeadController extends BaseController {
         const userId = reqBody.user_id;
         reqBody.account_id = 1;
         reqBody.assigned_from = userId;
-        reqBody.created_by = userId;
+        //reqBody.created_by = userId;
         const getData = await self.getById(LeadModel.Lead, reqBody.id);
         const currentStatus = getData.data.lead_current_status_id;
         const currentAssigned = getData.data.assigned_to;
