@@ -3,10 +3,12 @@ import { CONSTANTS } from "../../config/constants";
 
 class DatabaseController {
     public async getAll(currentModel, condition) {
+        console.log("+++++ condition +++++", condition);
         return new Promise((resolve, reject) => {
             currentModel
                 .findAndCountAll(condition)
                 .then(data => {
+                    console.log("+++++ data +++++", data);
                     const status = Object.keys(data).length > CONSTANTS.ZERO;
                     resolve({
                         data: data,
