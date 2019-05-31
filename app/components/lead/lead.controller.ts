@@ -128,7 +128,7 @@ class LeadController extends BaseController {
             lead_id: leadId,
             account_id: reqBody.account_id,
             company_id: reqBody.company_id,
-            created_by: reqBody.created_by,
+            created_by: reqBody.user_id,
             action_type: actionType
         };
 
