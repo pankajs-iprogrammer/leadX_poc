@@ -13,20 +13,20 @@ import contactPerson from "./app/components/contact/person.route";
 import SalesFeed from "./app/components/salesFeed/salesFeed.route";
 
 router.use("/login", loginRouter);
-router.use(function(req, res, next) {
-    console.log(": Session Email : ", req.session.email);
-    if (req.session.email) {
-        next();
-    } else {
-        let resonse = {
-            status: "Failure",
-            statusCode: 403,
-            data: "",
-            errorMessage: "Unauthorized Access"
-        };
-        res.json(resonse);
-    }
-});
+// router.use(function(req, res, next) {
+//     console.log(": Session Email : ", req.session.email);
+//     if (req.session.email) {
+//         next();
+//     } else {
+//         let resonse = {
+//             status: "Failure",
+//             statusCode: 403,
+//             data: "",
+//             errorMessage: "Unauthorized Access"
+//         };
+//         res.json(resonse);
+//     }
+// });
 
 router.use("/salesNews", salesNewsRouter);
 router.use("/lead", leadRouter);
