@@ -16,6 +16,8 @@ import db from "../../config/db.config";
 const Op = db.Sequelize.Op;
 import UserController from "../user/user.controller";
 let userCtrl = new UserController();
+import LicenseType from "../master/licenseType.model";
+
 const myPipeLine = "my_pipeline";
 class LeadController extends BaseController {
     public async addNewLead(reqBody, res, req) {
@@ -40,7 +42,10 @@ class LeadController extends BaseController {
 
         if (lastInsertId) {
             await this.addStatusLog(reqBody, lastInsertId);
-            await this.addSalesFeed(reqBody, lastInsertId, CONSTANTS.TWO);
+            if (reqBody.lead_current_status_id == 2) {
+                await this.addSalesFeed(reqBody, lastInsertId, CONSTANTS.TWO);
+            }
+
             if (self.check(["assigned_to"], reqBody) != null) {
                 //reqBody.assigned_from = req.session.user_id;
                 reqBody.assigned_from = 1;
@@ -82,8 +87,8 @@ class LeadController extends BaseController {
         }
 
         if (
-            this.check(["is_won"], reqBody) !== null &&
-            reqBody.is_won === CONSTANTS.ONE
+            reqBody.hasOwnProperty("is_bell_ringed") &&
+            reqBody.is_bell_ringed === CONSTANTS.ONE
         ) {
             await this.addSalesFeed(reqBody, reqBody.id, CONSTANTS.ONE);
         }
@@ -180,16 +185,22 @@ class LeadController extends BaseController {
                         assigned_to: reqBody.user_id
                     });
                 } else {
-                    /*Object.assign(reqBody.arrayFilters[0], {
-                        assigned_to: reqBody.user_id
-                    });
-                    Object.assign(reqBody.arrayFilters[0], {
-                        lead_current_status_id: 1
-                    });*/
                     customWhere = {
                         $or: [
-                            { assigned_to: reqBody.user_id },
-                            { lead_current_status_id: 1 }
+                            {
+                                $and: [
+                                    { assigned_to: null },
+                                    { created_by: reqBody.user_id }
+                                ]
+                            },
+                            {
+                                $and: [
+                                    { lead_current_status_id: 1 },
+                                    { is_hand_over: 1 }
+                                ]
+                            },
+                            { assigned_to: reqBody.user_id }
+                            //{ lead_current_status_id: 1 }
                         ]
                     };
                 }
@@ -197,17 +208,22 @@ class LeadController extends BaseController {
         } else {
             customWhere = { lead_current_status_id: { $ne: 1 } };
         }
-        console.log("customWhere", customWhere);
 
         const includeObj = [
             {
                 model: UserModel,
-                attributes: ["name", "user_avatar"],
-                as: "createdBy"
+                attributes: ["id", "name", "user_avatar"],
+                as: "createdBy",
+                include: [
+                    {
+                        model: LicenseType,
+                        attributes: ["id", "actual_name", "display_name"]
+                    }
+                ]
             },
             {
                 model: UserModel,
-                attributes: ["name", "user_avatar"],
+                attributes: ["id", "name", "user_avatar"],
                 as: "assignedTo"
             },
             {
