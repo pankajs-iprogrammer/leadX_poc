@@ -39,7 +39,7 @@ const Lead = sObj.define(
             allowNull: true
         },
         lead_value: {
-            type: Sequelize.FLOAT(CONSTANTS.TEN, CONSTANTS.TWO),
+            type: Sequelize.STRING(CONSTANTS.TWENTY),
             allowNull: false,
             validate: {
                 notEmpty: true

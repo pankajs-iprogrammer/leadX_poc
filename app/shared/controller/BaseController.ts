@@ -434,29 +434,5 @@ class BaseController extends DatabaseController {
             }
         };
     }
-
-    public createHash(hashCode) {
-        hashCode = {};
-        hashCode.verbose = function(s) {
-            var hash = 0,
-                i,
-                char,
-                l;
-            if (s.length == 0) return hash;
-            for (i = 0, l = s.length; i < l; i++) {
-                char = s.charCodeAt(i);
-                hash = (hash << 5) - hash + char;
-                hash |= 0; // Convert to 32bit integer
-            }
-            return hash;
-        };
-
-        hashCode.arrayreduce = function(s) {
-            return s.split("").reduce(function(a, b) {
-                a = (a << 5) - a + b.charCodeAt(0);
-                return a & a;
-            }, 0);
-        };
-    }
 }
 export default BaseController;
