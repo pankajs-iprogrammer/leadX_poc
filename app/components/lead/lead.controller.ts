@@ -13,6 +13,7 @@ import Territories from "../master/territory.model";
 import SalesFeedModel from "../salesFeed/salesFeed.model";
 import LeadSourceModel from "../master/leadSource.model";
 import UserController from "../user/user.controller";
+import LicenseType from "../master/licenseType.model";
 
 const myPipeLine = "my_pipeline";
 class LeadController extends BaseController {
@@ -83,8 +84,8 @@ class LeadController extends BaseController {
         }
 
         if (
-            this.check(["is_won"], reqBody) !== null &&
-            reqBody.is_won === CONSTANTS.ONE
+            reqBody.hasOwnProperty("is_bell_ringed") &&
+            reqBody.is_bell_ringed === CONSTANTS.ONE
         ) {
             await this.addSalesFeed(reqBody, reqBody.id, CONSTANTS.ONE);
         }
@@ -209,7 +210,13 @@ class LeadController extends BaseController {
             {
                 model: UserModel,
                 attributes: ["id", "name", "user_avatar"],
-                as: "createdBy"
+                as: "createdBy",
+                include: [
+                    {
+                        model: LicenseType,
+                        attributes: ["id", "actual_name", "display_name"]
+                    }
+                ]
             },
             {
                 model: UserModel,
