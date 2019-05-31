@@ -7,7 +7,7 @@ const should = chai.should();
 import ReqBody from "./inputs";
 const req = new ReqBody();
 chai.use(chaiHttp);
-const URL = "http://ec2-18-220-73-73.us-east-2.compute.amazonaws.com:" + port;
+const URL = "http://localhost" + port;
 
 describe("Unit Testing - module Contact", () => {
     describe("Test Contact_Person", () => {

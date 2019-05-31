@@ -7,6 +7,8 @@ import { CONSTANTS } from "../../config/constants";
 import * as AWS from "aws-sdk";
 import * as bufferFrom from "buffer-from";
 import * as dotenv from "dotenv";
+import db from "../../config/db.config";
+const Op = db.Sequelize.Op;
 dotenv.config();
 const client = redis.createClient();
 
@@ -260,7 +262,12 @@ class BaseController extends DatabaseController {
         return statusLog;
     }
 
-    public async getProcessedData(currentModel, reqBody, includeObj = {}) {
+    public async getProcessedData(
+        currentModel,
+        reqBody,
+        includeObj = {},
+        customWhere = {}
+    ) {
         const self = this;
         const arrayFilters = {};
         let sort = [["id", "DESC"]];
@@ -275,6 +282,29 @@ class BaseController extends DatabaseController {
             arrFilterEq.forEach(function(item, index) {
                 Object.assign(arrayFilters, item);
             });
+        }
+
+        if (
+            reqBody.hasOwnProperty("searchFilter") &&
+            Array.isArray(reqBody["searchFilter"])
+        ) {
+            reqBody["searchFilter"].forEach(function(item, index) {
+                let keys = Object.keys(item);
+                let temp = {};
+
+                keys.forEach(function(key) {
+                    temp[key] = {};
+
+                    temp[key] = {
+                        $like: "%" + item[key] + "%"
+                    };
+                    Object.assign(arrayFilters, temp);
+                });
+            });
+        }
+
+        if (this.isEmpty(customWhere) === false) {
+            Object.assign(arrayFilters, customWhere);
         }
 
         if (
@@ -320,8 +350,6 @@ class BaseController extends DatabaseController {
 
         const getResponse = await this.getAll(currentModel, condition);
         let finalResponse = {};
-        console.log("getResponse", getResponse.status);
-
         if (getResponse && getResponse.status) {
             finalResponse = getResponse["data"];
             return finalResponse;
@@ -330,7 +358,7 @@ class BaseController extends DatabaseController {
         }
     }
 
-    public clearRedisCacheByModule(moduleName) {
+    public async clearRedisCacheByModule(moduleName) {
         client.keys(moduleName + "_*", (err, keys) => {
             keys.forEach(key => {
                 console.log(moduleName + "_* key Deleted Successfully!");
@@ -400,15 +428,32 @@ class BaseController extends DatabaseController {
     public convertToObject(seqObj) {
         return JSON.parse(JSON.stringify(seqObj));
     }
-    public reqbodyStringify(reqBody) {
+    public async reqbodyStringify(reqBody) {
         const req = JSON.stringify(reqBody);
         return req;
     }
-    public hashCode(s) {
+    public async hashCode(s) {
         return s.split("").reduce(function(a, b) {
             a = (a << 5) - a + b.charCodeAt(0);
             return a & a;
         }, 0);
+    }
+
+    public dynamicSort(property) {
+        var sortOrder = 1;
+
+        if (property[0] === "-") {
+            sortOrder = -1;
+            property = property.substr(1);
+        }
+
+        return function(a, b) {
+            if (sortOrder == -1) {
+                return b[property].localeCompare(a[property]);
+            } else {
+                return a[property].localeCompare(b[property]);
+            }
+        };
     }
 }
 export default BaseController;

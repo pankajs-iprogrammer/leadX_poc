@@ -23,6 +23,9 @@ const constants = {
     FIFTY: 50,
     UNAUTHORISED: 403,
     THREE: 3
+    // PERSON: "PERSON",
+    // COMPANY: "COMPANY",
+    // PERSON_COMPANY: "PERSON_COMPANY"
 };
 
 export { constants as CONSTANTS };

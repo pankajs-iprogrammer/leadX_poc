@@ -7,6 +7,8 @@ import * as redis from "redis";
 const client = redis.createClient();
 class ContactCompanyController extends BaseController {
     public async addNewContactCompany(reqBody, res, req) {
+        await this.clearRedisCacheByModule("COMPANY_");
+        await this.clearRedisCacheByModule("PERSON_COMPANY_");
         const self = this;
         reqBody.created_by = req.session.user_id;
         reqBody.account_id = req.session.account_id;
@@ -23,7 +25,6 @@ class ContactCompanyController extends BaseController {
                 contact_company.msg
             );
         } else {
-            this.clearRedisCacheByModule("COMPANY");
             self.sendResponse(
                 res,
                 true,
@@ -61,36 +62,41 @@ class ContactCompanyController extends BaseController {
             reqBody,
             includeObj
         );
-        client.get(hashcode, function(err, data) {
-            if (data) {
-                const contactPerson = JSON.parse(data);
-                contactCompanyData = [
-                    {
-                        msg: "Response is coming from Redis",
-                        data: contactPerson
-                    }
-                ];
-                self.sendResponse(
-                    res,
-                    true,
-                    CONSTANTS.SUCCESSCODE,
-                    contactCompanyData,
-                    ""
-                );
-            } else {
-                client.set(hashcode, JSON.stringify(contact_company));
-                contactCompanyData = [
-                    { msg: "Response is coming from DB", data: contact_company }
-                ];
-                self.sendResponse(
-                    res,
-                    true,
-                    CONSTANTS.SUCCESSCODE,
-                    contactCompanyData,
-                    ""
-                );
-            }
-        });
+        if (is_return === 0) {
+            client.get(hashcode, function(err, data) {
+                if (data) {
+                    const contactPerson = JSON.parse(data);
+                    contactCompanyData = [
+                        {
+                            msg: "Response is coming from Redis",
+                            data: contactPerson
+                        }
+                    ];
+                    self.sendResponse(
+                        res,
+                        true,
+                        CONSTANTS.SUCCESSCODE,
+                        contactCompanyData,
+                        ""
+                    );
+                } else {
+                    client.set(hashcode, JSON.stringify(contact_company));
+                    contactCompanyData = [
+                        {
+                            msg: "Response is coming from DB",
+                            data: contact_company
+                        }
+                    ];
+                    self.sendResponse(
+                        res,
+                        true,
+                        CONSTANTS.SUCCESSCODE,
+                        contactCompanyData,
+                        ""
+                    );
+                }
+            });
+        }
 
         if (is_return === 1) {
             return contact_company;
@@ -135,6 +141,8 @@ class ContactCompanyController extends BaseController {
         }
     }
     public async update(reqBody, res: object) {
+        await this.clearRedisCacheByModule("COMPANY_");
+        await this.clearRedisCacheByModule("PERSON_COMPANY_");
         const self = this;
         const condition = {
             where: {
@@ -151,11 +159,10 @@ class ContactCompanyController extends BaseController {
                 res,
                 false,
                 CONSTANTS.SERVERERRORCODE,
-                contact_company.data.errors[0].message,
+                contact_company.data,
                 contact_company.msg
             );
         } else {
-            this.clearRedisCacheByModule("COMPANY");
             self.sendResponse(
                 res,
                 true,
@@ -166,6 +173,8 @@ class ContactCompanyController extends BaseController {
         }
     }
     public async delete(reqBody, res: object) {
+        await this.clearRedisCacheByModule("COMPANY_");
+        await this.clearRedisCacheByModule("PERSON_COMPANY_");
         const self = this;
         reqBody.is_deleted = 1;
         const condition = {
@@ -178,7 +187,7 @@ class ContactCompanyController extends BaseController {
             reqBody,
             condition
         );
-        this.clearRedisCacheByModule("COMPANY");
+
         self.sendResponse(
             res,
             true,

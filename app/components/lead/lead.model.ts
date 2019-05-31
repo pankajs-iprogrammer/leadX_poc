@@ -65,7 +65,7 @@ const Lead = sObj.define(
             }
         },
         contact_person_phone: {
-            type: Sequelize.BIGINT(CONSTANTS.TWENTY),
+            type: Sequelize.STRING(CONSTANTS.TWENTY),
             allowNull: true
         },
         notes: {
@@ -73,7 +73,7 @@ const Lead = sObj.define(
             allowNull: true
         },
         is_won: {
-            type: Sequelize.BOOLEAN,
+            type: Sequelize.INTEGER,
             allowNull: true
         },
         is_bell_ringed: {
@@ -82,9 +82,9 @@ const Lead = sObj.define(
             defaultValue: false
         },
         is_hand_over: {
-            type: Sequelize.BOOLEAN,
+            type: Sequelize.INTEGER,
             allowNull: false,
-            defaultValue: false
+            defaultValue: CONSTANTS.ZERO
         },
         lead_current_status_id: {
             type: Sequelize.INTEGER(CONSTANTS.TEN),

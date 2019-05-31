@@ -33,4 +33,7 @@ router.post("/getRoles", (req, res) => {
 router.post("/getLicenseType", (req, res) => {
     MasterCtrl.getAlllicenseType({ reqBody: req.body, res });
 });
+router.post("/getMasters", (req, res) => {
+    MasterCtrl.getMasters({ reqBody: req.body, res });
+});
 export default router;
