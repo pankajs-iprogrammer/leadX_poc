@@ -14,16 +14,27 @@ import SalesFeedModel from "../salesFeed/salesFeed.model";
 import LeadSourceModel from "../master/leadSource.model";
 import db from "../../config/db.config";
 const Op = db.Sequelize.Op;
-
+import UserController from "../user/user.controller";
+let userCtrl = new UserController();
 const myPipeLine = "my_pipeline";
 class LeadController extends BaseController {
     public async addNewLead(reqBody, res, req) {
         const self = this;
-        //reqBody.created_by = req.session.user_id;
-        //reqBody.account_id = req.session.account_id;
-        reqBody.created_by = 1;
+        const userId = reqBody.user_id;
+        reqBody.created_by = userId;
         reqBody.account_id = 1;
         reqBody.lead_current_status_id = 1;
+        if (self.check(["user_id"], reqBody) != null) {
+            let userCtrl = new UserController();
+            const userData = await userCtrl.getUserById(reqBody.user_id);
+            const roleType = userData.role.actual_name;
+            if (
+                roleType == "SALES_PROFESSIONAL" ||
+                roleType == "SALES_MANAGER"
+            ) {
+                reqBody.lead_current_status_id = 2;
+            }
+        }
         const leadData = await self.createData(LeadModel.Lead, reqBody);
         const lastInsertId = leadData.data.id;
 
@@ -36,8 +47,6 @@ class LeadController extends BaseController {
                 await this.addAssignedLog(reqBody, lastInsertId);
             }
         }
-
-        console.log("leadData", leadData);
 
         if (!leadData.status) {
             self.sendResponse(
@@ -56,9 +65,10 @@ class LeadController extends BaseController {
         const self = this;
         //reqBody.account_id = req.session.account_id;
         //reqBody.assigned_from = req.session.user_id;
+        const userId = reqBody.user_id;
         reqBody.account_id = 1;
-        reqBody.assigned_from = 1;
-        reqBody.created_by = 1;
+        reqBody.assigned_from = userId;
+        reqBody.created_by = userId;
         const getData = await self.getById(LeadModel.Lead, reqBody.id);
         const currentStatus = getData.data.lead_current_status_id;
         const currentAssigned = getData.data.assigned_to;
@@ -155,6 +165,40 @@ class LeadController extends BaseController {
 
     public async getAllLeadList({ reqBody, res }: { reqBody; res }) {
         const self = this;
+        let customWhere = {};
+        if (self.check(["from"], reqBody) == "my_pipeline") {
+            if (self.check(["user_id"], reqBody) != null) {
+                let userCtrl = new UserController();
+                const userData = await userCtrl.getUserById(reqBody.user_id);
+                const roleType = userData.role.actual_name;
+                if (roleType == "NON_SALES") {
+                    Object.assign(reqBody.arrayFilters[0], {
+                        created_by: reqBody.user_id
+                    });
+                } else if (roleType == "SALES_PROFESSIONAL") {
+                    Object.assign(reqBody.arrayFilters[0], {
+                        assigned_to: reqBody.user_id
+                    });
+                } else {
+                    /*Object.assign(reqBody.arrayFilters[0], {
+                        assigned_to: reqBody.user_id
+                    });
+                    Object.assign(reqBody.arrayFilters[0], {
+                        lead_current_status_id: 1
+                    });*/
+                    customWhere = {
+                        $or: [
+                            { assigned_to: reqBody.user_id },
+                            { lead_current_status_id: 1 }
+                        ]
+                    };
+                }
+            }
+        } else {
+            customWhere = { lead_current_status_id: { $ne: 1 } };
+        }
+        console.log("customWhere", customWhere);
+
         const includeObj = [
             {
                 model: UserModel,
@@ -209,7 +253,8 @@ class LeadController extends BaseController {
         const leadData = await self.getProcessedData(
             LeadModel.Lead,
             reqBody,
-            includeObj
+            includeObj,
+            customWhere
         );
         self.sendResponse(res, true, CONSTANTS.SUCCESSCODE, leadData, "");
     }
@@ -304,68 +349,21 @@ class LeadController extends BaseController {
         let response = {
             revenue: revenue,
             leadsTotal: totalLeads,
-            hitRate: parseFloat(hitRate.toFixed(2))
+            hitRate: parseFloat(hitRate.toFixed(2)),
+            account: {
+                id: 1,
+                logo:
+                    "https://s3.eu-west-2.amazonaws.com/lead-x/blue-and-green-circular-fish-company.png?response-content-disposition=inline&X-Amz-Security-Token=AgoGb3JpZ2luEMj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCmFwLXNvdXRoLTEigAI%2F2piDCxTVpEGsHFiNviO%2B2fmtfCxxG%2F5oMtLwkM4EEKnDGuOy82DP%2BkfUEFtKTjkxSX1vqYskF0Rga1db%2FI%2FgDPFzs4hYNK%2FZ7LrE3aZSoO1sbLTOi0r9%2FELqkNxR8ZuRXfHdVfLLs13vz9Lvg7kP%2ByaPT9jxC8B1c%2BXF%2F4893Q5UDTERCG0vv1OVBTOxHKM%2FTSk7xzBqctco6dQw39z50qOQ4VXSCNkq5%2FH%2FKJ9pHS%2BpjSvxQqOVQtwyASEfpUox1CBGixl2UbgDPfqAr%2Fjo1xaVwRHxVIMjyOlgiQLKrj0qGEYpzUxpW2mRs3E3YrmzCojKasWsXaZbvIN1dDEnKuQDCIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNDk3NjE1OTQzMjg2IgxOT4ERI8vO5pUypzkquAMrtfmxcsRWC%2Fbev8hDzQiCPhzFGNhwT4hX%2B%2B%2Ffih%2B2v7YzcFCo8%2BbZsNSOYl14OrpQI85YWDt01QURJBbWQ8xYsVsdIPeASeonc1WmfojE4YUGxl8NdsLBZr5OD42rm8rDgVS0cV%2FsuvqpcKAMvqgRJhwz0UnBhzldLrMCVrSNaZ5IYLGgor6YLNR25QuUhl9Xp1Y3LwQC5d5VnW4n8FinqoDYfBqAWbVO6yYdWOTLx7YAHl4OOhjy%2FY%2BOqMatrPShMKt34RGHBeT5ZZrI9p7DsdYoZeRpAds4FYhfUvCqecs%2BTkTByMyU%2B13vtf5l0fYCb2q9HqbODuVsQ4d6Y1kEQI5TeTBaxHjMcwQCSafWWmvJ7nZjNtufVM2XTRotE3%2B28f93YjU%2BDFzUzGQOe7C12C7FQ%2B1GFUevNVoOVT0pOmxEaLTLkOdGwEulJpdrRHx0EpxgClaGOg5h5qRyuB1Yn6%2BYKDebUhgXOSJP5rzD58%2FCuV8PIvgE9Lh4K8PydpbX0hPVVBOnf1s1Bua8smXkx36U8tF3tEOclK49uqV6Qu0ItV141thMDJtgx5%2BhLWG0kl4QfxDNczDEj8TnBQ%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190531T105619Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAXHXBYWZ3JLTQDSAH%2F20190531%2Feu-west-2%2Fs3%2Faws4_request&X-Amz-Signature=9bbf34c73c45417c3c4cfe386df56fea31051c39be1945b75da446376faec875",
+                name: "Cox Enterprise",
+                currency: {
+                    id: 1,
+                    short_name: "USD"
+                }
+            }
         };
-
-        if (
-            this.check(["revenueType"], reqBody) &&
-            reqBody.revenueType == myPipeLine
-        ) {
-            response["user"] = {
-                id: 1,
-                name: "Cox Enterprise",
-                currency: {
-                    id: 1,
-                    short_name: "USD"
-                }
-            };
-        } else {
-            response["account"] = {
-                id: 1,
-                name: "Cox Enterprise",
-                currency: {
-                    id: 1,
-                    short_name: "USD"
-                }
-            };
-        }
 
         this.sendResponse(res, true, CONSTANTS.SUCCESSCODE, response, "");
         return false;
-        // let revenueObj = {};
-        // if (
-        //     this.check(["revenueType"], reqBody) &&
-        //     reqBody.revenueType == myPipeLine
-        // ) {
-        //     revenueObj = {
-        // revenue: 3763,
-        // leadsTotal: 150,
-        // hitRate: 20.6,
-        // account: {
-        //     id: 1,
-        //     name: "Cox Enterprise",
-        //     currency: {
-        //         id: 1,
-        //         short_name: "USD"
-        //     }
-        // }
-        //     };
-        // } else {
-        //     revenueObj = {
-        //         revenue: 27836,
-        //         leadsTotal: 2768,
-        //         hitRate: 12.9,
-        //         account: {
-        //             id: 1,
-        //             name: "Cox Enterprise",
-        //             currency: {
-        //                 id: 1,
-        //                 short_name: "USD"
-        //             }
-        //         }
-        //     };
-        // }
-        // this.sendResponse(res, true, CONSTANTS.SUCCESSCODE, revenueObj, "");
     }
 }
 export default LeadController;

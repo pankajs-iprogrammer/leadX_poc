@@ -260,9 +260,12 @@ class BaseController extends DatabaseController {
         return statusLog;
     }
 
-    public async getProcessedData(currentModel, reqBody, includeObj = {}) {
-        console.log("+++++ reqBody +++++", reqBody);
-
+    public async getProcessedData(
+        currentModel,
+        reqBody,
+        includeObj = {},
+        customWhere = {}
+    ) {
         const self = this;
         const arrayFilters = {};
         let sort = [["id", "DESC"]];
@@ -284,21 +287,22 @@ class BaseController extends DatabaseController {
             Array.isArray(reqBody["searchFilter"])
         ) {
             reqBody["searchFilter"].forEach(function(item, index) {
-                console.log("++++ item ++++", item);
                 let keys = Object.keys(item);
                 let temp = {};
-                console.log("++++ keys ++++", keys);
+
                 keys.forEach(function(key) {
                     temp[key] = {};
-                    console.log("+++++ temp ++++++", temp);
+
                     temp[key] = {
-                        [Op.like]: "%" + item[key] + "%"
+                        $like: "%" + item[key] + "%"
                     };
                     Object.assign(arrayFilters, temp);
                 });
-                console.log("+++++ arrayFilters ++++++", arrayFilters);
-                // Object.assign(arrFilterEq, item);
             });
+        }
+
+        if (this.isEmpty(customWhere) === false) {
+            Object.assign(arrayFilters, customWhere);
         }
 
         if (
@@ -344,7 +348,7 @@ class BaseController extends DatabaseController {
 
         const getResponse = await this.getAll(currentModel, condition);
         let finalResponse = {};
-        if (getResponse && getResponse.hasOwnProperty("data")) {
+        if (getResponse && getResponse.status) {
             finalResponse = getResponse["data"];
             return finalResponse;
         } else {

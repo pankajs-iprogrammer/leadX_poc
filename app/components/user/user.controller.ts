@@ -2,11 +2,9 @@ import * as Joi from "@hapi/joi";
 import * as redis from "redis";
 import * as crypto from "crypto";
 import { CONSTANTS } from "../../config/constants";
-import db from "../../config/db.config";
 import BaseController from "../../shared/controller/BaseController";
 import User from "./user.model";
-import Department from "../department/department.model";
-const Op = db.Sequelize.Op;
+import RoleModel from "../master/role.model";
 
 class UserController extends BaseController {
     public async addNewUser(reqBody, res: object) {
@@ -124,11 +122,8 @@ class UserController extends BaseController {
 
     public async verifyPassword(password, salt) {
         // extract the salt and hash from the combined buffer
-        var saltBytes = CONSTANTS.SIXTEEN;
         var hashBytes = CONSTANTS.SIXTYFOUR;
         var iterations = CONSTANTS.THOUSAND;
-        var salt = salt;
-        var hash = password;
 
         // verify the salt and hash against the password
         crypto.pbkdf2(password, salt, iterations, hashBytes, "sha512", function(
@@ -156,26 +151,27 @@ class UserController extends BaseController {
         });
     }
 
-    public async delete(reqBody, res: object) {
-        const id = reqBody.userId;
-        User.destroy({
-            where: { id: id }
-        }).then(() => {
-            this.sendResponse(
-                res,
-                true,
-                CONSTANTS.SUCCESSCODE,
-                "deleted successfully a user with id = " + id,
-                ""
-            );
-        });
+    public async getUserById(userId) {
+        const includeObj = [
+            {
+                model: RoleModel,
+                attributes: ["id", "actual_name", "display_name"]
+            }
+        ];
+        let condition = {
+            where: { id: userId },
+            attributes: ["id", "name", "email", "user_avatar"],
+            include: includeObj
+        };
+        const leadData = await this.getOne(User, condition);
+        return leadData["data"];
     }
 
     public async getUserList(reqBody, res: object) {
         const condition = {
             where: {
                 user_role_id: {
-                    [Op.gt]: 1
+                    $gt: 1
                 }
             },
             attributes: ["id", "name"]
