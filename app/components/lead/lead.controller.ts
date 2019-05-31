@@ -311,12 +311,10 @@ class LeadController extends BaseController {
         }
     }
 
-    private async getMyTotalRevenue() {
-        let user_id = 1;
+    private async getMyTotalRevenue(user_id, revenue_type) {
         let condition = {
             where: {
                 is_won: 1,
-                assigned_to: 1,
                 lead_current_status_id: {
                     [Op.ne]: 1
                 }
@@ -328,15 +326,19 @@ class LeadController extends BaseController {
                 ]
             ]
         };
+        console.log("++++ user_id ++++", user_id);
+        console.log("++++ revenue_type ++++", revenue_type);
+
+        if (revenue_type === "my_pipeline") {
+            condition["where"]["user_id"] = user_id;
+        }
         const leadData = await this.getAll(LeadModel.Lead, condition);
         return leadData["data"];
     }
 
-    private async getMyTotalLeads() {
-        let user_id = 1;
+    private async getMyTotalLeads(user_id, revenue_type) {
         let condition = {
             where: {
-                assigned_to: 1,
                 lead_current_status_id: {
                     [Op.ne]: 1
                 }
@@ -348,24 +350,35 @@ class LeadController extends BaseController {
                 ]
             ]
         };
+        console.log("++++ user_id ++++", user_id);
+        console.log("++++ revenue_type ++++", revenue_type);
+        if (revenue_type === "my_pipeline") {
+            condition["where"]["user_id"] = user_id;
+        }
         const leadData = await this.getAll(LeadModel.Lead, condition);
         return leadData["data"];
     }
 
     public async getRevenueTotal(reqBody, res, req) {
-        let totalRevenue = await this.getMyTotalRevenue();
-        let totalLeadsObj = await this.getMyTotalLeads();
+        let user_id = reqBody["user_id"];
+        let revenue_type = reqBody["revenueType"];
+        let totalRevenue = await this.getMyTotalRevenue(user_id, revenue_type);
+        let totalLeadsObj = await this.getMyTotalLeads(user_id, revenue_type);
         totalRevenue = this.convertToObject(totalRevenue);
         totalLeadsObj = this.convertToObject(totalLeadsObj);
 
-        let totalWonLeads = parseInt(totalRevenue["count"]);
-        let totalLeads = parseInt(totalLeadsObj["count"]);
+        let totalWonLeads = totalRevenue["count"]
+            ? parseInt(totalRevenue["count"])
+            : 0;
+        let totalLeads = totalLeadsObj["count"]
+            ? parseInt(totalLeadsObj["count"])
+            : 0;
         let hitRate = (totalWonLeads / totalLeads) * 100;
         let revenue = this.check(["rows", 0, "total_lead_value"], totalRevenue);
         let response = {
-            revenue: revenue,
+            revenue: revenue ? revenue : 0,
             leadsTotal: totalLeads,
-            hitRate: parseFloat(hitRate.toFixed(2)),
+            hitRate: hitRate ? parseFloat(hitRate.toFixed(2)) : 0,
             account: {
                 id: 1,
                 logo:
