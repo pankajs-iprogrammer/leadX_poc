@@ -315,9 +315,7 @@ class LeadController extends BaseController {
         let condition = {
             where: {
                 is_won: 1,
-                lead_current_status_id: {
-                    [Op.ne]: 1
-                }
+                lead_current_status_id: 6
             },
             attributes: [
                 [
@@ -340,7 +338,7 @@ class LeadController extends BaseController {
         let condition = {
             where: {
                 lead_current_status_id: {
-                    [Op.ne]: 1
+                    $ne: 1
                 }
             },
             attributes: [
