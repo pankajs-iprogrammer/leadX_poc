@@ -330,7 +330,7 @@ class LeadController extends BaseController {
         console.log("++++ revenue_type ++++", revenue_type);
 
         if (revenue_type === "my_pipeline") {
-            condition["where"]["user_id"] = user_id;
+            condition["where"]["created_by"] = user_id;
         }
         const leadData = await this.getAll(LeadModel.Lead, condition);
         return leadData["data"];
@@ -353,7 +353,27 @@ class LeadController extends BaseController {
         console.log("++++ user_id ++++", user_id);
         console.log("++++ revenue_type ++++", revenue_type);
         if (revenue_type === "my_pipeline") {
-            condition["where"]["user_id"] = user_id;
+            condition["where"]["created_by"] = user_id;
+        }
+        const leadData = await this.getAll(LeadModel.Lead, condition);
+        return leadData["data"];
+    }
+
+    private async getTotalClosedLeads(user_id, revenue_type) {
+        let condition = {
+            where: {
+                lead_current_status_id: 6
+            },
+            attributes: [
+                [
+                    db.Sequelize.fn("count", db.Sequelize.col("id")),
+                    "total_leads"
+                ]
+            ]
+        };
+        console.log("++++ revenue_type ++++", revenue_type);
+        if (revenue_type === "my_pipeline") {
+            condition["where"]["created_by"] = user_id;
         }
         const leadData = await this.getAll(LeadModel.Lead, condition);
         return leadData["data"];
@@ -364,8 +384,18 @@ class LeadController extends BaseController {
         let revenue_type = reqBody["revenueType"];
         let totalRevenue = await this.getMyTotalRevenue(user_id, revenue_type);
         let totalLeadsObj = await this.getMyTotalLeads(user_id, revenue_type);
+        let totalLostLeadsObj = await this.getTotalClosedLeads(
+            user_id,
+            revenue_type
+        );
         totalRevenue = this.convertToObject(totalRevenue);
         totalLeadsObj = this.convertToObject(totalLeadsObj);
+        totalLostLeadsObj = this.convertToObject(totalLostLeadsObj);
+        let total_lost_leads = this.check(
+            ["rows", 0, "total_lead_value"],
+            totalLostLeadsObj
+        );
+        total_lost_leads = total_lost_leads ? total_lost_leads : 0;
 
         let totalWonLeads = totalRevenue["count"]
             ? parseInt(totalRevenue["count"])
@@ -373,12 +403,16 @@ class LeadController extends BaseController {
         let totalLeads = totalLeadsObj["count"]
             ? parseInt(totalLeadsObj["count"])
             : 0;
-        let hitRate = (totalWonLeads / totalLeads) * 100;
+        console.log("++++++ totalWonLeads +++++", totalWonLeads);
+        console.log("++++++ total_lost_leads +++++", total_lost_leads);
+        let hitRate =
+            (totalWonLeads / (totalWonLeads + total_lost_leads)) * 100;
         let revenue = this.check(["rows", 0, "total_lead_value"], totalRevenue);
+
         let response = {
             revenue: revenue ? revenue : 0,
-            leadsTotal: totalLeads,
-            hitRate: hitRate ? parseFloat(hitRate.toFixed(2)) : 0,
+            leadsTotal: totalLeads ? totalLeads : 0,
+            hitRate: hitRate,
             account: {
                 id: 1,
                 logo:
