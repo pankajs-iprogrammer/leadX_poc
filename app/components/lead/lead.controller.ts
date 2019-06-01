@@ -328,7 +328,7 @@ class LeadController extends BaseController {
         console.log("++++ revenue_type ++++", revenue_type);
 
         if (revenue_type === "my_pipeline") {
-            condition["where"]["created_by"] = user_id;
+            condition["where"]["assigned_to"] = user_id;
         }
         const leadData = await this.getAll(LeadModel.Lead, condition);
         return leadData["data"];
@@ -351,7 +351,7 @@ class LeadController extends BaseController {
         console.log("++++ user_id ++++", user_id);
         console.log("++++ revenue_type ++++", revenue_type);
         if (revenue_type === "my_pipeline") {
-            condition["where"]["created_by"] = user_id;
+            condition["where"]["assigned_to"] = user_id;
         }
         const leadData = await this.getAll(LeadModel.Lead, condition);
         return leadData["data"];
@@ -371,7 +371,7 @@ class LeadController extends BaseController {
         };
         console.log("++++ revenue_type ++++", revenue_type);
         if (revenue_type === "my_pipeline") {
-            condition["where"]["created_by"] = user_id;
+            condition["where"]["assigned_to"] = user_id;
         }
         const leadData = await this.getAll(LeadModel.Lead, condition);
         return leadData["data"];
