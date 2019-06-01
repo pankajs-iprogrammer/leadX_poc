@@ -410,7 +410,7 @@ class LeadController extends BaseController {
         let response = {
             revenue: revenue ? revenue : 0,
             leadsTotal: totalLeads ? totalLeads : 0,
-            hitRate: hitRate,
+            hitRate: hitRate ? hitRate : 0,
             account: {
                 id: 1,
                 logo:
