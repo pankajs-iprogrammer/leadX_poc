@@ -389,28 +389,26 @@ class LeadController extends BaseController {
         totalRevenue = this.convertToObject(totalRevenue);
         totalLeadsObj = this.convertToObject(totalLeadsObj);
         totalLostLeadsObj = this.convertToObject(totalLostLeadsObj);
+        console.log("++++++ total_lost_leads 1 +++++", totalLostLeadsObj);
         let total_lost_leads = this.check(
-            ["rows", 0, "total_lead_value"],
+            ["rows", 0, "total_leads"],
             totalLostLeadsObj
         );
         total_lost_leads = total_lost_leads ? total_lost_leads : 0;
-
         let totalWonLeads = totalRevenue["count"]
             ? parseInt(totalRevenue["count"])
             : 0;
         let totalLeads = totalLeadsObj["count"]
             ? parseInt(totalLeadsObj["count"])
             : 0;
-        console.log("++++++ totalWonLeads +++++", totalWonLeads);
-        console.log("++++++ total_lost_leads +++++", total_lost_leads);
-        let hitRate =
-            (totalWonLeads / (totalWonLeads + total_lost_leads)) * 100;
+
+        let hitRate = (totalWonLeads / total_lost_leads) * 100;
         let revenue = this.check(["rows", 0, "total_lead_value"], totalRevenue);
 
         let response = {
             revenue: revenue ? revenue : 0,
             leadsTotal: totalLeads ? totalLeads : 0,
-            hitRate: hitRate ? hitRate : 0,
+            hitRate: hitRate ? parseFloat(hitRate.toFixed(2)) : 0,
             account: {
                 id: 1,
                 logo:
