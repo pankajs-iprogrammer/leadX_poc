@@ -359,12 +359,10 @@ class LeadController extends BaseController {
         return leadData["data"];
     }
 
-    private async getTotalLostLeads(user_id, revenue_type) {
+    private async getTotalClosedLeads(user_id, revenue_type) {
         let condition = {
             where: {
-                lead_current_status_id: {
-                    [Op.ne]: 1
-                }
+                lead_current_status_id: 6
             },
             attributes: [
                 [
@@ -377,7 +375,6 @@ class LeadController extends BaseController {
         if (revenue_type === "my_pipeline") {
             condition["where"]["created_by"] = user_id;
         }
-        condition["where"]["is_won"] = 0;
         const leadData = await this.getAll(LeadModel.Lead, condition);
         return leadData["data"];
     }
@@ -387,7 +384,7 @@ class LeadController extends BaseController {
         let revenue_type = reqBody["revenueType"];
         let totalRevenue = await this.getMyTotalRevenue(user_id, revenue_type);
         let totalLeadsObj = await this.getMyTotalLeads(user_id, revenue_type);
-        let totalLostLeadsObj = await this.getTotalLostLeads(
+        let totalLostLeadsObj = await this.getTotalClosedLeads(
             user_id,
             revenue_type
         );
